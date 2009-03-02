@@ -1,0 +1,2668 @@
+<?php
+
+
+/*
+
+* Copyright (c) 2008, University of Cincinnati
+* All rights reserved.
+* See LICENSE file for important license information
+
+*/
+
+require_once('config.php');
+require_once('utils.php');
+
+define('DB_ERROR_ALREADY_EXISTS', -1);
+
+class mobilAP
+{
+	const SCHEDULE_DAYS_TABLE='schedule_days';
+	const SCHEDULE_TABLE='schedule';
+	
+	static function flushCache($key)
+	{
+		//no op
+	}
+
+	static function setCache($key)
+	{
+		//no op
+	}
+
+	static function getCache($key)
+	{
+		return false;
+		//no op
+	}
+	
+    static function query($sql,$continue=false)
+    {
+        $conn = mysql_connect(getConfig('db_host'), getConfig('db_user'), getConfig('db_password')) or die("Error connecting: " . mysql_error());
+        mysql_select_db(getConfig('db_database')) or die("Error selecting DB: " . mysql_error());
+        $result = mysql_query($sql, $conn);
+        if (!$result) {
+        	if (!$continue) {
+        		$bt = debug_backtrace();
+				die("Error with query: " . mysql_error());
+			} 
+			
+			$errno = mysql_errno();
+			switch ($errno)
+			{
+				case 1007:
+				case 1022:
+				case 1050:
+				case 1062:
+					$errno = DB_ERROR_ALREADY_EXISTS;
+					break;
+			}
+
+			$result = mobilAP_Error::throwError(mysql_error(), $errno, $sql);
+        }
+        return $result;
+    }
+
+	/* THIS FUNCTION COULD BE REWRITTEN TO HANDLE AUTHORIZATION. IT SHOULD RETURN true or false */
+    static function Auth($id, $password)
+    {
+		$field = 'attendee_id';
+
+		if (Utils::is_validEmail($id)) {
+			$field = 'email';
+		} elseif (strlen($id)!=32) {
+			return false;
+		}
+
+		$id = strtolower($id);
+
+		$sql = "SELECT attendee_id FROM " . mobilAP_attendee::ATTENDEE_TABLE . " u 
+				WHERE u.$field='" . addslashes($id) . "' AND
+		`md5`='" . md5($password) . "'";
+		
+		$result = mobilAP::query($sql);
+		return mysql_num_rows($result)>0;
+    }
+
+	static function getDays()
+	{
+		$sql = "SELECT DISTINCT DATE(`start_date`) `date`, UNIX_TIMESTAMP(DATE(`start_date`)) date_ts FROM " . mobilAP::SCHEDULE_TABLE . " d ORDER BY 1 ASC";
+		$result = mobilAP::query($sql);
+		$days = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$row['date_str'] = strftime("%b %d, %Y", $row['date_ts']);
+			$days[] = $row;
+		}
+		
+		return $days;
+	}
+	
+	static function getScheduleForDate($date)
+	{
+		$schedule = mobilAP::getSchedule();
+		foreach($schedule as $day_schedule) {
+			if ($day_schedule['date']==$date) {
+				return $day_schedule;
+			}
+		}
+		
+		return false;
+	}
+
+	static function getSchedule()
+	{
+		$days = mobilAP::getDays();
+		$schedule = array();
+		$day_map = array();
+		$i=0;
+		foreach ($days as $day) {
+			$schedule[$i] = array('index'=>$i, 'date'=>$day['date'], 'date_str'=>$day['date_str'], 'date_ts'=>$day['date_ts']);
+			$day_map[$day['date']] = $i;
+			$i++;
+		}
+								
+		$sql = "SELECT s.*, DATE(start_date) `date` FROM " . mobilAP::SCHEDULE_TABLE . " s ORDER BY start_date asc,session_id";
+		$result = mobilAP::query($sql);
+		while ($row = mysql_fetch_assoc($result)) {
+			$row['start_date'] = strftime('%b %d, %Y %H:%M:%S', $row['start_ts']);
+			$row['end_date'] = strftime('%b %d, %Y %H:%M:%S', $row['end_ts']);
+			$row['session_id'] = strlen($row['session_id']) ? sprintf("%03d", $row['session_id']) : '';
+			$schedule[$day_map[$row['date']]]['schedule'][] = $row;
+		}
+		
+		return $schedule;
+	}
+
+	function countries()
+	{
+		$countries = array(
+			'US'=>'United States',
+			'AF' => 'Afghanistan',
+			'AL' => 'Albania',
+			'DZ' => 'Algeria',
+			'AS' => 'American Samoa',
+			'AD' => 'Andorra',
+			'AO' => 'Angola',
+			'AI' => 'Anguilla',
+			'AQ' => 'Antarctica',
+			'AG' => 'Antigua And Barbuda',
+			'AR' => 'Argentina',
+			'AM' => 'Armenia',
+			'AW' => 'Aruba',
+			'AU' => 'Australia',
+			'AT' => 'Austria',
+			'AZ' => 'Azerbaijan',
+			'BS' => 'Bahamas',
+			'BH' => 'Bahrain',
+			'BD' => 'Bangladesh',
+			'BB' => 'Barbados',
+			'BY' => 'Belarus',
+			'BE' => 'Belgium',
+			'BZ' => 'Belize',
+			'BJ' => 'Benin',
+			'BM' => 'Bermuda',
+			'BT' => 'Bhutan',
+			'BO' => 'Bolivia',
+			'BA' => 'Bosnia And Herzegowina',
+			'BW' => 'Botswana',
+			'BV' => 'Bouvet Island',
+			'BR' => 'Brazil',
+			'IO' => 'British Indian Ocean Territory',
+			'BN' => 'Brunei Darussalam',
+			'BG' => 'Bulgaria',
+			'BF' => 'Burkina Faso',
+			'BI' => 'Burundi',
+			'KH' => 'Cambodia',
+			'CM' => 'Cameroon',
+			'CA' => 'Canada',
+			'CV' => 'Cape Verde',
+			'KY' => 'Cayman Islands',
+			'CF' => 'Central African Republic',
+			'TD' => 'Chad',
+			'CL' => 'Chile',
+			'CN' => 'China',
+			'CX' => 'Christmas Island',
+			'CC' => 'Cocos (Keeling) Islands',
+			'CO' => 'Colombia',
+			'KM' => 'Comoros',
+			'CG' => 'Congo',
+			'CD' => 'Congo, The Democratic Republic Of The',
+			'CK' => 'Cook Islands',
+			'CR' => 'Costa Rica',
+			'CI' => 'Cote D\'Ivoire',
+			'HR' => 'Croatia (Local Name: Hrvatska)',
+			'CU' => 'Cuba',
+			'CY' => 'Cyprus',
+			'CZ' => 'Czech Republic',
+			'DK' => 'Denmark',
+			'DJ' => 'Djibouti',
+			'DM' => 'Dominica',
+			'DO' => 'Dominican Republic',
+			'TP' => 'East Timor',
+			'EC' => 'Ecuador',
+			'EG' => 'Egypt',
+			'SV' => 'El Salvador',
+			'GQ' => 'Equatorial Guinea',
+			'ER' => 'Eritrea',
+			'EE' => 'Estonia',
+			'ET' => 'Ethiopia',
+			'FK' => 'Falkland Islands (Malvinas)',
+			'FO' => 'Faroe Islands',
+			'FJ' => 'Fiji',
+			'FI' => 'Finland',
+			'FR' => 'France',
+			'FX' => 'France, Metropolitan',
+			'GF' => 'French Guiana',
+			'PF' => 'French Polynesia',
+			'TF' => 'French Southern Territories',
+			'GA' => 'Gabon',
+			'GM' => 'Gambia',
+			'GE' => 'Georgia',
+			'DE' => 'Germany',
+			'GH' => 'Ghana',
+			'GI' => 'Gibraltar',
+			'GR' => 'Greece',
+			'GL' => 'Greenland',
+			'GD' => 'Grenada',
+			'GP' => 'Guadeloupe',
+			'GU' => 'Guam',
+			'GT' => 'Guatemala',
+			'GN' => 'Guinea',
+			'GW' => 'Guinea-Bissau',
+			'GY' => 'Guyana',
+			'HT' => 'Haiti',
+			'HM' => 'Heard And Mc Donald Islands',
+			'VA' => 'Holy See (Vatican City State)',
+			'HN' => 'Honduras',
+			'HK' => 'Hong Kong',
+			'HU' => 'Hungary',
+			'IS' => 'Iceland',
+			'IN' => 'India',
+			'ID' => 'Indonesia',
+			'IR' => 'Iran (Islamic Republic Of)',
+			'IQ' => 'Iraq',
+			'IE' => 'Ireland',
+			'IL' => 'Israel',
+			'IT' => 'Italy',
+			'JM' => 'Jamaica',
+			'JP' => 'Japan',
+			'JO' => 'Jordan',
+			'KZ' => 'Kazakhstan',
+			'KE' => 'Kenya',
+			'KI' => 'Kiribati',
+			'KP' => 'Korea, Democratic People\'S Republic Of',
+			'KR' => 'Korea, Republic Of',
+			'KW' => 'Kuwait',
+			'KG' => 'Kyrgyzstan',
+			'LA' => 'Lao People\'S Democratic Republic',
+			'LV' => 'Latvia',
+			'LB' => 'Lebanon',
+			'LS' => 'Lesotho',
+			'LR' => 'Liberia',
+			'LY' => 'Libyan Arab Jamahiriya',
+			'LI' => 'Liechtenstein',
+			'LT' => 'Lithuania',
+			'LU' => 'Luxembourg',
+			'MO' => 'Macau',
+			'MK' => 'Macedonia, Former Yugoslav Republic Of',
+			'MG' => 'Madagascar',
+			'MW' => 'Malawi',
+			'MY' => 'Malaysia',
+			'MV' => 'Maldives',
+			'ML' => 'Mali',
+			'MT' => 'Malta',
+			'MH' => 'Marshall Islands',
+			'MQ' => 'Martinique',
+			'MR' => 'Mauritania',
+			'MU' => 'Mauritius',
+			'YT' => 'Mayotte',
+			'MX' => 'Mexico',
+			'FM' => 'Micronesia, Federated States Of',
+			'MD' => 'Moldova, Republic Of',
+			'MC' => 'Monaco',
+			'MN' => 'Mongolia',
+			'MS' => 'Montserrat',
+			'MA' => 'Morocco',
+			'MZ' => 'Mozambique',
+			'MM' => 'Myanmar',
+			'NA' => 'Namibia',
+			'NR' => 'Nauru',
+			'NP' => 'Nepal',
+			'NL' => 'Netherlands',
+			'AN' => 'Netherlands Antilles',
+			'NC' => 'New Caledonia',
+			'NZ' => 'New Zealand',
+			'NI' => 'Nicaragua',
+			'NE' => 'Niger',
+			'NG' => 'Nigeria',
+			'NU' => 'Niue',
+			'NF' => 'Norfolk Island',
+			'MP' => 'Northern Mariana Islands',
+			'NO' => 'Norway',
+			'OM' => 'Oman',
+			'PK' => 'Pakistan',
+			'PW' => 'Palau',
+			'PA' => 'Panama',
+			'PG' => 'Papua New Guinea',
+			'PY' => 'Paraguay',
+			'PE' => 'Peru',
+			'PH' => 'Philippines',
+			'PN' => 'Pitcairn',
+			'PL' => 'Poland',
+			'PT' => 'Portugal',
+			'PR' => 'Puerto Rico',
+			'QA' => 'Qatar',
+			'RE' => 'Reunion',
+			'RO' => 'Romania',
+			'RU' => 'Russian Federation',
+			'RW' => 'Rwanda',
+			'KN' => 'Saint Kitts And Nevis',
+			'LC' => 'Saint Lucia',
+			'VC' => 'Saint Vincent And The Grenadines',
+			'WS' => 'Samoa',
+			'SM' => 'San Marino',
+			'ST' => 'Sao Tome And Principe',
+			'SA' => 'Saudi Arabia',
+			'SN' => 'Senegal',
+			'SC' => 'Seychelles',
+			'SL' => 'Sierra Leone',
+			'SG' => 'Singapore',
+			'SK' => 'Slovakia (Slovak Republic)',
+			'SI' => 'Slovenia',
+			'SB' => 'Solomon Islands',
+			'SO' => 'Somalia',
+			'ZA' => 'South Africa',
+			'GS' => 'South Georgia, South Sandwich Islands',
+			'ES' => 'Spain',
+			'LK' => 'Sri Lanka',
+			'SH' => 'St. Helena',
+			'PM' => 'St. Pierre And Miquelon',
+			'SD' => 'Sudan',
+			'SR' => 'Suriname',
+			'SJ' => 'Svalbard And Jan Mayen Islands',
+			'SZ' => 'Swaziland',
+			'SE' => 'Sweden',
+			'CH' => 'Switzerland',
+			'SY' => 'Syrian Arab Republic',
+			'TW' => 'Taiwan',
+			'TJ' => 'Tajikistan',
+			'TZ' => 'Tanzania, United Republic Of',
+			'TH' => 'Thailand',
+			'TG' => 'Togo',
+			'TK' => 'Tokelau',
+			'TO' => 'Tonga',
+			'TT' => 'Trinidad And Tobago',
+			'TN' => 'Tunisia',
+			'TR' => 'Turkey',
+			'TM' => 'Turkmenistan',
+			'TC' => 'Turks And Caicos Islands',
+			'TV' => 'Tuvalu',
+			'UG' => 'Uganda',
+			'UA' => 'Ukraine',
+			'AE' => 'United Arab Emirates',
+			'GB' => 'United Kingdom',
+			'UM' => 'United States Minor Outlying Islands',
+			'UY' => 'Uruguay',
+			'UZ' => 'Uzbekistan',
+			'VU' => 'Vanuatu',
+			'VE' => 'Venezuela',
+			'VN' => 'Viet Nam',
+			'VG' => 'Virgin Islands (British)',
+			'VI' => 'Virgin Islands (U.S.)',
+			'WF' => 'Wallis And Futuna Islands',
+			'EH' => 'Western Sahara',
+			'YE' => 'Yemen',
+			'YU' => 'Yugoslavia',
+			'ZM' => 'Zambia',
+			'ZW' => 'Zimbabwe' 
+		);
+	
+		return $countries;
+	}        
+
+	function states()
+	{
+		$states = array(
+		'AL'=>'Alabama',
+		'AK'=>'Alaska',
+		'AZ'=>'Arizona',
+		'AR'=>'Arkansas',
+		'CA'=>'California',
+		'CO'=>'Colorado',
+		'CT'=>'Connecticut',
+		'DE'=>'Delaware',
+		'DC'=>'District Of Columbia',
+		'FL'=>'Florida',
+		'GA'=>'Georgia',
+		'HI'=>'Hawaii',
+		'ID'=>'Idaho',
+		'IL'=>'Illinois',
+		'IN'=>'Indiana',
+		'IA'=>'Iowa',
+		'KS'=>'Kansas',
+		'KY'=>'Kentucky',
+		'LA'=>'Louisiana',
+		'ME'=>'Maine',
+		'MD'=>'Maryland',
+		'MA'=>'Massachusetts',
+		'MI'=>'Michigan',
+		'MN'=>'Minnesota',
+		'MS'=>'Mississippi',
+		'MO'=>'Missouri',
+		'MT'=>'Montana',
+		'NE'=>'Nebraska',
+		'NV'=>'Nevada',
+		'NH'=>'New Hampshire',
+		'NJ'=>'New Jersey',
+		'NM'=>'New Mexico',
+		'NY'=>'New York',
+		'NC'=>'North Carolina',
+		'ND'=>'North Dakota',    
+		'OH'=>'Ohio',
+		'OK'=>'Oklahoma',
+		'OR'=>'Oregon',
+		'PA'=>'Pennsylvania',
+		'PR'=>'Puerto Rico',
+		'RI'=>'Rhode Island',
+		'SC'=>'South Carolina',
+		'SD'=>'South Dakota',
+		'TN'=>'Tennessee',
+		'TX'=>'Texas',
+		'UT'=>'Utah',
+		'VT'=>'Vermont',
+		'VI'=>'Virgin Islands',
+		'VA'=>'Virginia',
+		'WA'=>'Washington',
+		'WV'=>'West Virginia',
+		'WI'=>'Wisconsin',
+		'WY'=>'Wyoming');
+	
+		return $states;
+	}
+
+	function is_validState($state)
+	{
+		$states = mobilAP::states();
+		return array_key_exists(strtoupper($state), $states);
+	}
+
+	function is_validCountry($country)
+	{
+		$countries = mobilAP::countries();
+		return array_key_exists(strtoupper($country), $countries);
+	}
+}
+
+class mobilAP_schedule_item
+{
+	var $schedule_id;
+	var $date;
+	var $start_date;
+	var $start_ts;
+	var $end_date;
+	var $end_ts;
+	var $day;
+	var $title;
+	var $detail;
+	var $session_id;
+	var $room;
+	var $session_group_id;
+
+	public function setStartTime($start_time)
+	{
+		if (utils::is_timestamp($start_time)) {
+			$this->start_ts = $start_time;
+			$this->start_date = strftime('%Y-%m-%d %H:%M:%S', $this->start_ts);
+			$this->date = strftime('%Y-%m-%d', $this->start_ts);
+			return true;
+		}
+	}
+
+	public function setEndTime($end_time)
+	{
+		if (utils::is_timestamp($end_time)) {
+			$this->end_ts = $end_time;
+			$this->end_date = strftime('%Y-%m-%d %H:%M:%S', $this->end_ts);
+			return true;
+		}
+	}
+
+	public function setTitle($title)
+	{
+		if (strlen($title)>0) {
+			$this->title = $title;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function setDetail($detail)
+	{
+		$this->detail = $detail;
+		return true;
+	}
+
+	public function setRoom($room)
+	{
+		$this->room = $room;
+		return true;
+	}
+	
+	public function setSession($session_id)
+	{
+		if ($session = mobilAP_session::getSessionByID($session_id)) {
+			$this->session_id = $session->session_id;
+		} else {
+			$this->session_id = null;
+		}
+	}
+
+	public function setSessionGroup($session_group_id)
+	{
+		if ($session_group = mobilAP_session_group::getSessionGroupByID($session_group_id)) {
+			$this->session_group_id = $session_group->session_group_id;
+		} else {
+			$this->session_group_id = null;
+		}
+	}
+	
+	public function setDay($day)
+	{
+		$this->day = $day;
+	}
+
+	public function createItem()
+	{
+		if (empty($this->title)) {
+			return mobilAP_Error::throwError("Title cannot be blank");
+		} elseif (!$this->start_ts) {
+			return mobilAP_Error::throwError("Invalid start time");
+		} elseif (!$this->end_ts) {
+			return mobilAP_Error::throwError("Invalid end time");
+		} elseif ($this->start_ts > $this->end_ts) {
+			return mobilAP_Error::throwError("Start time cannot be after end time");
+		} 
+		
+		$sql = "INSERT INTO " . mobilAP::SCHEDULE_TABLE . " 
+				(title) 
+				VALUES
+				('" . addslashes($this->title) . "')";
+		$result = mobilAP::query($sql);
+		$this->schedule_id = mysql_insert_id();
+		$this->updateItem();
+		return true;
+	}
+
+	public function deleteItem()
+	{
+		$sql = "DELETE FROM " . mobilAP::SCHEDULE_TABLE . " 
+				WHERE schedule_id=$this->schedule_id";
+		$result = mobilAP::query($sql);
+	}
+	
+	public function updateItem()
+	{
+		$session_id = strlen($this->session_id) ? "'" . $this->session_id . "'" : "NULL";
+		$session_group_id = strlen($this->session_group_id) ? $this->session_group_id: "NULL";
+
+		$sql = "UPDATE " . mobilAP::SCHEDULE_TABLE . " SET
+				start_ts=$this->start_ts,
+				start_date='$this->start_date',
+				end_ts=$this->end_ts,
+				end_date='$this->end_date',
+				title='" . addslashes($this->title) . "',
+				detail='" . addslashes($this->detail) . "',
+				room='" . addslashes($this->room) . "',
+				session_id=$session_id,
+				session_group_id=$session_group_id
+				WHERE schedule_id=$this->schedule_id";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+	
+	static function getScheduleItem($schedule_id)
+	{
+		$sql = "SELECT * FROM " . mobilAP::SCHEDULE_TABLE . " WHERE schedule_id='" . addslashes($schedule_id) . "'";
+		$result = mobilAP::query($sql);
+		if ($row = mysql_fetch_assoc($result)) {
+			$schedule_item = new mobilAP_schedule_item();
+			$schedule_item->schedule_id = $row['schedule_id'];
+			$schedule_item->start_date = $row['start_date'];
+			$schedule_item->start_ts = $row['start_ts'];
+			$schedule_item->date = strftime('%Y-%m-%d', $schedule_item->start_ts);
+			$schedule_item->end_date = $row['end_date'];
+			$schedule_item->end_ts = $row['end_ts'];
+			$schedule_item->title = $row['title'];
+			$schedule_item->detail = $row['detail'];
+			$schedule_item->room = $row['room'];
+			$schedule_item->session_id = $row['session_id'];
+			$schedule_item->session_group_id = $row['session_group_id'];
+		} else {
+			$schedule_item = false;
+		}
+		
+		return $schedule_item;
+	}
+}
+
+class mobilAP_attendee
+{
+	const ATTENDEE_TABLE='attendees';
+	var $attendee_id;
+	var $salutation;
+	var $FirstName;
+	var $LastName;
+	var $organization;
+	var $title;
+	var $dept;
+	var $city;
+	var $state;
+	var $country;
+	var $email;
+	var $phone;
+	var $bio;
+	var $checked_in=0;
+	var $directory_active=0;
+	var $admin=0;
+	var $image_url;
+	
+	static function commitImport($import_id)
+	{
+		if ($attendee = mobilAP_attendee::editImport($import_id)) {
+			$result = $attendee->createAttendeeFromObj();
+			if (mobilAP_Error::isError($result)) {
+				return $result;
+			} 
+			$attendee->updateAttendee();
+			mobilAP_attendee::deleteImport($import_id);
+		} elseif ($import_id=='all') {
+			$data = mobilAP_attendee::getImportData();
+			foreach ($data as $item) {
+				mobilAP_attendee::commitImport($item['import_id']);
+			}
+		}
+	}
+
+	static function deleteImport($import_id)
+	{
+		if ($import_id=='all') {
+			$data = mobilAP_attendee::getImportData();
+			foreach ($data as $item) {
+				mobilAP_attendee::deleteImport($item['import_id']);
+			}
+		} else {
+			$sql = sprintf("DELETE FROM attendees_import WHERE import_id=%d", $import_id);
+			$result = mobilAP::query($sql);
+		}
+	}
+
+	static function editImport($import_id)
+	{
+		$sql = sprintf("SELECT * FROM attendees_import WHERE import_id=%d", $import_id);
+		$result = mobilAP::query($sql);
+		if ($row = mysql_fetch_assoc($result)) {
+			$attendee = new mobilAP_attendee();	
+
+			$attendee->setName($row['salutation'], $row['FirstName'], $row['LastName']);
+			$attendee->setOrganization($row['organization']);
+			$attendee->setTitle($row['title']);
+			$attendee->setDepartment($row['dept']);
+			$attendee->setEmail($row['email']);
+			$attendee->setLocation($row['city'], $row['state'], $row['country']);
+			$attendee->setPhone($row['phone']);
+		} else {
+			$attendee = false;
+		}
+		
+		return $attendee;
+	}
+	
+	function getImportData()
+	{
+		$sql = "SELECT * FROM attendees_import";
+		$result = mobilAP::query($sql);
+		$data = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$data[] = $row;
+		}
+		return $data;
+	}
+
+	function purgeImportData()
+	{
+		mobilAP::query("TRUNCATE TABLE attendees_import");
+	}
+
+	static function importDelimitedFile($fileName, $delimiter=",", $enclosure='"')
+	{
+		mobilAP_attendee::purgeImportData();
+		
+		$field_count = 11;
+		if (!$handle = fopen($fileName, "r")) {
+			return mobilAP_Error::throwError("Error reading $fileName");
+		}
+		
+		while ( ($line = fgetcsv($handle, 0, $delimiter)) !== FALSE)
+		{
+			if (count($line)<=$field_count) {
+				foreach ($line as $i=>$val) {
+					$line[$i] = strtoupper($val)=='NULL' ? null : addslashes($val);
+				}
+
+				while (count($line)<$field_count) {
+					$line[] = '';
+				}
+				
+				$email = isset($line[9]) ? $line[9] : '';
+				
+				if (!$attendee = mobilAP_attendee::getAttendeeById($email)) {
+					$sql = "INSERT INTO attendees_import VALUES (null, '" . implode("','", $line) . "')";
+					mobilAP::query($sql);
+				}
+			}
+		}
+		fclose($handle);	
+
+		return mobilAP_attendee::getImportData();
+	}
+	
+	public function getUserID()
+	{
+		return $this->attendee_id;
+	}
+
+	static function getNextAttendeeID()
+	{
+		$attendee_id = md5(uniqid(rand(), true));
+	
+		// to be really sure we need to check if it's already there
+		$sql = "SELECT attendee_id FROM " . mobilAP_attendee::ATTENDEE_TABLE . " WHERE `attendee_id`='$attendee_id'";
+			
+		$result = mobilAP::query($sql);
+	
+		if (mysql_numRows($result)>0) {
+			return mobilAP_attendee::generateToken();
+		}
+	
+		return $attendee_id;		
+	}
+
+	function check_in()
+	{
+		$this->checked_in = time();
+		$this->directory_active = -1;
+		$this->updateAttendee();
+	}
+
+	public function setBio($bio_text)
+	{
+		$this->bio = $bio_text;
+		return true;
+	}
+	
+	public function setName($salutation, $FirstName, $LastName)
+	{
+		if (!array_key_exists($salutation, mobilAP_attendee::getSalutations()) && !empty($salutation)) {
+			return false;
+		}
+
+		if (empty($FirstName) || empty($LastName)) {
+			return false;
+		}
+		
+		$this->salutation = $salutation;
+		$this->FirstName = trim($FirstName);
+		$this->LastName = trim($LastName);
+		return true;
+	}
+
+	function setOrganization($organization)
+	{
+		if (empty($organization)) {
+			return false;
+		}
+		
+		$this->organization = $organization;
+		return true;
+	}
+
+	function setTitle($title)
+	{
+		$this->title = $title;
+		return true;
+	}
+
+	function setDepartment($dept)
+	{
+		$this->dept = $dept;
+		return true;
+	}
+
+	function setEmail($email)
+	{
+		if (!empty($email) && !Utils::is_validEmail($email)) {
+			return false;
+		}
+		
+		$this->email = $email;
+		return true;
+	}
+
+	function setLocation($city, $state, $country)
+	{
+		$ok = true;
+		
+		if (empty($city)) {
+			$ok = false;
+		} else {
+			$this->city = $city;
+		}
+		
+		if (!mobilAP::is_validCountry($country)) {
+			$ok = false;
+		} else {
+			$this->country = $country;
+		}
+		
+		if ($country=='US') {
+			if (!mobilAP::is_validState($state)) {
+				$ok = false;
+			} else {
+				$this->state = $state;
+			}			
+
+		}  else {
+			$this->state = $state;
+		}
+		
+		return $ok;
+	}
+
+	function setPhone($phone)
+	{
+		if ($this->country=='US' || $this->country=='CA') {
+			if (!preg_match('/^\(?(\d\d\d)?[-.)\s]*(\d\d\d)[-.\s]*(\d\d\d\d)$/', $phone, $bits)) {
+				return false;
+			}
+			
+			$this->phone = Utils::phone_format($phone);
+			return true;
+		} else {
+			$this->phone = $phone;
+			return true;
+		}
+	}
+	
+	static function getSalutations()
+	{
+		return array('Mr'=>'Mr', 'Miss'=>'Miss', 'Ms'=>'Ms', 'Mrs'=>'Mrs', 'Dr'=>'Dr', 'Prof'=>'Prof');
+	}
+
+	public function getImageURL()
+	{
+		if (is_file($this->getPhotoThumb())) {
+			return sprintf("directory_images/%s.jpg", $this->getUserID());
+		} else {
+			return 'Images/directory_default.png';
+		}
+	}
+	
+	public function deleteDirectoryImage()
+	{
+		@unlink($this->getPhotoThumb());
+		@unlink($this->getPhotoFile());
+	}
+	
+	/* this probably needs to be a configuration setting */
+	public function getPhotoDir()
+	{
+		
+		$photo_dir = sprintf('%s/directory_images', $_SERVER['DOCUMENT_ROOT']);
+		return $photo_dir;
+	}
+
+	public function getPhotoFile()
+	{
+		$photo_file = sprintf("%s/%s_orig.jpg", $this->getPhotoDir(), $this->getUserID());
+		return $photo_file;
+	}
+
+	public function getPhotoThumb()
+	{
+		$photo_file = sprintf("%s/%s.jpg", $this->getPhotoDir(), $this->getUserID() );
+		return $photo_file;
+	}
+
+	function uploadDirectoryImage()
+	{
+		$FILES = array();
+		
+		$file_keys = array('name','type','tmp_name','error','size');
+		
+		//cycle through files
+		foreach ($_FILES as $key=>$file) {
+			
+			//make sure the array is a valid php upload array
+			if (is_array($file) && array_keys($file)===$file_keys) {
+		
+				if (is_array($file['tmp_name'])) {
+					foreach ($file['tmp_name'] as $k=>$f) {
+						if (is_uploaded_file($file['tmp_name'][$k])) {
+							$f = array('name'=>$file['name'][$k],
+									   'type'=>$file['type'][$k],
+									   'tmp_name'=>$file['tmp_name'][$k],
+									   'error'=>$file['error'][$k],
+									   'size'=>$file['size'][$k]
+							);
+									
+							$FILES[] = $f;
+						}
+					}
+				} elseif (is_uploaded_file($file['tmp_name'])) {
+					$FILES[] = $file;
+				}
+			}
+		}
+
+		foreach ($FILES as $file) {
+			if ($file['type'] != 'image/jpeg') {
+				return mobilAP_Error::throwError("Image must be JPEG");
+			}
+			
+			if (!$imageData = getimagesize($file['tmp_name'])) {
+				return mobilAP_Error::throwError("Error processing JPEG file");
+			}
+			
+			if (!move_uploaded_file($file['tmp_name'], $this->getPhotoFile())) {
+				return mobilAP_Error::throwError("Error saving file");
+			}
+			chmod($this->getPhotoFile(), 0644);
+			$thumbFile = $this->getPhotoThumb();
+			
+			$BaseWidth = $imageData[0];
+			$BaseHeight = $imageData[1];
+			$width = 150;
+			$height = 150;
+			
+			$aspect = $BaseWidth / $BaseHeight;
+        	$boxAspect = $width / $height;
+        	
+			if ($aspect>=$boxAspect) {
+				$newWidth = $width;
+				$newHeight = floor($width / $aspect);
+			} else {
+				$newHeight = $height;
+				$newWidth = floor ($height * $aspect);
+			}
+			
+			if (
+				($newWidth >= $BaseWidth) &&
+				($newHeight >= $BaseHeight)
+			   ) 
+			{
+				$newWidth = $BaseWidth;
+				$newHeight = $BaseHeight;
+			}
+			
+			if ($newHeight==$BaseHeight && $newWidth==$BaseWidth) {
+				if (!copy($this->getPhotoFile(), $this->getPhotoThumb())) {
+					return mobilAP_Error::throwError("Error creating thumbnail");
+				} else {
+					return;
+				}
+			}
+			
+			
+			$options = array(
+				"-z {$newHeight} {$newWidth}",
+				"-s format JPEG"
+			);
+		
+			$exec = sprintf("%s %s %s --out %s", '/usr/bin/sips', implode(' ', $options), escapeshellarg($this->getPhotoFile()), escapeshellarg($this->getPhotoThumb()));
+			$result = exec($exec . " 2>&1", $output, $retVal);
+		
+			if ($retVal!==0) {
+				return mobilAP_Error::throwError("Error creating thumbnail");
+			}
+		
+			return true;
+		}
+	}
+	
+	public function loadData($row=null)
+	{
+		if (!is_array($row)) {
+			$sql = "SELECT * FROM  " . mobilAP_attendee::ATTENDEE_TABLE . " WHERE
+					attendee_id='" . $this->getUserID()  . "'";
+			$result = mobilAP::query($sql);
+			$row = mysql_fetch_assoc($result);
+		}
+		
+		if ($row) {
+			$this->salutation=$row['salutation'];
+			$this->FirstName=$row['FirstName'];
+			$this->LastName=$row['LastName'];
+			$this->organization=$row['organization'];
+			$this->title=$row['title'];
+			$this->dept=$row['dept'];
+			$this->city=$row['city'];
+			$this->state=$row['state'];
+			$this->country=$row['country'];
+			$this->email=$row['email'];
+			$this->phone=$row['phone'];
+			$this->bio=$row['bio'];
+			$this->checked_in= intval($row['checked_in']);
+			$this->directory_active= intval($row['directory_active']);
+			$this->image_url = $this->getImageURL();
+			$this->admin= intval($row['admin']);
+			return true;
+		
+		} else {
+			return false;
+		}
+	}
+
+		
+	public function updateAttendee()
+	{
+		$sql = sprintf("UPDATE `%s` SET
+				salutation='%s',
+				FirstName='%s',
+				LastName='%s',
+				organization='%s',
+				title='%s',
+				dept='%s',
+				city='%s',
+				state='%s',
+				country='%s',
+				email='%s',
+				phone='%s',
+				bio='%s',
+				checked_in=%d,
+				directory_active=%d,
+				admin=%d
+				WHERE attendee_id='%s'",
+				mobilAP_attendee::ATTENDEE_TABLE,
+				$this->salutation,
+				mysql_real_escape_string($this->FirstName),
+				mysql_real_escape_string($this->LastName),
+				mysql_real_escape_string($this->organization),
+				mysql_real_escape_string($this->title),
+				mysql_real_escape_string($this->dept),
+				mysql_real_escape_string($this->city),
+				mysql_real_escape_string($this->state),
+				mysql_real_escape_string($this->country),
+				mysql_real_escape_string($this->email),
+				mysql_real_escape_string($this->phone),
+				mysql_real_escape_string($this->bio),
+				$this->checked_in,
+				$this->directory_active,
+				$this->admin,
+				$this->attendee_id);
+		$result = mobilAP::query($sql, true);
+		if (mobilAP_Error::isError($result)) {
+			if ($result->getCode()==DB_ERROR_ALREADY_EXISTS) {
+				$result = mobilAP_Error::throwError("User already exists", DB_ERROR_ALREADY_EXISTS);
+			}
+		}
+		mobilAP::flushCache('mobilAP_attendees');
+		mobilAP::flushCache('mobilAP_attendee_summary');
+		return $result;	
+	}
+
+	function createAttendeeFromObj()
+	{
+		if (!Utils::is_validEmail($this->email)) {
+			return mobilAP_Error::throwError("Invalid email: $this->email");
+		} elseif (strlen($this->FirstName)==0 || strlen($this->LastName)==0) {
+			return mobilAP_Error::throwError("Name cannot be blank");
+		}
+		$this->attendee_id = mobilAP_attendee::getNextAttendeeID();
+		$sql = sprintf("INSERT INTO %s
+				(attendee_id, email, FirstName, LastName, md5)
+				VALUES
+				('%s', '%s', '%s', '%s', '%s')", 
+				mobilAP_attendee::ATTENDEE_TABLE, 
+				$this->attendee_id,
+				mysql_real_escape_string($this->email),
+				mysql_real_escape_string($this->FirstName),
+				mysql_real_escape_string($this->LastName),
+				md5(getConfig('default_password'))
+		);
+		$result = mobilAP::query($sql, true);
+		if (mobilAP_Error::isError($result)) {
+			if ($result->getCode()==DB_ERROR_ALREADY_EXISTS) {
+				$result = mobilAP_Error::throwError("User already exists", DB_ERROR_ALREADY_EXISTS);
+			}
+		} else {
+			$result = true;
+		}
+	}
+	
+	function deleteAttendee()
+	{
+		$this->deleteDirectoryImage();		
+
+		$sql = sprintf("DELETE FROM %s
+				WHERE response_userID='%s'",
+				mobilAP_session::POLL_ANSWERS_TABLE, 
+				$this->attendee_id);
+		$result = mobilAP::query($sql);
+		
+		$sessions = mobilAP_session::getSessionsForUser($this->getUserID());
+		foreach ($sessions as $session) {
+			$index = $session->getIndexForPresenter($this->getUserID());
+			if (!mobilAP_Error::isError($index)) {
+				$session->removePresenter($index);
+			}
+		}		
+		
+		$tables = array(
+			mobilAP_session::SESSION_CHAT_TABLE, 
+			mobilAP_session::SESSION_LINK_TABLE, 
+			mobilAP_session::SESSION_EVALUATION_TABLE
+		);
+		foreach ($tables as $table) {
+
+			$sql = sprintf("DELETE FROM %s
+					WHERE post_user='%s'",
+					$table,
+					$this->attendee_id);
+			$result = mobilAP::query($sql);
+		}		
+
+		$sql = sprintf("DELETE FROM %s
+				WHERE attendee_id='%s'",
+				mobilAP_attendee::ATTENDEE_TABLE, 
+				$this->attendee_id);
+		$result = mobilAP::query($sql);
+
+		mobilAP::flushCache('mobilAP_attendees');
+		mobilAP::flushCache('mobilAP_attendee_summary');
+	}
+	
+	static function createAttendee($email, $FirstName, $LastName)
+	{
+		if (!Utils::is_validEmail($email)) {
+			return mobilAP_Error::throwError("Invalid email: $email");
+		} elseif (strlen($FirstName)==0 || strlen($LastName)==0) {
+			return mobilAP_Error::throwError("Name cannot be blank");
+		}
+		$attendee_id = mobilAP_attendee::getNextAttendeeID();
+		$sql = sprintf("INSERT INTO %s
+				(attendee_id, email, FirstName, LastName, md5)
+				VALUES
+				('%s', '%s', '%s', '%s', '%s')", 
+				mobilAP_attendee::ATTENDEE_TABLE, 
+				$attendee_id,
+				mysql_real_escape_string($email),
+				mysql_real_escape_string($FirstName),
+				mysql_real_escape_string($LastName),
+				md5(getConfig('default_password'))
+		);
+		$result = mobilAP::query($sql, true);
+		if (mobilAP_Error::isError($result)) {
+			if ($result->getCode()==DB_ERROR_ALREADY_EXISTS) {
+				$result = mobilAP_Error::throwError("User already exists", DB_ERROR_ALREADY_EXISTS);
+			}
+		} else {
+			$result = mobilAP_attendee::getAttendeeByID($attendee_id);
+		}
+		
+		return $result;
+	}
+	
+	public function setAdmin($admin)
+	{
+		$this->admin = $admin ? -1 : 0;
+	}
+	
+	public function isAdmin()
+	{
+		return $this->admin;
+	}
+	
+	static function getAttendeeByID($token)
+	{
+		$field = 'attendee_id';
+
+		if (Utils::is_validEmail($token)) {
+			$field = 'email';
+		} elseif (strlen($token)!=32) {
+			return false;
+		}
+		
+		$sql = "SELECT * FROM  " . mobilAP_attendee::ATTENDEE_TABLE . " WHERE
+				$field='" . addslashes($token) . "'";
+		$result = mobilAP::query($sql);
+		
+		if ($row = mysql_fetch_assoc($result)) {
+			$attendee = new mobilAP_attendee();
+			$attendee->attendee_id = $row['attendee_id'];
+			$attendee->loadData($row);
+		} else {
+			$attendee = false;
+		}
+		
+		return $attendee;
+	}
+	
+	static function getAttendees($args=null)
+	{
+		$order = 'LastName,FirstName';
+		$args = is_array($args) ? $args : array();
+		$where = array();
+		
+		foreach ($args as $arg=>$value) 
+		{
+			switch ($arg)
+			{
+				case 'order':
+					$$arg = $value;
+					break;
+				case 'only_active':
+					if ($value) {
+						$where[] = 'directory_active';
+					}
+					break;
+			}
+		}
+		
+		if ($order !='LastName') {
+			$order .=',LastName,FirstName';
+		}
+		
+		
+		$sql = "SELECT * FROM  " . mobilAP_attendee::ATTENDEE_TABLE;
+		
+		if (count($where)>0) {
+			$sql .= " WHERE " . implode(" AND ", $where);
+		}
+		
+		$sql .= " ORDER BY $order";
+		$result = mobilAP::query($sql);
+
+		$attendees=array();
+		
+		while ($row = mysql_fetch_assoc($result)) {
+			$attendee = new mobilAP_attendee();
+			$attendee->attendee_id = $row['attendee_id'];
+			$attendee->loadData($row);
+			$attendees[] = $attendee;
+		}
+		
+		return $attendees;
+	}
+	
+	static function getWelcomeImageSrc()
+	{
+		if (!$attendee_summary = mobilAP::getCache('mobilAP_attendee_summary')) {
+			$attendee_summary = mobilAP_attendee::getAttendeeSummary();
+		}
+		
+		$src = 'http://chart.apis.google.com/chart?chtm=usa&chs=280x140&cht=t';
+		$states = array();
+		$values = array();
+		foreach ($attendee_summary['states'] as $state=>$value) {
+			$values[] = floor($value*100/$attendee_summary['total']);
+		}
+		
+		if (count($attendee_summary['states'])>0) {
+			$src .= '&chd=t:' . implode(',', $values);
+			$src .= '&chld=' . implode('', array_keys($attendee_summary['states']));
+		} else {
+			$src .= '&chd=s:_';
+		}
+		
+		return $src;
+	}
+	
+	static function getAttendeeSummary()
+	{
+		$where = array();
+		if (getConfig('show_only_active_attendees')) {
+			$where[] = 'directory_active';
+		}
+		
+		$sql = "SELECT state,country,organization FROM  " . mobilAP_attendee::ATTENDEE_TABLE;
+		if (count($where)>0) {
+			$sql .= " WHERE " . implode(" AND ", $where);
+		}
+		
+		$result = mobilAP::query($sql);
+		$data = array(
+			'total'=>0,
+			'states'=>array(),
+			'states_count'=>0,
+			'organizations'=>array(),
+			'organizations_count'=>0
+		);
+		while ($row = mysql_fetch_assoc($result)) {
+		
+			$data['total']++;
+			if ($row['state']) {
+				if (!isset($data['states'][$row['state']])) {
+					$data['states'][$row['state']] = 0;
+				}
+				$data['states'][$row['state']]++;
+			}
+
+			if (!isset($data['organizations'][$row['organization']])) {
+				$data['organizations'][$row['organization']] = 0;
+			}
+			$data['organizations'][$row['organization']]++;
+		}
+		
+		ksort($data['states']);
+		ksort($data['organizations']);
+
+		$data['states_count'] = count($data['states']);
+		$data['organizations_count'] = count($data['organizations']);
+		unset($data['organizations']);
+
+		return $data;
+	}
+	
+	public function isPresenter()
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+				WHERE 
+				presenter_id='" . $this->getUserID() . "'";
+				
+		$result = mobilAP::query($sql);
+		return mysql_numRows($result)>0;
+	}
+	
+}
+
+class mobilAP_session
+{
+	const POLL_QUESTIONS_TABLE='poll_questions';
+	const POLL_RESPONSES_TABLE='poll_responses';
+	const POLL_ANSWERS_TABLE='poll_answers';
+	const SESSION_TABLE='sessions';
+	const SESSION_LINK_TABLE='session_links';
+	const SESSION_PRESENTER_TABLE='session_presenters';
+	const SESSION_CHAT_TABLE='session_chat';
+	const SESSION_EVALUATION_TABLE='session_evaluations';
+	const ERROR_NO_USER=-1;
+	const ERROR_USER_ALREADY_SUBMITTED=-2;
+	var $session_id;
+	var $session_title;
+	var $session_abstract;
+	
+	/* this function gets what a user has done with a session, most notably if they've finished the evaluation or answered the questions */
+	public function getUserSubmissions($userID)
+	{
+		$data = array('questions'=>array(), 'evaluation'=>false);
+		$sql = "SELECT evaluation_id FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+				WHERE session_id=$this->session_id AND post_user='$userID'";
+		$result = mobilAP::query($sql);
+		$data['evaluation'] = mysql_numRows($result)>0;
+				
+		$sql = "SELECT a.* FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " a
+				WHERE question_id IN (SELECT question_id FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " WHERE session_id=$this->session_id) AND response_userID='$userID'";
+		$result = mobilAP::query($sql);
+		while ($row = mysql_fetch_assoc($result)) {
+			$data['questions'][$row['question_id']] = $row['answer_id'];
+		}
+
+		return $data;
+	}
+	
+	public function loadSessionFromArray($arr)
+	{
+		$session = new mobilAP_session();
+		$session->session_id = sprintf("%03d", $arr['session_id']);
+		$session->session_title = $arr['session_title'];
+		$session->session_abstract = $arr['session_abstract'];
+		return $session;
+	}
+	
+	public function deleteSession()
+	{
+		$questions = $this->getQuestions();
+		foreach ($questions as $question) {
+			$question->deleteQuestion();
+		}
+		
+		$tables = array(mobilAP_session::SESSION_TABLE, mobilAP_session::SESSION_LINK_TABLE, mobilAP_session::SESSION_PRESENTER_TABLE, mobilAP_session::SESSION_EVALUATION_TABLE, mobilAP_session::SESSION_CHAT_TABLE);
+		foreach ($tables as $table) {
+			$sql = "DELETE FROM `$table` WHERE session_id='$this->session_id'";
+			$result = mobilAP::query($sql);
+		}
+		$sql = "UPDATE `" . mobilAP::SCHEDULE_TABLE . "` SET session_id=null WHERE session_id='$this->session_id'";
+		$result = mobilAP::query($sql);
+	}
+	
+	static function createSession($session_id, $session_title)
+	{
+		if (!preg_match('/^\d\d\d$/', $session_id)) {
+			return mobilAP_Error::throwError("Session code must be 3 digits");
+		} elseif (empty($session_title)) {
+			return mobilAP_Error::throwError("Session title cannot be blank");
+		} elseif ($session = mobilAP_session::getSessionByID($session_id)) {
+			return mobilAP_Error::throwError("Session $session_id already exists");
+		}
+		
+		$sql = "INSERT INTO " . mobilAP_session::SESSION_TABLE . " (session_id, session_title) VALUES ($session_id, '" . addslashes($session_title) . "')";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+
+	static function getSessionByID($session_id)
+	{
+		$sql = "SELECT s.*
+				FROM " . mobilAP_session::SESSION_TABLE . " s 
+				WHERE session_id='" . addslashes($session_id) . "'";
+		$result = mobilAP::query($sql);
+		$session = false;
+		if ($row = mysql_fetch_assoc($result)) {
+			$session = mobilAP_session::loadSessionFromArray($row);
+		}
+		return $session;
+	}
+	
+	static function getSessions()
+	{
+		$sql = "SELECT s.* FROM " . mobilAP_session::SESSION_TABLE . " s ORDER BY session_id";
+		$result = mobilAP::query($sql);
+		$sessions = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$session = mobilAP_session::loadSessionFromArray($row);
+			$session->session_links = $session->getLinks();
+			$session->session_questions = $session->getQuestions();				
+			$session->session_presenters = $session->getPresenters();
+			$session->session_chat = $session->get_chat();
+			$session->session_evaluations = $session->getEvaluations();
+			$sessions[$session->session_id] = $session;
+		}
+		
+		return $sessions;
+	}
+	
+	static function getSessionsForUser($userID)
+	{
+		$sessions = array();
+		if ($user = mobilAP_attendee::getAttendeeByID($userID)) {
+			if ($user->isAdmin()) {
+				return mobilAP_session::getSessions();
+			}
+			
+			
+			$sql = "SELECT s.* FROM " . mobilAP_session::SESSION_TABLE . " s 
+					WHERE session_id IN (SELECT session_id FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " WHERE presenter_id='" . $user->getUserID() . "')
+					ORDER BY session_id";
+			$result = mobilAP::query($sql);
+			
+			while ($row = mysql_fetch_assoc($result)) {
+				$session = mobilAP_session::loadSessionFromArray($row);
+				$sessions[$session->session_id] = $session;
+			}
+		}
+		return $sessions;
+	}
+
+	public function getEvaluationSummary()
+	{
+		$sql = "SELECT avg(q0) q0, avg(q1) q1, avg(q2) q2  FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+				WHERE session_id=$this->session_id";
+			
+		$result = mobilAP::query($sql);
+		if ($data=mysql_fetch_assoc($result)) {
+		} else {
+			$data = array('q0'=>0,'q1'=>0,'q2'=>0);
+		}
+
+		$data['q3']=array('1'=>0, '2'=>0, '3'=>0, '4'=>0);
+		$sql = "SELECT q3  FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+				WHERE session_id=$this->session_id";
+		
+		$result = mobilAP::query($sql);
+		while ($row = mysql_fetch_assoc($result)) {
+			if ($row['q3']) {
+				$data['q3'][$row['q3']]++;
+			}
+		}
+
+		return $data;		
+	}
+	
+	public function getEvaluations()
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+				WHERE session_id=$this->session_id";
+		$result = mobilAP::query($sql);
+		$evaluations = array();
+		while ($row=mysql_fetch_assoc($result)) {
+			$evaluations[] = $row;
+		}
+		
+		return $evaluations;
+	}
+	
+	public function getLinks()
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::SESSION_LINK_TABLE . " 
+				WHERE session_id=$this->session_id
+				ORDER BY post_timestamp DESC";
+		$result = mobilAP::query($sql);
+		$links = array();
+		while ($row=mysql_fetch_assoc($result)) {
+			$links[] = mobilAP_link::loadLinkFromArray($row);
+		}
+		
+		return $links;				
+	}
+
+	public function getQuestions($show_all=false)
+	{
+		$where = array(
+			"session_id=$this->session_id"
+		);
+		
+		if (!$show_all) {
+			$where[] = 'question_active';
+		}
+		
+		$sql = "SELECT * FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+				WHERE " . implode(" AND ", $where) . "
+				ORDER BY `index`";
+		$result = mobilAP::query($sql);
+		$questions = array();
+		while ($row=mysql_fetch_assoc($result)) {
+			$questions[] = mobilAP_poll_question::loadQuestionFromArray($row);
+		}
+		
+		return $questions;				
+	}
+
+	public function getNextQuestionIndex()
+	{
+		$sql = "SELECT `index` FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+				WHERE session_id=$this->session_id";
+		$result = mobilAP::query($sql);
+		return mysql_numrows($result);
+	}
+
+	public function getQuestionById($question_id)
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+				WHERE 
+				question_id='" . addslashes($question_id) . "' AND
+				session_id=$this->session_id";
+		$result = mobilAP::query($sql);
+		$question = false;
+		if ($row=mysql_fetch_assoc($result)) {
+			$question = mobilAP_poll_question::loadQuestionFromArray($row);
+		}
+		return $question;		
+	}
+
+	public function getLinkById($link_id)
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::SESSION_LINK_TABLE . " 
+				WHERE 
+				link_id='" . addslashes($link_id) . "' AND
+				session_id=$this->session_id";
+		$result = mobilAP::query($sql);
+		$link = false;
+		if ($row=mysql_fetch_assoc($result)) {
+			$link = mobilAP_link::loadLinkFromArray($row);
+		}
+		return $link;
+	}
+	
+	public function isPresenter($userID)
+	{
+		$user = mobilAP_attendee::getAttendeeById($userID);
+		
+		if ($user) {
+			$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+					WHERE 
+					session_id=$this->session_id 
+					AND presenter_id='" . $user->getUserID() . "'";
+					
+			$result = mobilAP::query($sql);
+			return mysql_num_rows($result);
+		}
+		return false;
+			
+	}
+
+	public function getPresenters()
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+				WHERE session_id=$this->session_id ORDER BY `index`";
+		$result = mobilAP::query($sql);
+		$presenters = array();
+		while ($row=mysql_fetch_assoc($result)) {
+			$presenters[$row['index']] = mobilAP_attendee::getAttendeeById($row['presenter_id']);
+		}
+		return $presenters;
+	}
+
+	public function getPresentersDirectory()
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+				WHERE session_id=$this->session_id ORDER BY `index`";
+		$result = mobilAP::query($sql);
+		$presenters = array();
+		while ($row=mysql_fetch_assoc($result)) {
+			if ($user = mobilAP_attendee::getAttendeeById($row['presenter_id'])) {
+				$presenters[$row['index']] = $user;
+			}
+		}
+		return $presenters;
+	}
+	
+	public function getNextPresenterIndex()
+	{
+		$sql = "SELECT `index` FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+				WHERE session_id=$this->session_id";
+		$result = mobilAP::query($sql);
+		return mysql_numrows($result);
+	}
+	
+	public function addPresenter($presenter_userID)
+	{
+		if ($user = mobilAP_attendee::getAttendeeByID($presenter_userID)) {
+			$index = $this->getNextPresenterIndex();
+			$sql = "INSERT INTO " . mobilAP_session::SESSION_PRESENTER_TABLE . " (session_id, `index`, presenter_id)
+			VALUES ($this->session_id, $index, '" . $user->getUserID() . "')";
+			$result = mobilAP::query($sql, true);
+			if (mobilAP_Error::isError($result) && $result->getCode()==DB_ERROR_ALREADY_EXISTS) {
+				$result = true;
+			}
+			return $result;
+		} else {
+			return mobilAP_Error::throwError("User $presenter_userID not found");
+		}
+	}
+	
+	public function getIndexForPresenter($presenter_userID)
+	{
+		if ($user = mobilAP_attendee::getAttendeeByID($presenter_userID)) {
+			$sql = sprintf("SELECT `index` FROM %s
+							WHERE 
+							session_id=%d AND presenter_id='%s'", 
+							mobilAP_session::SESSION_PRESENTER_TABLE,
+							$this->session_id,
+							$user->getUserID()
+							);
+			$result = mobilAP::query($sql);
+			
+			if ($row = mysql_fetch_assoc($result)) {
+				return $row['index'];
+			} else {
+				return mobilAP_Error::throwError("User $presenter_userID not a presenter for this session");
+			}
+			
+		} else {
+			return mobilAP_Error::throwError("User $presenter_userID not found");
+		}
+	}
+		
+
+	public function removePresenter($index)
+	{
+		$sql = "DELETE FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . "
+			    WHERE session_id=$this->session_id AND `index`=$index";
+		$result = mobilAP::query($sql);
+		$sql = "UPDATE " . mobilAP_session::SESSION_PRESENTER_TABLE . "
+				SET `index`=`index`-1 
+			    WHERE session_id=$this->session_id AND `index`>$index";
+		$result = mobilAP::query($sql);
+	}
+	
+	public function addQuestion($question_text)
+	{
+		if (empty($question_text)) {
+			return mobilAP_Error::throwError("Question cannot be empty");
+		}
+		
+		$index = $this->getNextQuestionIndex();
+			
+		$sql = "INSERT INTO " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+		(session_id, `index`, question_text)
+		VALUES
+		($this->session_id, $index, '" . addslashes($question_text) . "')";
+		
+		$result = mobilAP::query($sql);
+		$question_id = mysql_insert_id();
+		return $this->getQuestionById($question_id);
+	}
+	
+	public function addLink($link_url, $link_text, $post_user)
+	{
+		if (!preg_match('@http[s]?://(.+)@', $link_url)) {
+			trigger_error("Invalid url $link_url found when creating link to $link_text");
+			return mobilAP_Error::throwError("Invalid url");
+		} elseif (empty($link_text)) {
+			return mobilAP_Error::throwError("Link text cannot be blank");
+		} elseif (!$user = mobilAP_attendee::getAttendeeById($post_user)) {
+			return mobilAP_Error::throwError("You must login to post a link", mobilAP_session::ERROR_NO_USER);
+		}
+		
+		
+		$ts = time();
+		
+		$link_type = $this->isPresenter($post_user) ? 'A' : 'U';
+		
+		$sql = "INSERT INTO " . mobilAP_session::SESSION_LINK_TABLE . "
+				(session_id, link_url, link_text, link_type, post_user, post_timestamp)
+				VALUES
+				($this->session_id, '" . addslashes($link_url) . "','" . addslashes($link_text) . "','$link_type', '" . addslashes($post_user) . "', $ts)";
+		$result = mobilAP::query($sql);
+		$link_id = mysql_insert_id();
+		return $this->getLinkById($link_id);
+	}
+	
+	public function addEvaluation($post_user, $responses)
+	{
+		if (!is_array($responses)) {
+			return mobilAP_Error::throwError("Invalid responses");
+		}
+		
+		for($i=0; $i<4; $i++) {
+			if (!isset($responses[$i])) {
+				$responses[$i] = 'NULL';
+			}
+		}
+		
+		$evaluation_comment = isset($responses[4]) ? "'" . addslashes($responses[4]) . "'" : 'NULL';
+		$ts = time();
+		
+		if (!$user = mobilAP_attendee::getAttendeeById($post_user)) {
+			return mobilAP_Error::throwError("You must login to post an evaluation", mobilAP_session::ERROR_NO_USER);
+		}
+
+		if ($post_user) {		
+			$sql = "SELECT evaluation_id FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+				    WHERE session_id=$this->session_id AND post_user='$post_user'";
+			$result = mobilAP::query($sql);
+			if (mysql_numrows($result)>0) {
+				return mobilAP_Error::throwError("You have already evaluated this session", mobilAP_session::ERROR_USER_ALREADY_SUBMITTED);
+			}
+		}
+		
+		
+		$sql = "INSERT INTO " . mobilAP_session::SESSION_EVALUATION_TABLE . "
+				(session_id, post_user, post_timestamp, q0, q1, q2, q3, q4)
+				VALUES
+				($this->session_id, '" . addslashes($post_user) . "', $ts, $responses[0], $responses[1], $responses[2], $responses[3], $evaluation_comment)";
+		$result = mobilAP::query($sql);
+		return $this->getUserSubmissions($post_user);
+	}
+
+	public function clearEvaluations()
+	{
+		$sql = "DELETE FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . "
+				WHERE session_id=$this->session_id";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+
+	public function clearChat()
+	{
+		$sql = "DELETE FROM " . mobilAP_session::SESSION_CHAT_TABLE . "
+				WHERE session_id=$this->session_id";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+	
+	public function post_chat($post_text, $post_user)
+	{
+		if (empty($post_text)) {
+			return mobilAP_Error::throwError("Text cannot be empty");
+		} elseif (!$user = mobilAP_attendee::getAttendeeById($post_user)) {
+			return mobilAP_Error::throwError("Please login to participate in the discussion", mobilAP_session::ERROR_NO_USER);
+		}
+
+		
+		$ts = time();
+		$sql = "INSERT INTO " . mobilAP_session::SESSION_CHAT_TABLE . "
+				(session_id, post_user, post_timestamp, post_text)
+				VALUES
+				($this->session_id, '" . addslashes($post_user) . "', $ts, '" . addslashes($post_text) . "')";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+	
+	public function delete_chat($post_id)
+	{
+		$sql = "DELETE FROM " . mobilAP_session::SESSION_CHAT_TABLE . "
+				WHERE session_id=$this->session_id AND post_id='" . addslashes($post_id) . "'";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+
+	public function get_chat($last_post=0)
+	{
+		$sql = "SELECT post_id,post_timestamp, post_user, post_text, concat(FirstName, ' ', LastName) post_name, email FROM " . mobilAP_session::SESSION_CHAT_TABLE . " c
+				LEFT JOIN " . mobilAP_attendee::ATTENDEE_TABLE . " u ON c.post_user=u.attendee_id
+				WHERE session_id=$this->session_id AND post_id>$last_post
+				ORDER BY post_timestamp DESC";
+		$result = mobilAP::query($sql);
+		$chats = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$row['post_id'] = intval($row['post_id']);
+			$row['date'] = strftime('%b %d, %Y %H:%M:%S', $row['post_timestamp']);
+			$chats[] = $row;
+		}
+		
+		return $chats;
+	}
+
+	public function setSessionTitle($session_title)
+	{
+		if (!empty($session_title)) {
+			$this->session_title = $session_title;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function setSessionAbstract($session_abstract)
+	{
+		$this->session_abstract = $session_abstract;
+		return true;
+	}
+	
+	public function updateSession()
+	{
+		$sql = "UPDATE " . mobilAP_session::SESSION_TABLE . " SET
+		session_title='" . addslashes($this->session_title) . "',
+		session_abstract='" . addslashes($this->session_abstract) . "'
+		WHERE session_id='$this->session_id'";
+		
+		mobilAP::flushCache('mobilAP_schedule');		
+		$result = mobilAP::query($sql);
+		
+	}
+	
+}
+
+class mobilAP_session_group
+{
+	var $session_group_title;
+	var $sessions=array();
+	const SESSION_GROUP_TABLE='session_groups';
+	const SESSION_GROUP_SESSION_TABLE='session_group_sessions';
+
+	function getSessionGroupByID($session_group_id) {	
+		$sql = "SELECT * FROM " . mobilAP_session_group::SESSION_GROUP_SESSION_TABLE . " gs
+				LEFT JOIN " . mobilAP_session_group::SESSION_GROUP_TABLE . " g USING (session_group_id)
+				LEFT JOIN " . mobilAP_session::SESSION_TABLE . " s ON gs.session_id=s.session_id
+				WHERE gs.session_group_id='" . addslashes($session_group_id) . "'";
+				
+		$result = mobilAP::query($sql);
+		$session_group = new mobilAP_session_group();
+		
+		while ($row = mysql_fetch_assoc($result)) {
+			$session_group->session_group_title = $row['session_group_title'];
+			$session_group->session_group_id = $row['session_group_id'];
+			$session_group->sessions[] = array('session_id'=>$row['session_id'], 'title'=>$row['session_title']);
+		} 
+		
+		if (count($session_group->sessions)==0) {
+			$session_group = null;
+		}
+		
+		return $session_group;
+	
+	}
+	
+	function getSessionGroups()
+	{
+		$sql = "SELECT * FROM " . mobilAP_session_group::SESSION_GROUP_SESSION_TABLE . " gs
+				LEFT JOIN " . mobilAP_session_group::SESSION_GROUP_TABLE . " g USING (session_group_id)
+				LEFT JOIN " . mobilAP_session::SESSION_TABLE . " s ON gs.session_id=s.session_id";
+		$result = mobilAP::query($sql);
+		$session_groups = array();
+		
+		while ($row = mysql_fetch_assoc($result)) {
+			if (!isset($session_groups[$row['session_group_id']])) {
+				$session_group = new mobilAP_session_group();
+				$session_group->session_group_title = $row['session_group_title'];
+				$session_group->session_group_id = $row['session_group_id'];
+				$session_groups[$row['session_group_id']] = $session_group;
+			}
+			
+			$session_groups[$row['session_group_id']]->sessions[] = array(
+				'session_id'=>$row['session_id'],
+				'title'=>$row['session_title']
+			);
+		}
+		
+		return $session_groups;
+	}
+}
+
+class mobilAP_link
+{
+	var $link_id;
+	var $session_id;
+	var $link_url;
+	var $link_text;
+	var $post_user;
+	var $link_type;
+	var $post_timestamp;
+	
+	function setURL($url)
+	{
+		if (preg_match('@http[s]?://(.+)@', $url)) {
+			$this->link_url = $url;
+			return true;
+		} else {
+			trigger_error("Invalid url $url found when setting link");
+			return false;
+		}
+	}
+
+	function setText($text)
+	{
+		if (!empty($text)) {
+			$this->link_text = $text;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	function updateLink()
+	{
+		$sql = "UPDATE " . mobilAP_session::SESSION_LINK_TABLE . " SET
+				link_url='" . addslashes($this->link_url) . "',
+				link_text='" . addslashes($this->link_text) . "'
+				WHERE link_id=$this->link_id";
+		$result = mobilAP::query($sql);
+	}
+
+	function deleteLink()
+	{
+		$tables = array(mobilAP_session::SESSION_LINK_TABLE);
+		foreach ($tables as $table)
+		{
+			$sql = "DELETE FROM `$table` WHERE link_id=$this->link_id";
+			$result = mobilAP::query($sql);
+		}
+		
+		return true;
+	}
+	
+	function loadLinkFromArray($arr)
+	{
+		$link = new mobilAP_link();
+		$link->link_id = $arr['link_id'];
+		$link->session_id = $arr['session_id'];
+		$link->link_url = $arr['link_url'];
+		$link->link_text = $arr['link_text'];
+		$link->link_type = $arr['link_type'];
+		$link->post_user = $arr['post_user'];
+		$link->post_timestamp = $arr['post_timestamp'];
+		return $link;
+	}
+
+}
+
+class mobilAP_poll_question
+{
+	const RESPONSE_TYPE_CHOICE='C';
+	const RESPONSE_TYPE_ZIP='Z';
+	const RESPONSE_TYPE_='Z';
+	var $question_id;
+	var $session_id;
+	var $index=0;
+	var $question_text;
+	var $question_list_text;
+	var $question_minchoices=0;
+	var $question_maxchoices=1;
+	var $question_active=-1;
+	var $response_type=mobilAP_poll_question::RESPONSE_TYPE_CHOICE;
+	var $chart_type='p';
+	var $responses=array();
+	var $answers=array();
+	
+	function __toString()
+	{
+		return $this->question_text;
+	}
+	
+	function __construct($session_id)
+	{
+		$this->session_id = $session_id;
+	}
+	
+	function getChartTypes()
+	{
+		return array(
+			'p'=>'Pie Chart',
+			'bhs'=>'Bar Chart'
+		);
+			
+	}
+	
+	function setQuestionActive($active)
+	{
+		$this->question_active = $active ? -1 : 0;
+	}
+	
+	function setChartType($chart_type)
+	{
+		$chart_types = mobilAP_poll_question::getChartTypes();
+		if (isset($chart_types[$chart_type])) {
+			$this->chart_type = $chart_type;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	function setText($question_text)
+	{
+		if (is_string($question_text) && !empty($question_text)) {
+			$this->question_text = $question_text;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	function setMaxChoices($max_choices)
+	{
+		if (intval($max_choices)) {
+			$this->question_maxchoices = intval($max_choices);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function setMinChoices($min_choices)
+	{
+		if (intval($min_choices) || $min_choices==0) {
+			$this->question_minchoices = intval($min_choices);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+    function getChartURL()
+    {
+        
+        $max_label_length=15;
+        
+        //go through the responses, for pie charts, don't include responses with zero answers
+        //max_data value represents the highest value and is used to scale the bar charts
+        
+        $max_data = 0;
+        $data = array();
+        $labels = array();
+        
+        foreach ($this->responses as $i=>$response) {
+        	if ($this->answers[$response->response_value]>0 || $this->chart_type != 'p') {
+        		$data[] = $this->answers[$response->response_value];
+
+                if ($this->answers[$response->response_value] > $max_data) {
+                    $max_data = $this->answers[$response->response_value];
+                }
+        		
+				$labels[] = strlen($response->response_text)>$max_label_length ? $i+1 : urlencode($response->response_text);
+        	}
+        }
+
+		// base url with type, size and background
+        $src = 'http://chart.apis.google.com/chart?cht=' . $this->chart_type . '&chf=bg,s,00000000';
+
+		// add the data using text encoding
+		$src .='&chd=t:' . implode(",", $data);
+        
+        //make no more than 10 x-axis legends, use the next whole factor for the max
+        $step = 0;
+        do {
+            $step +=2;
+            $even_max = $max_data % $step ? ($max_data+($max_data % $step)) : $max_data;
+            
+        } while ($even_max / $step > 10);
+        
+        switch ($this->chart_type)
+        {
+            case 'p':
+                $src .='&chs=280x140';
+                $src .='&chl=' . implode('|', $labels);
+                break;
+            
+            case 'bhs':
+                $src .='&chs=280x' . ((count($this->responses)*33)+20);
+                $src .='&chxt=x,y';
+                $src .='&chds=0,' . $even_max;
+                $range = array();
+                for ($i=0; $i<=$even_max; $i+=$step) {
+                    $range[] = $i;
+                }               
+                                                
+                $src .='&chxl=0:|' . implode('|', $range) . '|1:|' . implode('|', array_reverse($labels));
+                break;
+        }
+        
+        return $src;
+    }
+
+	function submitAnswer($responses, $user_token)
+	{
+		$userIDStr = $user_token ? "'$user_token'" : 'NULL';
+		$responses = is_array($responses) ? $responses : array();
+		$ts = time();
+		$_responses=array();
+								
+		if (count($responses) < $this->question_minchoices || count($responses) > $this->question_maxchoices) {
+			$message = "Question should have ";
+			if ($this->question_maxchoices==1) {
+				$message .= "1 choice";
+			} elseif ($this->question_minchoices==$this->question_maxchoices) {
+				$message .= sprintf("%d choices", $this->question_maxchoices);
+			} else { 
+				$message .= sprintf(" between %d and %d choices", $this->question_minchoices, $this->question_maxchoices);
+			}					
+			
+			return mobilAP_Error::throwError($message);
+		} 
+
+		if (!$user = mobilAP_attendee::getAttendeeById($user_token)) {
+			return mobilAP_Error::throwError("Please login to answer this question", mobilAP_session::ERROR_NO_USER);
+		}
+		
+		if ($user_token) {		
+			$sql = "SELECT answer_id FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
+				    WHERE question_id=$this->question_id AND response_userID='$user_token'";
+			$result = mobilAP::query($sql);
+			if (mysql_numrows($result)>0) {
+				return mobilAP_Error::throwError("You have already answered this question", mobilAP_session::ERROR_USER_ALREADY_SUBMITTED);
+			}
+		}
+		
+		foreach ($responses as $response_value) {
+			if ($this->is_response($response_value)) {
+				$sql = "INSERT INTO " . mobilAP_session::POLL_ANSWERS_TABLE . " (question_id, response_value, response_timestamp, response_userID)
+				VALUES ($this->question_id, $response_value,$ts, $userIDStr)";
+				mobilAP::query($sql);
+			}
+		}
+		$this->answers = $this->getAnswers();
+	}
+	
+	function is_response($response_value) 
+	{
+		foreach ($this->responses as $response) {
+			if ($response->response_value ==$response_value) 
+				return true;
+		}
+		
+		return false;
+	}
+	
+	function loadQuestionFromArray($arr)
+	{
+		$question = new mobilAP_poll_question($arr['session_id']);
+		$question->question_id = $arr['question_id'];
+		$question->index = intval($arr['index']);
+		$question->question_text = $arr['question_text'];
+		$question->question_list_text = $arr['question_list_text'];
+		$question->question_minchoices =  intval($arr['question_minchoices']);
+		$question->question_maxchoices =  intval($arr['question_maxchoices']);
+		$question->question_active =  intval($arr['question_active']);
+		$question->response_type =  $arr['response_type'];
+		$question->chart_type =  $arr['chart_type'];
+		$question->responses = $question->getResponses();
+		$question->answers = $question->getAnswers();
+		return $question;
+		
+	}
+	
+	function setQuestion($question_text)
+	{
+		if (is_string($question_text) && !empty($question_text)) {
+			$this->question_text = $question_text;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function setQuestionListText($question_list_text)
+	{
+		$this->question_list_text = $question_list_text;
+		return true;
+	}
+	
+	function deleteQuestion()
+	{
+		$tables = array(mobilAP_session::POLL_QUESTIONS_TABLE, mobilAP_session::POLL_RESPONSES_TABLE, mobilAP_session::POLL_ANSWERS_TABLE);
+		foreach ($tables as $table)
+		{
+			$sql = "DELETE FROM `$table` WHERE question_id=$this->question_id";
+			$result = mobilAP::query($sql);
+		}
+		
+		//reindex questions
+		$sql = "UPDATE " . mobilAP_session::POLL_QUESTIONS_TABLE . " SET `index`=`index`-1 WHERE session_id=$this->session_id AND `index`>$this->index";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+	
+	function clearAnswers()
+	{
+		$sql = "DELETE FROM `" . mobilAP_session::POLL_ANSWERS_TABLE . "` WHERE question_id=$this->question_id";
+		$result = mobilAP::query($sql);
+		$this->answers = $this->getAnswers();
+	}
+	
+	function getNextResponseIndex()
+	{
+		return count($this->responses);
+	}
+
+	function getNextResponseValue()
+	{
+		$sql = "SELECT MAX(response_value) response_value FROM " . mobilAP_session::POLL_RESPONSES_TABLE . " 
+				WHERE question_id=$this->question_id";
+		$result = mobilAP::query($sql);
+		
+		$row = mysql_fetch_assoc($result);
+		if ($row['response_value']) {
+			$next = intval($row['response_value'])+1;
+		} else {
+			$next = 1;
+		}
+		
+		return $next;
+	}
+
+	function getQuestionById($question_id)
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+				WHERE 
+				question_id='" . addslashes($question_id) . "'";
+		$result = mobilAP::query($sql);
+		$question = false;
+		if ($row=mysql_fetch_assoc($result)) {
+			$question = mobilAP_poll_question::loadQuestionFromArray($row);
+		}
+		return $question;		
+	}
+
+	function removeResponse($response_value)
+	{
+		if ($response = $this->getResponseByValue($response_value)) {
+
+			$index = $response->index;
+			$result = $response->deleteResponse();
+			if (mobilAP_Error::isError($result)) {
+				return $result;
+			}
+			
+			$sql = "UPDATE " . mobilAP_session::POLL_RESPONSES_TABLE . " SET 
+				`index`=`index`-1 
+				WHERE question_id=$this->question_id AND `index`>$index 
+				ORDER BY `index` ASC";
+			$result = mobilAP::query($sql);
+			$this->responses = $this->getResponses();
+			$this->answers = $this->getAnswers();
+			return true;
+		} else {
+			return mobilAP_Error::throwError("There is no response $response_value for this question");
+		}
+	}
+	
+	function addResponse($response_text)
+	{
+		if (empty($response_text)) {
+			return mobilAP_Error::throwError("Invalid response");
+		}
+		
+		$index = $this->getNextResponseIndex();
+		$response_value = $this->getNextResponseValue();
+		
+		
+		$sql = "INSERT INTO " . mobilAP_session::POLL_RESPONSES_TABLE . " (question_id, `index`, response_value, response_text)
+				VALUES
+				($this->question_id, $index, $response_value,'" . addslashes($response_text) . "')";
+		$result = mobilAP::query($sql, true);
+		$this->responses = $this->getResponses();
+		$this->answers = $this->getAnswers();
+
+		if (mobilAP_Error::isError($result)) {
+			if ($result->getCode()==DB_ERROR_ALREADY_EXISTS) {
+				$result = mobilAP_Error::throwError("$response_text already exists", DB_ERROR_ALREADY_EXISTS);
+			} else {
+			}
+			return $result;
+		}
+		return true;
+	}
+	
+	function &getResponseByValue($response_value)
+	{
+		$return = false;
+		foreach ($this->responses as $index=>$response) {
+			if ($response->response_value==$response_value) {
+				return $response;
+			}
+		}
+		return $return;
+	}
+	
+	function getResponses()
+	{
+		$sql = "SELECT * FROM " . mobilAP_session::POLL_RESPONSES_TABLE . " 
+		WHERE question_id=$this->question_id ORDER BY `index`";
+		$result = mobilAP::query($sql);
+		$responses = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$row['session_id'] = $this->session_id;
+			$responses[] = mobilAP_poll_response::loadResponseFromArray($row);
+		}
+		
+		return $responses;
+	}
+	
+	function getAllAnswers()
+	{
+		$sql = "SELECT pa.*, a.FirstName, a.LastName, a.email FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " pa
+				LEFT JOIN " . mobilAP_attendee::ATTENDEE_TABLE . " a ON pa.response_userID=a.attendee_id
+				WHERE question_id=$this->question_id
+				ORDER BY response_value, LastName, FirstName
+				";
+		$result = mobilAP::query($sql);
+		$answers = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$answers[$row['response_value']][] = $row;
+		}
+		
+		return $answers;
+	}
+
+	function getAnswers()
+	{
+		$answers = array('total'=>0);
+		foreach ($this->responses as $index=>$response) {
+			$answers[$response->response_value] = 0;
+		}
+		
+		if (count($this->responses)>0) {
+			$sql = "SELECT count(*) count, response_value FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
+			WHERE question_id=$this->question_id
+			GROUP BY response_value";
+			$result = mobilAP::query($sql);
+			while ($row = mysql_fetch_assoc($result)) {
+				$answers['total']+=$row['count'];
+				$answers[$row['response_value']]+=$row['count'];
+			}
+		}		
+		
+		return $answers;
+	}
+	
+	function updateQuestion()
+	{
+		$sql = "UPDATE " . mobilAP_session::POLL_QUESTIONS_TABLE  . " SET
+				question_text='" . addslashes($this->question_text) . "',
+				question_list_text='" . addslashes($this->question_list_text) . "',
+				question_minchoices=$this->question_minchoices,
+				question_maxchoices=$this->question_maxchoices,
+				question_active=$this->question_active,
+				chart_type='$this->chart_type',
+				response_type='$this->response_type'
+				WHERE question_id='$this->question_id'";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+
+	
+}
+
+class mobilAP_poll_response
+{
+	var $session_id;
+	var $question_id;
+	var $index;
+	var $response_value;
+	var $response_text;
+
+	function __toString()
+	{
+		return $this->response_text;
+	}
+	
+	function deleteResponse()
+	{
+		$tables = array(mobilAP_session::POLL_RESPONSES_TABLE, mobilAP_session::POLL_ANSWERS_TABLE);
+		foreach ($tables as $table)
+		{
+			$sql = "DELETE FROM `$table` WHERE question_id=$this->question_id AND response_value=$this->response_value";
+			$result = mobilAP::query($sql);
+		}
+		return true;
+	}
+	
+	function setResponseText($response_text)
+	{
+		if (empty($response_text)) {
+			return mobilAP_Error::throwError("Invalid response");
+		}
+		$this->response_text = $response_text;
+		return true;
+	}
+
+	function updateResponse()
+	{
+		$sql = "UPDATE " . mobilAP_session::POLL_RESPONSES_TABLE . " SET
+			response_text='" . addslashes($this->response_text) . "'
+			WHERE question_id=$this->question_id AND response_value=$this->response_value";
+		$result = mobilAP::query($sql);
+		return true;
+	}
+
+	function loadResponseFromArray($arr)
+	{
+		$response = new mobilAP_poll_response();
+		$response->session_id = $arr['session_id'];
+		$response->question_id = intval($arr['question_id']);
+		$response->index = intval($arr['index']);
+		$response->response_value = intval($arr['response_value']);
+		$response->response_text = $arr['response_text'];
+		return $response;
+	}
+	
+}
+
+class mobilAP_webuser
+{
+	const USER_NOT_FOUND=-1;
+	const USER_ALREADY_LOGGED_IN=-2;
+	const USER_LOGIN_FAILURE=-3;
+	var $mobilAP_userID;
+    var $user;
+    
+    function __construct()
+    {
+		if (!isset($_SESSION)) {
+    		session_start();
+    	}
+    	
+		$_SESSION['last_ping'] = isset($_SESSION['ping']) ? $_SESSION['ping'] : 0;
+		$_SESSION['ping'] = time();
+    	    	
+        $val = $this->_getSession();
+
+        $this->sid = session_id();
+        $this->_setSession();
+    }
+	
+	function getUserToken()
+	{
+		if ($user = $this->getUser()) {
+			return $user->getUserID();
+		}
+		
+		return null;
+	}
+
+	function getUser()
+    {
+    	if (!$this->user) {
+    		$this->user = mobilAP_attendee::getAttendeeById($this->getUserID());
+    	}
+    	
+    	return $this->user;
+    }
+
+    function is_LoggedIn()
+    {
+        return $this->getUserID() ? 1 : 0;
+    }   
+    
+    function getUserID()
+    {
+		return $this->mobilAP_userID;
+    }
+    
+    function setmobilAP_userID($userID)
+    {
+    	$this->mobilAP_userID = strtolower($userID);
+    	$user = $this->getUser();
+    	return true;
+    }
+    
+    function _setSession()
+    {
+    	$_SESSION['mobilAP_userID'] = $this->getUserID();
+		setCookie('mobilAP_userID', $this->getUserID(), mktime(0,0,0,10,11,2037), getConfig('mobilAP_base_path'));
+    }    
+
+    function _getSession()
+    {
+    	
+        $mobilAP_userID = isset($_COOKIE['mobilAP_userID']) ? $_COOKIE['mobilAP_userID'] : '';
+        
+        if ($mobilAP_userID) {
+
+            $this->setmobilAP_userID($mobilAP_userID);
+            
+            if ($this->is_loggedIn()) {
+				if (!$user = $this->getUser()) {
+					$this->logout();
+					trigger_error("User $mobilAP_userID not found", E_USER_WARNING);
+					return mobilAP_Error::throwError("User $mobilAP_userID not found");
+				}
+				
+			}			
+            
+            return true;
+        } else {
+            return true;
+        }
+                
+    }
+    
+    function login($userID, $pword, $mode=null)
+    {
+        $userID = strtolower($userID);
+        if ($this->is_LoggedIn()) {
+        	return mobilAP_Error::throwError('User already logged in', mobilAP_webuser::USER_ALREADY_LOGGED_IN);
+        } elseif (!$user = mobilAP_attendee::getAttendeeByID($userID)) {
+        	return mobilAP_Error::throwError("User $userID is not a user", mobilAP_webuser::USER_NOT_FOUND);
+        } else {
+			
+            
+            if ($login = mobilAP::Auth($userID, $pword, $mode)) {
+
+                $this->setmobilAP_userID($user->email);
+
+                //set login times
+                $sql = "UPDATE " . mobilAP_attendee::ATTENDEE_TABLE . " u SET 
+                	u.login_last=login_now 
+                	WHERE 
+                	u.attendee_id='" . $this->getUserID() . "' AND 
+                	!isnull(u.login_now)";
+                	
+                $result = mobilAP::query($sql);
+
+				$sql = "UPDATE " . mobilAP_attendee::ATTENDEE_TABLE . " u SET 
+						u.login_now= " . time() . "
+						WHERE 
+						u.attendee_id='" . $this->getUserID() . "'";
+	
+				$result = mobilAP::query($sql);                
+                $this->_setSession();
+                                
+                return true;
+                
+            } else {
+				return mobilAP_Error::throwError("Login Failure.");
+            }
+        }
+        
+        return $this->getResult();
+    }
+    
+    function _reset()
+    {
+        unset($_SESSION['mobilAP_userID']);
+		setCookie('mobilAP_userID', '', mktime(0,0,0,10,11,1977), getConfig('mobilAP_base_path'));
+		
+        $this->mobilAP_userID = null;
+        $this->_setSession();
+    }
+    
+    function logout()
+    {
+    	if ($this->is_LoggedIn()) {
+			$sql = "UPDATE " . mobilAP_attendee::ATTENDEE_TABLE . " SET 
+					login_last=login_now, 
+					login_now=NULL 
+					WHERE attendee_id='" . $this->getUserID() ."'";
+			$result = mobilAP::query($sql);
+    	}
+    	
+    	$this->_reset();
+    	session_destroy();
+
+        return true;
+    }
+
+}
+
+class mobilAP_Error
+{
+	public $error_message;
+	public $error_code;
+	public $error_userinfo;
+	public $message;
+	public $code;
+	public $userinfo;
+	
+	public function __toString()
+	{
+		if ($this->code) {
+			return sprintf('%s: %d (%s)', __CLASS__, $this->code, $this->message);
+		} else {
+			return sprintf('%s: %s', __CLASS__, $this->message);
+		}		
+	}
+
+	public function __construct($message=null, $code=null, $userinfo=null) {
+        $this->setMessage($message);
+        $this->setCode($code);
+        $this->setUserInfo($userinfo);
+    }
+
+    public static function throwError($message = null, $code = null, $userinfo = null)
+    {
+    	$a = new mobilAP_Error($message, $code, $userinfo);
+    	return $a;
+    }
+    
+    public static function isError($data)
+    {
+        return is_a($data, 'mobilAP_Error');
+    }    
+
+	public function getMessage()
+	{
+		return $this->message;
+	}
+
+	public function setMessage($message)
+	{
+		$this->message = $message;
+		$this->error_message = $message;
+	}
+
+	public function setCode($code)
+	{
+		$this->code = $code;
+		$this->error_code = $code;
+	}
+
+	public function setUserInfo($userinfo)
+	{
+		$this->userinfo = $userinfo;
+		$this->error_userinfo = $userinfo;
+	}
+
+	public function getCode()
+	{
+		return $this->code;
+	}
+
+    public function getUserInfo()
+    {
+        return $this->userinfo;
+    }
+}
+
+?>

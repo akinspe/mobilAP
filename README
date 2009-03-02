@@ -1,0 +1,36 @@
+mobilAP Version 0.9
+
+This version of the mobilAP conference edition includes two 
+components, a PHP based back-end and a HTML/Javascript based front end.
+
+The backend has the following requirements:
+
+- PHP 5.x
+- Access to a MySQL 5 database server (the code could be rewritten to use other DBs if necessary)
+
+There are some configurations that have to be made:
+
+x
+1. Copy the contents of the html folder to a folder on your web server. It can be the root, but it doesn't have to be.
+2. Set the db_host, db_user, db_password parameters in "inc/config.php" as necessary
+3. Run setup.php which will create an admin user, and create the appropriate tables
+
+Session configuration and schedule is accomplished using the admin.php script. 
+
+
+NOTES
+
+1. None of the admin scripts have any style to them.
+2. There are probably things that don't work right because of some other assumptions that may turn out to be false.
+3. There are probably some redundant files or CSS styles that haven't been cleaned up yet. 
+4. the Js.php script is the main controller for AJAX communication between the DB and the front end.
+5. The use of the APC cache is strongly encouraged. The calls in the code aren't quite there yet. but the stubs are there.
+6. Sorry about the sparse documentation. This should get improved in the future once further developement occurs.
+
+Please send any feedback or suggestions to:
+mobilap@daap.uc.edu
+
+Please note that technical support cannot be given, although paid consultation for conference help is available.
+
+Monitor http://daap.uc.edu/mobilap for future updates.
+
