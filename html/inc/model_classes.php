@@ -77,7 +77,7 @@ class mobilAP
 
 		$id = strtolower($id);
 
-		$sql = "SELECT attendee_id FROM " . mobilAP_attendee::ATTENDEE_TABLE . " u 
+		$sql = "SELECT attendee_id FROM " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u 
 				WHERE u.$field='" . addslashes($id) . "' AND
 		`md5`='" . md5($password) . "'";
 		
@@ -87,7 +87,7 @@ class mobilAP
 
 	static function getDays()
 	{
-		$sql = "SELECT DISTINCT DATE(`start_date`) `date`, UNIX_TIMESTAMP(DATE(`start_date`)) date_ts FROM " . mobilAP::SCHEDULE_TABLE . " d ORDER BY 1 ASC";
+		$sql = "SELECT DISTINCT DATE(`start_date`) `date`, UNIX_TIMESTAMP(DATE(`start_date`)) date_ts FROM " .  TABLE_PREFIX . mobilAP::SCHEDULE_TABLE . " d ORDER BY 1 ASC";
 		$result = mobilAP::query($sql);
 		$days = array();
 		while ($row = mysql_fetch_assoc($result)) {
@@ -125,7 +125,7 @@ class mobilAP
 		$session_groups = mobilAP_session_group::getSessionGroups();
 		$parsed_session_groups = array();
 								
-		$sql = "SELECT s.*, DATE(start_date) `date` FROM " . mobilAP::SCHEDULE_TABLE . " s ORDER BY start_date asc,session_id";
+		$sql = "SELECT s.*, DATE(start_date) `date` FROM " .  TABLE_PREFIX . mobilAP::SCHEDULE_TABLE . " s ORDER BY start_date asc,session_id";
 		$result = mobilAP::query($sql);
 		while ($row = mysql_fetch_assoc($result)) {
 			if (!$expand_groups && $row['session_group_id']) {
@@ -149,7 +149,7 @@ class mobilAP
 	
 	function getEvaluationQuestions()
 	{
-		$sql = sprintf("SELECT * FROM %s ORDER BY question_index", mobilAP::EVALUATION_QUESTION_TABLE);
+		$sql = sprintf("SELECT * FROM %s%s ORDER BY question_index", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE);
 		$result = mobilAP::query($sql);
 		$questions = array();
 		while ($row = mysql_fetch_assoc($result)) {
@@ -587,7 +587,7 @@ class mobilAP_schedule_item
 			return mobilAP_Error::throwError("Start time cannot be after end time");
 		} 
 		
-		$sql = "INSERT INTO " . mobilAP::SCHEDULE_TABLE . " 
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP::SCHEDULE_TABLE . " 
 				(title) 
 				VALUES
 				('" . addslashes($this->title) . "')";
@@ -599,7 +599,7 @@ class mobilAP_schedule_item
 
 	public function deleteItem()
 	{
-		$sql = "DELETE FROM " . mobilAP::SCHEDULE_TABLE . " 
+		$sql = "DELETE FROM " . TABLE_PREFIX .  mobilAP::SCHEDULE_TABLE . " 
 				WHERE schedule_id=$this->schedule_id";
 		$result = mobilAP::query($sql);
 	}
@@ -609,7 +609,7 @@ class mobilAP_schedule_item
 		$session_id = strlen($this->session_id) ? "'" . $this->session_id . "'" : "NULL";
 		$session_group_id = strlen($this->session_group_id) ? $this->session_group_id: "NULL";
 
-		$sql = "UPDATE " . mobilAP::SCHEDULE_TABLE . " SET
+		$sql = "UPDATE " . TABLE_PREFIX . mobilAP::SCHEDULE_TABLE . " SET
 				start_ts=$this->start_ts,
 				start_date='$this->start_date',
 				end_ts=$this->end_ts,
@@ -626,7 +626,7 @@ class mobilAP_schedule_item
 	
 	static function getScheduleItem($schedule_id)
 	{
-		$sql = "SELECT * FROM " . mobilAP::SCHEDULE_TABLE . " WHERE schedule_id='" . addslashes($schedule_id) . "'";
+		$sql = "SELECT * FROM " . TABLE_PREFIX .  mobilAP::SCHEDULE_TABLE . " WHERE schedule_id='" . addslashes($schedule_id) . "'";
 		$result = mobilAP::query($sql);
 		if ($row = mysql_fetch_assoc($result)) {
 			$schedule_item = new mobilAP_schedule_item();
@@ -695,14 +695,14 @@ class mobilAP_attendee
 				mobilAP_attendee::deleteImport($item['import_id']);
 			}
 		} else {
-			$sql = sprintf("DELETE FROM attendees_import WHERE import_id=%d", $import_id);
+			$sql = sprintf("DELETE FROM %s%s WHERE import_id=%d", TABLE_PREFIX, 'attendees_import', $import_id);
 			$result = mobilAP::query($sql);
 		}
 	}
 
 	static function editImport($import_id)
 	{
-		$sql = sprintf("SELECT * FROM attendees_import WHERE import_id=%d", $import_id);
+		$sql = sprintf("SELECT * FROM %s%s WHERE import_id=%d", TABLE_PREFIX, 'attendees_import', $import_id);
 		$result = mobilAP::query($sql);
 		if ($row = mysql_fetch_assoc($result)) {
 			$attendee = new mobilAP_attendee();	
@@ -723,7 +723,7 @@ class mobilAP_attendee
 	
 	function getImportData()
 	{
-		$sql = "SELECT * FROM attendees_import";
+		$sql = "SELECT * FROM " . TABLE_PREFIX . 'attendees_import';
 		$result = mobilAP::query($sql);
 		$data = array();
 		while ($row = mysql_fetch_assoc($result)) {
@@ -734,7 +734,7 @@ class mobilAP_attendee
 
 	function purgeImportData()
 	{
-		mobilAP::query("TRUNCATE TABLE attendees_import");
+		mobilAP::query("TRUNCATE TABLE " . TABLE_PREFIX . 'attendees_import');
 	}
 
 	static function importDelimitedFile($fileName, $delimiter=",", $enclosure='"')
@@ -761,7 +761,7 @@ class mobilAP_attendee
 				$email = isset($line[9]) ? $line[9] : '';
 				
 				if (!$attendee = mobilAP_attendee::getAttendeeById($email)) {
-					$sql = "INSERT INTO attendees_import VALUES (null, '" . implode("','", $line) . "')";
+					$sql = "INSERT INTO " . TABLE_PREFIX . "attendees_import VALUES (null, '" . implode("','", $line) . "')";
 					mobilAP::query($sql);
 				}
 			}
@@ -781,7 +781,7 @@ class mobilAP_attendee
 		$attendee_id = md5(uniqid(rand(), true));
 	
 		// to be really sure we need to check if it's already there
-		$sql = "SELECT attendee_id FROM " . mobilAP_attendee::ATTENDEE_TABLE . " WHERE `attendee_id`='$attendee_id'";
+		$sql = "SELECT attendee_id FROM " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " WHERE `attendee_id`='$attendee_id'";
 			
 		$result = mobilAP::query($sql);
 	
@@ -1042,7 +1042,7 @@ class mobilAP_attendee
 	public function loadData($row=null)
 	{
 		if (!is_array($row)) {
-			$sql = "SELECT * FROM  " . mobilAP_attendee::ATTENDEE_TABLE . " WHERE
+			$sql = "SELECT * FROM  " . TABLE_PREFIX .  mobilAP_attendee::ATTENDEE_TABLE . " WHERE
 					attendee_id='" . $this->getUserID()  . "'";
 			$result = mobilAP::query($sql);
 			$row = mysql_fetch_assoc($result);
@@ -1075,7 +1075,7 @@ class mobilAP_attendee
 		
 	public function updateAttendee()
 	{
-		$sql = sprintf("UPDATE `%s` SET
+		$sql = sprintf("UPDATE `%s%s` SET
 				salutation='%s',
 				FirstName='%s',
 				LastName='%s',
@@ -1092,6 +1092,7 @@ class mobilAP_attendee
 				directory_active=%d,
 				admin=%d
 				WHERE attendee_id='%s'",
+				TABLE_PREFIX,
 				mobilAP_attendee::ATTENDEE_TABLE,
 				$this->salutation,
 				mysql_real_escape_string($this->FirstName),
@@ -1128,10 +1129,11 @@ class mobilAP_attendee
 			return mobilAP_Error::throwError("Name cannot be blank");
 		}
 		$this->attendee_id = mobilAP_attendee::getNextAttendeeID();
-		$sql = sprintf("INSERT INTO %s
+		$sql = sprintf("INSERT INTO %s%s
 				(attendee_id, email, FirstName, LastName, md5)
 				VALUES
 				('%s', '%s', '%s', '%s', '%s')", 
+				TABLE_PREFIX,
 				mobilAP_attendee::ATTENDEE_TABLE, 
 				$this->attendee_id,
 				mysql_real_escape_string($this->email),
@@ -1153,8 +1155,9 @@ class mobilAP_attendee
 	{
 		$this->deleteDirectoryImage();		
 
-		$sql = sprintf("DELETE FROM %s
+		$sql = sprintf("DELETE FROM %s%s
 				WHERE response_userID='%s'",
+				TABLE_PREFIX,
 				mobilAP_session::POLL_ANSWERS_TABLE, 
 				$this->attendee_id);
 		$result = mobilAP::query($sql);
@@ -1174,15 +1177,17 @@ class mobilAP_attendee
 		);
 		foreach ($tables as $table) {
 
-			$sql = sprintf("DELETE FROM %s
+			$sql = sprintf("DELETE FROM %s%s
 					WHERE post_user='%s'",
+					TABLE_PREFIX,
 					$table,
 					$this->attendee_id);
 			$result = mobilAP::query($sql);
 		}		
 
-		$sql = sprintf("DELETE FROM %s
+		$sql = sprintf("DELETE FROM %s%s
 				WHERE attendee_id='%s'",
+				TABLE_PREFIX,
 				mobilAP_attendee::ATTENDEE_TABLE, 
 				$this->attendee_id);
 		$result = mobilAP::query($sql);
@@ -1199,10 +1204,11 @@ class mobilAP_attendee
 			return mobilAP_Error::throwError("Name cannot be blank");
 		}
 		$attendee_id = mobilAP_attendee::getNextAttendeeID();
-		$sql = sprintf("INSERT INTO %s
+		$sql = sprintf("INSERT INTO %s%s
 				(attendee_id, email, FirstName, LastName, md5)
 				VALUES
 				('%s', '%s', '%s', '%s', '%s')", 
+				TABLE_PREFIX,
 				mobilAP_attendee::ATTENDEE_TABLE, 
 				$attendee_id,
 				mysql_real_escape_string($email),
@@ -1242,7 +1248,7 @@ class mobilAP_attendee
 			return false;
 		}
 		
-		$sql = "SELECT * FROM  " . mobilAP_attendee::ATTENDEE_TABLE . " WHERE
+		$sql = "SELECT * FROM  " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " WHERE
 				$field='" . addslashes($token) . "'";
 		$result = mobilAP::query($sql);
 		
@@ -1283,7 +1289,7 @@ class mobilAP_attendee
 		}
 		
 		
-		$sql = "SELECT * FROM  " . mobilAP_attendee::ATTENDEE_TABLE;
+		$sql = "SELECT * FROM  " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE;
 		
 		if (count($where)>0) {
 			$sql .= " WHERE " . implode(" AND ", $where);
@@ -1334,7 +1340,7 @@ class mobilAP_attendee
 			$where[] = 'directory_active';
 		}
 		
-		$sql = "SELECT state,country,organization FROM  " . mobilAP_attendee::ATTENDEE_TABLE;
+		$sql = "SELECT state,country,organization FROM  " . TABLE_PREFIX .  mobilAP_attendee::ATTENDEE_TABLE;
 		if (count($where)>0) {
 			$sql .= " WHERE " . implode(" AND ", $where);
 		}
@@ -1375,7 +1381,7 @@ class mobilAP_attendee
 	
 	public function isPresenter()
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::SESSION_PRESENTER_TABLE . " 
 				WHERE 
 				presenter_id='" . $this->getUserID() . "'";
 				
@@ -1426,7 +1432,7 @@ class mobilAP_session
 						
 		foreach ($tables as $table)
 		{
-			$sql = sprintf("UPDATE %s SET session_id='%s' WHERE session_id='%s'", $table, $session_id, $this->session_id);
+			$sql = sprintf("UPDATE %s%s SET session_id='%s' WHERE session_id='%s'", TABLE_PREFIX, $table, $session_id, $this->session_id);
 			mobilAP::query($sql);
 		}
 		
@@ -1438,13 +1444,13 @@ class mobilAP_session
 	public function getUserSubmissions($userID)
 	{
 		$data = array('questions'=>array(), 'evaluation'=>false);
-		$sql = "SELECT evaluation_id FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+		$sql = "SELECT evaluation_id FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . " 
 				WHERE session_id='$this->session_id' AND post_user='$userID'";
 		$result = mobilAP::query($sql);
 		$data['evaluation'] = mysql_numRows($result)>0;
 				
-		$sql = "SELECT a.* FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " a
-				WHERE question_id IN (SELECT question_id FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " WHERE session_id='$this->session_id') AND response_userID='$userID'";
+		$sql = "SELECT a.* FROM " . TABLE_PREFIX  . mobilAP_session::POLL_ANSWERS_TABLE . " a
+				WHERE question_id IN (SELECT question_id FROM " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE . " WHERE session_id='$this->session_id') AND response_userID='$userID'";
 		$result = mobilAP::query($sql);
 		while ($row = mysql_fetch_assoc($result)) {
 			$data['questions'][$row['question_id']] = $row['answer_id'];
@@ -1471,10 +1477,10 @@ class mobilAP_session
 		
 		$tables = array(mobilAP_session::SESSION_TABLE, mobilAP_session::SESSION_LINK_TABLE, mobilAP_session::SESSION_PRESENTER_TABLE, mobilAP_session::SESSION_EVALUATION_TABLE, mobilAP_session::SESSION_CHAT_TABLE);
 		foreach ($tables as $table) {
-			$sql = "DELETE FROM `$table` WHERE session_id='$this->session_id'";
+			$sql = "DELETE FROM `" . TABLE_PREFIX . $table . "` WHERE session_id='$this->session_id'";
 			$result = mobilAP::query($sql);
 		}
-		$sql = "UPDATE `" . mobilAP::SCHEDULE_TABLE . "` SET session_id=null WHERE session_id='$this->session_id'";
+		$sql = "UPDATE `" . TABLE_PREFIX . mobilAP::SCHEDULE_TABLE . "` SET session_id=null WHERE session_id='$this->session_id'";
 		$result = mobilAP::query($sql);
 	}
 	
@@ -1488,7 +1494,7 @@ class mobilAP_session
 			return mobilAP_Error::throwError("Session $session_id already exists");
 		}
 		
-		$sql = "INSERT INTO " . mobilAP_session::SESSION_TABLE . " (session_id, session_title) VALUES ('$session_id', '" . addslashes($session_title) . "')";
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " (session_id, session_title) VALUES ($session_id, '" . addslashes($session_title) . "')";
 		$result = mobilAP::query($sql);
 		return true;
 	}
@@ -1496,7 +1502,7 @@ class mobilAP_session
 	static function getSessionByID($session_id)
 	{
 		$sql = "SELECT s.*
-				FROM " . mobilAP_session::SESSION_TABLE . " s 
+				FROM " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " s 
 				WHERE session_id='" . addslashes($session_id) . "'";
 		$result = mobilAP::query($sql);
 		$session = false;
@@ -1508,7 +1514,7 @@ class mobilAP_session
 	
 	static function getSessions()
 	{
-		$sql = "SELECT s.* FROM " . mobilAP_session::SESSION_TABLE . " s ORDER BY session_id";
+		$sql = "SELECT s.* FROM " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " s ORDER BY session_id";
 		$result = mobilAP::query($sql);
 		$sessions = array();
 		while ($row = mysql_fetch_assoc($result)) {
@@ -1520,7 +1526,7 @@ class mobilAP_session
 			$session->session_evaluations = $session->getEvaluations();
 			$sessions[$session->session_id] = $session;
 		}
-				
+		
 		return $sessions;
 	}
 	
@@ -1533,7 +1539,7 @@ class mobilAP_session
 			}
 			
 			
-			$sql = "SELECT s.* FROM " . mobilAP_session::SESSION_TABLE . " s 
+			$sql = "SELECT s.* FROM " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " s 
 					WHERE session_id IN (SELECT session_id FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " WHERE presenter_id='" . $user->getUserID() . "')
 					ORDER BY session_id";
 			$result = mobilAP::query($sql);
@@ -1548,7 +1554,7 @@ class mobilAP_session
 
 	public function getEvaluationSummary()
 	{
-		$sql = "SELECT avg(q0) q0, avg(q1) q1, avg(q2) q2  FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+		$sql = "SELECT avg(q0) q0, avg(q1) q1, avg(q2) q2  FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . " 
 				WHERE session_id='$this->session_id'";
 			
 		$result = mobilAP::query($sql);
@@ -1558,7 +1564,7 @@ class mobilAP_session
 		}
 
 		$data['q3']=array('1'=>0, '2'=>0, '3'=>0, '4'=>0);
-		$sql = "SELECT q3  FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+		$sql = "SELECT q3  FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . " 
 				WHERE session_id='$this->session_id'";
 		
 		$result = mobilAP::query($sql);
@@ -1573,7 +1579,7 @@ class mobilAP_session
 	
 	public function getEvaluations()
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX .  mobilAP_session::SESSION_EVALUATION_TABLE . " 
 				WHERE session_id='$this->session_id'";
 		$result = mobilAP::query($sql);
 		$evaluations = array();
@@ -1586,7 +1592,7 @@ class mobilAP_session
 	
 	public function getLinks()
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::SESSION_LINK_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::SESSION_LINK_TABLE . " 
 				WHERE session_id='$this->session_id'
 				ORDER BY post_timestamp DESC";
 		$result = mobilAP::query($sql);
@@ -1608,7 +1614,7 @@ class mobilAP_session
 			$where[] = 'question_active';
 		}
 		
-		$sql = "SELECT * FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE . " 
 				WHERE " . implode(" AND ", $where) . "
 				ORDER BY `index`";
 		$result = mobilAP::query($sql);
@@ -1622,7 +1628,7 @@ class mobilAP_session
 
 	public function getNextQuestionIndex()
 	{
-		$sql = "SELECT `index` FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+		$sql = "SELECT `index` FROM " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE . " 
 				WHERE session_id='$this->session_id'";
 		$result = mobilAP::query($sql);
 		return mysql_numrows($result);
@@ -1630,7 +1636,7 @@ class mobilAP_session
 
 	public function getQuestionById($question_id)
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE . " 
 				WHERE 
 				question_id='" . addslashes($question_id) . "' AND
 				session_id='$this->session_id'";
@@ -1644,7 +1650,7 @@ class mobilAP_session
 
 	public function getLinkById($link_id)
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::SESSION_LINK_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX  . mobilAP_session::SESSION_LINK_TABLE . " 
 				WHERE 
 				link_id='" . addslashes($link_id) . "' AND
 				session_id='$this->session_id'";
@@ -1661,7 +1667,7 @@ class mobilAP_session
 		$user = mobilAP_attendee::getAttendeeById($userID);
 		
 		if ($user) {
-			$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+			$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::SESSION_PRESENTER_TABLE . " 
 					WHERE 
 					session_id='$this->session_id'
 					AND presenter_id='" . $user->getUserID() . "'";
@@ -1675,7 +1681,7 @@ class mobilAP_session
 
 	public function getPresenters()
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX .  mobilAP_session::SESSION_PRESENTER_TABLE . " 
 				WHERE session_id='$this->session_id' ORDER BY `index`";
 		$result = mobilAP::query($sql);
 		$presenters = array();
@@ -1687,7 +1693,7 @@ class mobilAP_session
 
 	public function getPresentersDirectory()
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::SESSION_PRESENTER_TABLE . " 
 				WHERE session_id='$this->session_id' ORDER BY `index`";
 		$result = mobilAP::query($sql);
 		$presenters = array();
@@ -1701,7 +1707,7 @@ class mobilAP_session
 	
 	public function getNextPresenterIndex()
 	{
-		$sql = "SELECT `index` FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " 
+		$sql = "SELECT `index` FROM " . TABLE_PREFIX .  mobilAP_session::SESSION_PRESENTER_TABLE . " 
 				WHERE session_id='$this->session_id'";
 		$result = mobilAP::query($sql);
 		return mysql_numrows($result);
@@ -1711,7 +1717,7 @@ class mobilAP_session
 	{
 		if ($user = mobilAP_attendee::getAttendeeByID($presenter_userID)) {
 			$index = $this->getNextPresenterIndex();
-			$sql = "INSERT INTO " . mobilAP_session::SESSION_PRESENTER_TABLE . " (session_id, `index`, presenter_id)
+			$sql = "INSERT INTO " . TABLE_PREFIX .  mobilAP_session::SESSION_PRESENTER_TABLE . " (session_id, `index`, presenter_id)
 			VALUES ('$this->session_id', $index, '" . $user->getUserID() . "')";
 			$result = mobilAP::query($sql, true);
 			if (mobilAP_Error::isError($result) && $result->getCode()==DB_ERROR_ALREADY_EXISTS) {
@@ -1726,9 +1732,10 @@ class mobilAP_session
 	public function getIndexForPresenter($presenter_userID)
 	{
 		if ($user = mobilAP_attendee::getAttendeeByID($presenter_userID)) {
-			$sql = sprintf("SELECT `index` FROM %s
+			$sql = sprintf("SELECT `index` FROM %s%s
 							WHERE 
 							session_id='%s' AND presenter_id='%s'", 
+							TABLE_PREFIX,
 							mobilAP_session::SESSION_PRESENTER_TABLE,
 							$this->session_id,
 							$user->getUserID()
@@ -1749,10 +1756,10 @@ class mobilAP_session
 
 	public function removePresenter($index)
 	{
-		$sql = "DELETE FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . "
+		$sql = "DELETE FROM " . TABLE_PREFIX . mobilAP_session::SESSION_PRESENTER_TABLE . "
 			    WHERE session_id='$this->session_id' AND `index`=$index";
 		$result = mobilAP::query($sql);
-		$sql = "UPDATE " . mobilAP_session::SESSION_PRESENTER_TABLE . "
+		$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::SESSION_PRESENTER_TABLE . "
 				SET `index`=`index`-1 
 			    WHERE session_id='$this->session_id' AND `index`>$index";
 		$result = mobilAP::query($sql);
@@ -1766,7 +1773,7 @@ class mobilAP_session
 		
 		$index = $this->getNextQuestionIndex();
 			
-		$sql = "INSERT INTO " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE . " 
 		(session_id, `index`, question_text)
 		VALUES
 		('$this->session_id', $index, '" . addslashes($question_text) . "')";
@@ -1792,7 +1799,7 @@ class mobilAP_session
 		
 		$link_type = $this->isPresenter($post_user) ? 'A' : 'U';
 		
-		$sql = "INSERT INTO " . mobilAP_session::SESSION_LINK_TABLE . "
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::SESSION_LINK_TABLE . "
 				(session_id, link_url, link_text, link_type, post_user, post_timestamp)
 				VALUES
 				('$this->session_id', '" . addslashes($link_url) . "','" . addslashes($link_text) . "','$link_type', '" . addslashes($post_user) . "', $ts)";
@@ -1826,7 +1833,7 @@ class mobilAP_session
 		}
 
 		if ($post_user) {		
-			$sql = "SELECT evaluation_id FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+			$sql = "SELECT evaluation_id FROM " . TABLE_PREFIX .  mobilAP_session::SESSION_EVALUATION_TABLE . " 
 				    WHERE session_id='$this->session_id' AND post_user='$post_user'";
 			$result = mobilAP::query($sql);
 			if (mysql_numrows($result)>0) {
@@ -1835,7 +1842,7 @@ class mobilAP_session
 		}
 		
 		
-		$sql = "INSERT INTO " . mobilAP_session::SESSION_EVALUATION_TABLE . "
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
 				(session_id, post_user, post_timestamp, q" . implode(", q", array_keys($evaluation_questions)) . ") 
 				VALUES
 				('$this->session_id', '" . addslashes($post_user) . "', $ts, " . implode(",", $responses) . ")";
@@ -1845,7 +1852,7 @@ class mobilAP_session
 
 	public function clearEvaluations()
 	{
-		$sql = "DELETE FROM " . mobilAP_session::SESSION_EVALUATION_TABLE . "
+		$sql = "DELETE FROM " . TABLE_PREFIX .  mobilAP_session::SESSION_EVALUATION_TABLE . "
 				WHERE session_id='$this->session_id'";
 		$result = mobilAP::query($sql);
 		return true;
@@ -1853,7 +1860,7 @@ class mobilAP_session
 
 	public function clearChat()
 	{
-		$sql = "DELETE FROM " . mobilAP_session::SESSION_CHAT_TABLE . "
+		$sql = "DELETE FROM " . TABLE_PREFIX .  mobilAP_session::SESSION_CHAT_TABLE . "
 				WHERE session_id='$this->session_id'";
 		$result = mobilAP::query($sql);
 		return true;
@@ -1869,7 +1876,7 @@ class mobilAP_session
 
 		
 		$ts = time();
-		$sql = "INSERT INTO " . mobilAP_session::SESSION_CHAT_TABLE . "
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::SESSION_CHAT_TABLE . "
 				(session_id, post_user, post_timestamp, post_text)
 				VALUES
 				('$this->session_id', '" . addslashes($post_user) . "', $ts, '" . addslashes($post_text) . "')";
@@ -1879,7 +1886,7 @@ class mobilAP_session
 	
 	public function delete_chat($post_id)
 	{
-		$sql = "DELETE FROM " . mobilAP_session::SESSION_CHAT_TABLE . "
+		$sql = "DELETE FROM " . TABLE_PREFIX . mobilAP_session::SESSION_CHAT_TABLE . "
 				WHERE session_id='$this->session_id' AND post_id='" . addslashes($post_id) . "'";
 		$result = mobilAP::query($sql);
 		return true;
@@ -1887,8 +1894,8 @@ class mobilAP_session
 
 	public function get_chat($last_post=0)
 	{
-		$sql = "SELECT post_id,post_timestamp, post_user, post_text, concat(FirstName, ' ', LastName) post_name, email FROM " . mobilAP_session::SESSION_CHAT_TABLE . " c
-				LEFT JOIN " . mobilAP_attendee::ATTENDEE_TABLE . " u ON c.post_user=u.attendee_id
+		$sql = "SELECT post_id,post_timestamp, post_user, post_text, concat(FirstName, ' ', LastName) post_name, email FROM " . TABLE_PREFIX . mobilAP_session::SESSION_CHAT_TABLE . " c
+				LEFT JOIN " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u ON c.post_user=u.attendee_id
 				WHERE session_id='$this->session_id' AND post_id>$last_post
 				ORDER BY post_timestamp DESC";
 		$result = mobilAP::query($sql);
@@ -1920,7 +1927,7 @@ class mobilAP_session
 	
 	public function updateSession()
 	{
-		$sql = "UPDATE " . mobilAP_session::SESSION_TABLE . " SET
+		$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " SET
 		session_title='" . addslashes($this->session_title) . "',
 		session_abstract='" . addslashes($this->session_abstract) . "'
 		WHERE session_id='$this->session_id'";
@@ -1941,7 +1948,7 @@ class mobilAP_session_group
 	const SESSION_GROUP_TABLE='session_groups';
 
 	function getSessionGroupByID($session_group_id) {	
-		$sql = sprintf("SELECT * FROM %s WHERE session_group_id=%d", mobilAP_session_group::SESSION_GROUP_TABLE, $session_group_id);
+		$sql = sprintf("SELECT * FROM %s%s WHERE session_group_id=%d", TABLE_PREFIX, mobilAP_session_group::SESSION_GROUP_TABLE, $session_group_id);
 		$result = mobilAP::query($sql);
 		
 		$session_group = null;
@@ -1973,10 +1980,10 @@ class mobilAP_session_group
 	
 	function updateGroup()
 	{
-		$sql = sprintf("UPDATE %s SET 
+		$sql = sprintf("UPDATE %s%s SET 
 						session_group_title='%s' ,
 						session_group_detail='%s'
-						WHERE session_group_id=%d", mobilAP_session_group::SESSION_GROUP_TABLE, addslashes($this->session_group_title), addslashes($this->session_group_detail), $this->session_group_id);
+						WHERE session_group_id=%d", TABLE_PREFIX, mobilAP_session_group::SESSION_GROUP_TABLE, addslashes($this->session_group_title), addslashes($this->session_group_detail), $this->session_group_id);
 		$result = mobilAP::query($sql);
 	}
 
@@ -1986,8 +1993,8 @@ class mobilAP_session_group
 			return mobilAP_Error::throwError("Session group title cannot be blank");
 		}
 
-		$sql = sprintf("INSERT INTO %s (session_group_title, session_group_detail) VALUES ('%s', '%s')",
-						mobilAP_session_group::SESSION_GROUP_TABLE, addslashes($this->session_group_title), addslashes($this->session_group_detail));
+		$sql = sprintf("INSERT INTO %s%s (session_group_title, session_group_detail) VALUES ('%s', '%s')",
+						TABLE_PREFIX, mobilAP_session_group::SESSION_GROUP_TABLE, addslashes($this->session_group_title), addslashes($this->session_group_detail));
 		$result = mobilAP::query($sql);
 		$this->session_group_id = mysql_insert_id();
 		$this->updateGroup();
@@ -1998,18 +2005,18 @@ class mobilAP_session_group
 	{
 		$tables = array(mobilAP_session_group::SESSION_GROUP_TABLE);
 		foreach ($tables as $table) {
-			$sql = sprintf("DELETE FROM %s WHERE session_group_id=%d" , $table,  $this->session_group_id);
+			$sql = sprintf("DELETE FROM %s%s WHERE session_group_id=%d" , TABLE_PREFIX, $table,  $this->session_group_id);
 			$result = mobilAP::query($sql);
 		}
 
-		$sql = sprintf("UPDATE %s SET session_group_id=NULL WHERE session_group_id=%d" , mobilAP::SCHEDULE_TABLE,  $this->session_group_id);
+		$sql = sprintf("UPDATE %s%s SET session_group_id=NULL WHERE session_group_id=%d" , TABLE_PREFIX, mobilAP::SCHEDULE_TABLE,  $this->session_group_id);
 		$result = mobilAP::query($sql);
 	}
 	
 	function getScheduleItems()
 	{
 		$schedule_items = array();
-		$sql = sprintf("SELECT * FROM %s WHERE session_group_id=%d", mobilAP::SCHEDULE_TABLE, $this->session_group_id);
+		$sql = sprintf("SELECT * FROM %s%s WHERE session_group_id=%d", TABLE_PREFIX, mobilAP::SCHEDULE_TABLE, $this->session_group_id);
 		$result = mobilAP::query($sql);
 		while ($row = mysql_fetch_assoc($result)) {
 			$schedule_item = new mobilAP_schedule_item();
@@ -2031,7 +2038,7 @@ class mobilAP_session_group
 	
 	function getSessionGroups()
 	{
-		$sql = "SELECT * FROM " .  mobilAP_session_group::SESSION_GROUP_TABLE ;
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session_group::SESSION_GROUP_TABLE ;
 		$result = mobilAP::query($sql);
 		$session_groups = array();
 		
@@ -2081,7 +2088,7 @@ class mobilAP_link
 	
 	function updateLink()
 	{
-		$sql = "UPDATE " . mobilAP_session::SESSION_LINK_TABLE . " SET
+		$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::SESSION_LINK_TABLE . " SET
 				link_url='" . addslashes($this->link_url) . "',
 				link_text='" . addslashes($this->link_text) . "'
 				WHERE link_id=$this->link_id";
@@ -2093,7 +2100,7 @@ class mobilAP_link
 		$tables = array(mobilAP_session::SESSION_LINK_TABLE);
 		foreach ($tables as $table)
 		{
-			$sql = "DELETE FROM `$table` WHERE link_id=$this->link_id";
+			$sql = "DELETE FROM `" . TABLE_PREFIX . $table . "` WHERE link_id=$this->link_id";
 			$result = mobilAP::query($sql);
 		}
 		
@@ -2284,7 +2291,7 @@ class mobilAP_poll_question
 		}
 		
 		if ($user_token) {		
-			$sql = "SELECT answer_id FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
+			$sql = "SELECT answer_id FROM " . TABLE_PREFIX . mobilAP_session::POLL_ANSWERS_TABLE . " 
 				    WHERE question_id=$this->question_id AND response_userID='$user_token'";
 			$result = mobilAP::query($sql);
 			if (mysql_numrows($result)>0) {
@@ -2294,7 +2301,7 @@ class mobilAP_poll_question
 		
 		foreach ($responses as $response_value) {
 			if ($this->is_response($response_value)) {
-				$sql = "INSERT INTO " . mobilAP_session::POLL_ANSWERS_TABLE . " (question_id, response_value, response_timestamp, response_userID)
+				$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::POLL_ANSWERS_TABLE . " (question_id, response_value, response_timestamp, response_userID)
 				VALUES ($this->question_id, $response_value,$ts, $userIDStr)";
 				mobilAP::query($sql);
 			}
@@ -2351,19 +2358,19 @@ class mobilAP_poll_question
 		$tables = array(mobilAP_session::POLL_QUESTIONS_TABLE, mobilAP_session::POLL_RESPONSES_TABLE, mobilAP_session::POLL_ANSWERS_TABLE);
 		foreach ($tables as $table)
 		{
-			$sql = "DELETE FROM `$table` WHERE question_id=$this->question_id";
+			$sql = "DELETE FROM `" . TABLE_PREFIX . $table . "` WHERE question_id=$this->question_id";
 			$result = mobilAP::query($sql);
 		}
 		
 		//reindex questions
-		$sql = "UPDATE " . mobilAP_session::POLL_QUESTIONS_TABLE . " SET `index`=`index`-1 WHERE session_id='$this->session_id' AND `index`>$this->index";
+		$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE . " SET `index`=`index`-1 WHERE session_id='$this->session_id' AND `index`>$this->index";
 		$result = mobilAP::query($sql);
 		return true;
 	}
 	
 	function clearAnswers()
 	{
-		$sql = "DELETE FROM `" . mobilAP_session::POLL_ANSWERS_TABLE . "` WHERE question_id=$this->question_id";
+		$sql = "DELETE FROM `" . TABLE_PREFIX . mobilAP_session::POLL_ANSWERS_TABLE . "` WHERE question_id=$this->question_id";
 		$result = mobilAP::query($sql);
 		$this->answers = $this->getAnswers();
 	}
@@ -2375,7 +2382,7 @@ class mobilAP_poll_question
 
 	function getNextResponseValue()
 	{
-		$sql = "SELECT MAX(response_value) response_value FROM " . mobilAP_session::POLL_RESPONSES_TABLE . " 
+		$sql = "SELECT MAX(response_value) response_value FROM " . TABLE_PREFIX . mobilAP_session::POLL_RESPONSES_TABLE . " 
 				WHERE question_id=$this->question_id";
 		$result = mobilAP::query($sql);
 		
@@ -2391,7 +2398,7 @@ class mobilAP_poll_question
 
 	function getQuestionById($question_id)
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::POLL_QUESTIONS_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE . " 
 				WHERE 
 				question_id='" . addslashes($question_id) . "'";
 		$result = mobilAP::query($sql);
@@ -2412,7 +2419,7 @@ class mobilAP_poll_question
 				return $result;
 			}
 			
-			$sql = "UPDATE " . mobilAP_session::POLL_RESPONSES_TABLE . " SET 
+			$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::POLL_RESPONSES_TABLE . " SET 
 				`index`=`index`-1 
 				WHERE question_id=$this->question_id AND `index`>$index 
 				ORDER BY `index` ASC";
@@ -2435,7 +2442,7 @@ class mobilAP_poll_question
 		$response_value = $this->getNextResponseValue();
 		
 		
-		$sql = "INSERT INTO " . mobilAP_session::POLL_RESPONSES_TABLE . " (question_id, `index`, response_value, response_text)
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::POLL_RESPONSES_TABLE . " (question_id, `index`, response_value, response_text)
 				VALUES
 				($this->question_id, $index, $response_value,'" . addslashes($response_text) . "')";
 		$result = mobilAP::query($sql, true);
@@ -2465,7 +2472,7 @@ class mobilAP_poll_question
 	
 	function getResponses()
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::POLL_RESPONSES_TABLE . " 
+		$sql = "SELECT * FROM " . TABLE_PREFIX . mobilAP_session::POLL_RESPONSES_TABLE . " 
 		WHERE question_id=$this->question_id ORDER BY `index`";
 		$result = mobilAP::query($sql);
 		$responses = array();
@@ -2479,8 +2486,8 @@ class mobilAP_poll_question
 	
 	function getAllAnswers()
 	{
-		$sql = "SELECT pa.*, a.FirstName, a.LastName, a.email FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " pa
-				LEFT JOIN " . mobilAP_attendee::ATTENDEE_TABLE . " a ON pa.response_userID=a.attendee_id
+		$sql = "SELECT pa.*, a.FirstName, a.LastName, a.email FROM " . TABLE_PREFIX . mobilAP_session::POLL_ANSWERS_TABLE . " pa
+				LEFT JOIN " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " a ON pa.response_userID=a.attendee_id
 				WHERE question_id=$this->question_id
 				ORDER BY response_value, LastName, FirstName
 				";
@@ -2501,7 +2508,7 @@ class mobilAP_poll_question
 		}
 		
 		if (count($this->responses)>0) {
-			$sql = "SELECT count(*) count, response_value FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
+			$sql = "SELECT count(*) count, response_value FROM " . TABLE_PREFIX . mobilAP_session::POLL_ANSWERS_TABLE . " 
 			WHERE question_id=$this->question_id
 			GROUP BY response_value";
 			$result = mobilAP::query($sql);
@@ -2516,7 +2523,7 @@ class mobilAP_poll_question
 	
 	function updateQuestion()
 	{
-		$sql = "UPDATE " . mobilAP_session::POLL_QUESTIONS_TABLE  . " SET
+		$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::POLL_QUESTIONS_TABLE  . " SET
 				question_text='" . addslashes($this->question_text) . "',
 				question_list_text='" . addslashes($this->question_list_text) . "',
 				question_minchoices=$this->question_minchoices,
@@ -2550,7 +2557,7 @@ class mobilAP_poll_response
 		$tables = array(mobilAP_session::POLL_RESPONSES_TABLE, mobilAP_session::POLL_ANSWERS_TABLE);
 		foreach ($tables as $table)
 		{
-			$sql = "DELETE FROM `$table` WHERE question_id=$this->question_id AND response_value=$this->response_value";
+			$sql = "DELETE FROM `" . TABLE_PREFIX . $table . "` WHERE question_id=$this->question_id AND response_value=$this->response_value";
 			$result = mobilAP::query($sql);
 		}
 		return true;
@@ -2567,7 +2574,7 @@ class mobilAP_poll_response
 
 	function updateResponse()
 	{
-		$sql = "UPDATE " . mobilAP_session::POLL_RESPONSES_TABLE . " SET
+		$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::POLL_RESPONSES_TABLE . " SET
 			response_text='" . addslashes($this->response_text) . "'
 			WHERE question_id=$this->question_id AND response_value=$this->response_value";
 		$result = mobilAP::query($sql);
@@ -2691,7 +2698,7 @@ class mobilAP_webuser
                 $this->setmobilAP_userID($user->email);
 
                 //set login times
-                $sql = "UPDATE " . mobilAP_attendee::ATTENDEE_TABLE . " u SET 
+                $sql = "UPDATE " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u SET 
                 	u.login_last=login_now 
                 	WHERE 
                 	u.attendee_id='" . $this->getUserID() . "' AND 
@@ -2699,7 +2706,7 @@ class mobilAP_webuser
                 	
                 $result = mobilAP::query($sql);
 
-				$sql = "UPDATE " . mobilAP_attendee::ATTENDEE_TABLE . " u SET 
+				$sql = "UPDATE " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u SET 
 						u.login_now= " . time() . "
 						WHERE 
 						u.attendee_id='" . $this->getUserID() . "'";
@@ -2710,7 +2717,7 @@ class mobilAP_webuser
                 return true;
                 
             } else {
-				return mobilAP_Error::throwError("Login Failure.");
+				return mobilAP_Error::throwError("Login Failure.", mobilAP_webuser::USER_LOGIN_FAILURE);
             }
         }
         
@@ -2729,7 +2736,7 @@ class mobilAP_webuser
     function logout()
     {
     	if ($this->is_LoggedIn()) {
-			$sql = "UPDATE " . mobilAP_attendee::ATTENDEE_TABLE . " SET 
+			$sql = "UPDATE " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " SET 
 					login_last=login_now, 
 					login_now=NULL 
 					WHERE attendee_id='" . $this->getUserID() ."'";
@@ -2829,17 +2836,18 @@ class mobilAP_announcement
 			return mobilAP_Error::throwError("Invalid user $attendee_id");
 		}
 
-		$sql = sprintf("INSERT INTO %s (announcement_title, announcement_timestamp, attendee_id, announcement_text)
-					    VALUES ('%s', %d, '%s', '%s')", mobilAP_announcement::ANNOUNCEMENT_TABLE, addslashes($this->announcement_title), time(), $attendee->getUserID(), addslashes($this->announcement_text));
+		$sql = sprintf("INSERT INTO %s%s (announcement_title, announcement_timestamp, attendee_id, announcement_text)
+					    VALUES ('%s', %d, '%s', '%s')", TABLE_PREFIX, mobilAP_announcement::ANNOUNCEMENT_TABLE, addslashes($this->announcement_title), time(), $attendee->getUserID(), addslashes($this->announcement_text));
 		$result = mobilAP::query($sql);
 		$this->announcement_id = mysql_insert_id();
 	}
 	
 	function updateAnnouncement($attendee_id)
 	{
-		$sql = sprintf("UPDATE %s SET
+		$sql = sprintf("UPDATE %s%s SET
 						announcement_title='%s', announcement_text='%s'
 						WHERE announcement_id=%d",
+						TABLE_PREFIX,
 					    mobilAP_announcement::ANNOUNCEMENT_TABLE, addslashes($this->announcement_title), addslashes($this->announcement_text), $this->announcement_id);
 		$result = mobilAP::query($sql);
 	}
@@ -2848,9 +2856,9 @@ class mobilAP_announcement
 	{
 		$tables = array(mobilAP_announcement::ANNOUNCEMENT_TABLE, mobilAP_announcement::ANNOUNCEMENT_READ_TABLE);
 		foreach ($tables as $table) {
-			$sql = sprintf("DELETE FROM %s
+			$sql = sprintf("DELETE FROM %s%s
 							WHERE announcement_id=%d",
-					    	$table, $this->announcement_id);
+					    	TABLE_PREFIX, $table, $this->announcement_id);
 			$result = mobilAP::query($sql);
 		}
 	}
@@ -2887,7 +2895,7 @@ class mobilAP_announcement
 
 	function getAnnouncementByID($announcement_id)
 	{
-		$sql = sprintf("SELECT * FROM %s WHERE announcement_id=%d", mobilAP_announcement::ANNOUNCEMENT_TABLE, $announcement_id);
+		$sql = sprintf("SELECT * FROM %s%s WHERE announcement_id=%d", TABLE_PREFIX, mobilAP_announcement::ANNOUNCEMENT_TABLE, $announcement_id);
 		$result = mobilAP::query($sql);
 		if ($row = mysql_fetch_assoc($result)) {
 			$announcement = new mobilAP_announcement();
@@ -2900,7 +2908,7 @@ class mobilAP_announcement
 
 	function getAnnouncements()
 	{
-		$sql = sprintf("SELECT * FROM %s ORDER BY announcement_timestamp DESC", mobilAP_announcement::ANNOUNCEMENT_TABLE);
+		$sql = sprintf("SELECT * FROM %s%s ORDER BY announcement_timestamp DESC", TABLE_PREFIX, mobilAP_announcement::ANNOUNCEMENT_TABLE);
 		$result = mobilAP::query($sql);
 		$announcements=array();
 		while ($row = mysql_fetch_assoc($result)) {
@@ -2914,7 +2922,7 @@ class mobilAP_announcement
 	function hasRead($userID)
 	{
 		if ($attendee = mobilAP_attendee::getAttendeeById($userID)) {
-			$sql = sprintf("SELECT * FROM %s WHERE announcement_id=%d AND attendee_id='%s'",
+			$sql = sprintf("SELECT * FROM %s%s WHERE announcement_id=%d AND attendee_id='%s'", TABLE_PREFIX,
 						   mobilAP_announcement::ANNOUNCEMENT_READ_TABLE, $this->announcement_id, $attendee->getUserID());
 			$result = mobilAP::query($sql);
 			if ($row = mysql_fetch_assoc($result)) {
@@ -2928,8 +2936,8 @@ class mobilAP_announcement
 	function readAnnouncement($userID)
 	{
 		if ($attendee = mobilAP_attendee::getAttendeeById($userID)) {
-			$sql = sprintf("INSERT INTO %s (announcement_id, attendee_id, read_timestamp)
-							VALUES (%d, '%s', %d)", mobilAP_announcement::ANNOUNCEMENT_READ_TABLE, $this->announcement_id, $attendee->getUserID(), time());
+			$sql = sprintf("INSERT INTO %s%s (announcement_id, attendee_id, read_timestamp)
+							VALUES (%d, '%s', %d)", TABLE_PREFIX, mobilAP_announcement::ANNOUNCEMENT_READ_TABLE, $this->announcement_id, $attendee->getUserID(), time());
 			$result = mobilAP::query($sql, true);
 			return mobilAP_Error::isError($result) ? $result : true;
 		} else {
@@ -2949,12 +2957,12 @@ class mobilAP_evaluation_question
 	
 	function removeResponse($response_index)
 	{
-		$sql = sprintf("DELETE FROM %s WHERE question_index=%d AND response_index=%d",
-		mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index, $response_index);
+		$sql = sprintf("DELETE FROM %s%s WHERE question_index=%d AND response_index=%d",
+		TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index, $response_index);
 		$result = mobilAP::query($sql);
 		
-		$sql = sprintf("UPDATE %s SET response_index=response_index-1, response_value=response_value-1 WHERE question_index=%d AND response_index>%d ORDER BY response_index ASC",
-		mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index, $response_index);
+		$sql = sprintf("UPDATE %s%s SET response_index=response_index-1, response_value=response_value-1 WHERE question_index=%d AND response_index>%d ORDER BY response_index ASC",
+		TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index, $response_index);
 		$result = mobilAP::query($sql);
 	}
 	
@@ -2967,27 +2975,27 @@ class mobilAP_evaluation_question
 		$responses = $this->getResponses();
 		$response_index = count($responses);
 		$response_value = count($responses)+1;
-		$sql = sprintf("INSERT INTO %s (question_index, response_index, response_text, response_value) 
-		VALUES (%d, %d, '%s', %d)", mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index, $response_index, addslashes($response_text), $response_value);
+		$sql = sprintf("INSERT INTO %s%s (question_index, response_index, response_text, response_value) 
+		VALUES (%d, %d, '%s', %d)", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index, $response_index, addslashes($response_text), $response_value);
 		$result = mobilAP::query($sql);
 	}
 	
 	function deleteQuestion()
 	{
 		$questions = mobilAP::getEvaluationQuestions();
-		$sql = sprintf("DELETE FROM %s WHERE question_index=%d",
-		mobilAP::EVALUATION_QUESTION_TABLE, $this->question_index);
+		$sql = sprintf("DELETE FROM %s%s WHERE question_index=%d",
+		TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $this->question_index);
 		$result = mobilAP::query($sql);
-		$sql = sprintf("DELETE FROM %s WHERE question_index=%d",
-		mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index);
+		$sql = sprintf("DELETE FROM %s%s WHERE question_index=%d",
+		TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index);
 		$result = mobilAP::query($sql);
-		$sql = sprintf("ALTER TABLE %s DROP q%d", mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index);
+		$sql = sprintf("ALTER TABLE %s%s DROP q%d", TABLE_PREFIX, mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index);
 		$result = mobilAP::query($sql);
 		unset($questions[$this->question_index]);
 		for ($i=$this->question_index+1; $i<=count($questions); $i++) {
-			$sql = sprintf("ALTER TABLE %s CHANGE q%d q%d %s", mobilAP_session::SESSION_EVALUATION_TABLE, $i, $i-1, $questions[$i]->getColumnType());
+			$sql = sprintf("ALTER TABLE %s%s CHANGE q%d q%d %s", TABLE_PREFIX, mobilAP_session::SESSION_EVALUATION_TABLE, $i, $i-1, $questions[$i]->getColumnType());
 			$result = mobilAP::query($sql);
-			$sql = sprintf("UPDATE %s SET question_index=%d WHERE question_index=%d", mobilAP::EVALUATION_QUESTION_TABLE, $i-1, $i);
+			$sql = sprintf("UPDATE %s%s SET question_index=%d WHERE question_index=%d", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $i-1, $i);
 			$result = mobilAP::query($sql);
 		}
 	}
@@ -2996,18 +3004,18 @@ class mobilAP_evaluation_question
 	{
 		$questions = mobilAP::getEvaluationQuestions();
 		$this->question_index = count($questions);
-		$sql = sprintf("INSERT INTO %s (question_index, question_text, question_response_type)
-		VALUES (%d, '%s', '%s')", mobilAP::EVALUATION_QUESTION_TABLE, $this->question_index, addslashes($this->question_text), $this->question_response_type);
+		$sql = sprintf("INSERT INTO %s%s (question_index, question_text, question_response_type)
+		VALUES (%d, '%s', '%s')", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $this->question_index, addslashes($this->question_text), $this->question_response_type);
 		$result = mobilAP::query($sql);
-		$sql = sprintf("ALTER TABLE %s ADD q%d %s", mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->getColumnType());
+		$sql = sprintf("ALTER TABLE %s%s ADD q%d %s", TABLE_PREFIX, mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->getColumnType());
 		$result = mobilAP::query($sql);
 		return true;
 	}
 
 	function updateQuestion()
 	{
-		$sql = sprintf("UPDATE %s SET question_text='%s', question_response_type='%s' WHERE question_index=%d", 
-		mobilAP::EVALUATION_QUESTION_TABLE, addslashes($this->question_text), $this->question_response_type, $this->question_index);
+		$sql = sprintf("UPDATE %s%s SET question_text='%s', question_response_type='%s' WHERE question_index=%d", 
+		TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, addslashes($this->question_text), $this->question_response_type, $this->question_index);
 		$result = mobilAP::query($sql);
 		return true;
 	}
@@ -3039,15 +3047,16 @@ class mobilAP_evaluation_question
 		{
 			case mobilAP_evaluation_question::RESPONSE_TYPE_TEXT:
 			case mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES:
+
 				if ($this->question_response_type != $question_response_type) {
 					$this->question_response_type = $question_response_type;
-					$sql = sprintf("ALTER TABLE %s CHANGE q%d q%d %s", mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->question_index, $this->getColumnType());
+					$sql = sprintf("ALTER TABLE %s%s CHANGE q%d q%d %s", TABLE_PREFIX, mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->question_index, $this->getColumnType());
 					$result = mobilAP::query($sql);
 				}
 			
 				$this->question_response_type = $question_response_type;
-				$sql = sprintf("UPDATE %s SET question_response_type='%s' WHERE question_index=%d", 
-				mobilAP::EVALUATION_QUESTION_TABLE, $this->question_response_type, $this->question_index);
+				$sql = sprintf("UPDATE %s%s SET question_response_type='%s' WHERE question_index=%d", 
+				TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $this->question_response_type, $this->question_index);
 				$result = mobilAP::query($sql);
 				
 				return true;
@@ -3059,7 +3068,7 @@ class mobilAP_evaluation_question
 
 	function getQuestionByIndex($question_index)
 	{
-		$sql = sprintf("SELECT * FROM %s WHERE question_index=%d", mobilAP::EVALUATION_QUESTION_TABLE, $question_index);
+		$sql = sprintf("SELECT * FROM %s%s WHERE question_index=%d", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $question_index);
 		$result = mobilAP::query($sql);
 		if ($row = mysql_fetch_assoc($result)) {
 			$question = new mobilAP_evaluation_question();
@@ -3079,7 +3088,7 @@ class mobilAP_evaluation_question
 			return false;
 		}
 		
-		$sql = sprintf("SELECT * FROM %s WHERE question_index=%d ORDER BY response_index", mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index);
+		$sql = sprintf("SELECT * FROM %s%s WHERE question_index=%d ORDER BY response_index", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $this->question_index);
 		$result = mobilAP::query($sql);
 		$responses = array();
 		while ($row = mysql_fetch_assoc($result)) {

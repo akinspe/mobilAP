@@ -39,6 +39,8 @@ $_CONFIG = array(
     'DEFAULT_LOGOUT_URL'=>'index.php'
 );
 
+define('TABLE_PREFIX', '');
+
 function getConfig($var)
 {
 	global $_CONFIG;
