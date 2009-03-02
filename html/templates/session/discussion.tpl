@@ -2,7 +2,7 @@
 <?php 
 foreach ($session->session_chat as $item) { 
 ?>
-	<li><?= date("m/d h:i:s", $item['post_timestamp']) ?> <a href="attendee_directory?view_attendee=<?= $item['post_user'] ?>"><?= $item['post_name'] ?></a> <?= $item['post_text'] ?></li>
+	<li><?= date("m/d h:i:s", $item['post_timestamp']) ?> <a href="attendee_directory.php?view_attendee=<?= $item['post_user'] ?>"><?= $item['post_name'] ?></a> <?= $item['post_text'] ?></li>
 <?php } ?>
 </ul>
 

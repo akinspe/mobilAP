@@ -1,8 +1,6 @@
-<?php if (!$session->session_id) { ?>
 <label>Session Number:</label>
-<input type="text" name="session_id" value="" size="4" maxlength="3">	
+<input type="text" name="<?php if ($session->session_id) echo "edit_"; ?>session_id" value="<?= $session->session_id ?>" size="4" maxlength="3">
 <br class="end">
-<?php } ?>
 
 <label>Session Title</label>
 <input type="text" name="session_title" value="<?= htmlentities($session->session_title) ?>" size="60" maxlength="100">	

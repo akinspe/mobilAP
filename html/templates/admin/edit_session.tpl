@@ -51,7 +51,7 @@ if (count($session_links)>0) { ?>
 <?php
 	foreach ($session_links as $link) {
 ?>
-	<li><?= $link->link_text ?> ( <?= $link->link_url ?>) <a href="<?= $App->SCRIPT_NAME ?>?action=edit_link&amp;session_id= <?= $session->session_id ?>&amp;link_id=<?= $link->link_id ?>">edit</a></li>
+	<li><?= $link->link_text ?> ( <?= $link->link_url ?>) <a href="<?= $App->SCRIPT_NAME ?>?action=edit_link&amp;session_id=<?= $session->session_id ?>&amp;link_id=<?= $link->link_id ?>">edit</a></li>
 <?php
 	} ?>
 </ul>	
@@ -102,6 +102,7 @@ if ($mobilAP_admin) { ?>
 $session_chat = $session->get_Chat();
 ?>
 <p><?= count($session_chat) ?> posts have been submitted to the discussion section</p>
+<a href="<?= $App->SCRIPT_NAME ?>?action=view_discussion&amp;session_id=<?= $session->session_id ?>">view discussion</a>
 
 </form>
 

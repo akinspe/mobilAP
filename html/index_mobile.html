@@ -72,6 +72,17 @@
                         <div class="event_detail" id="programList_detail"></div>
                     </li>
                 </ul>
+            </div><div id="session_group">
+                <div class="heading" id="session_group_title"></div>
+                <ul id="session_group_list" class="rounded_list">
+                    <li id="sessionGroupList_template" class="programList_template" style="border-top-width: 0px; ">
+                        <div class="event_title" id="sessionGroupList_title"></div>
+                        <div id="sessionGroupList_arrow" class="listArrow_template">
+                        </div>
+                        <div class="event_room" id="sessionGroupList_room"></div>
+                        <div class="event_detail" id="sessionGroupList_detail"></div>
+                    </li>
+                </ul>
             </div><div id="directory">
                 <div id="searchBox">
                     <input type="search" value="" placeholder="Search" results="10" incremental="incremental" id="searchfield" name="attendeeSearch">
@@ -93,12 +104,47 @@
                         <div id="directory_detail_title"></div>
                         <div id="directory_detail_organization"></div>
                         <div id="directory_detail_dept"></div>
-                        <div id="directory_bio"></div>
                     </div>
                 </div>
                 <div id="directory_email_box">
                     <div id="directory_detail_email"></div>
                 </div>
+                <div id="directory_bio"></div>
+            </div><div id="announcements">
+                <div class="heading" id="announcements_title"></div>
+                <ul id="announcements_list">
+                    <li id="announcementListTemplate" class="listRowTemplate_template">
+                        <div id="announcement_list_title" class="listTitle_template"></div>
+                        <div id="announcement_list_arrow" class="listArrow_template">
+                        </div>
+                    </li>
+                </ul>
+            </div><div id="announcement_detail">
+                <div class="heading" id="announcement_title"></div>
+                <div id="announcement_timestamp"></div>
+                <div id="announcement_text"></div>
+            </div><div id="local">
+                <ul id="local_list" class="browser_list">
+                    <li id="local_listTemplate" class="listRowTemplate_template">
+                        <div id="local_label" class="listTitle_template"></div>
+                        <div id="local_arrow" class="listArrow_template">
+                        </div>
+                    </li>
+                </ul>
+            </div><div id="generic_list">
+                <ul id="generic_list_list" class="browser_list">
+                    <li id="genericListTemplate" class="listRowTemplate_template">
+                        <div id="genericList_label" class="label_template"></div>
+                        <div id="genericList_arrow" class="listArrow_template">
+                        </div>
+                    </li>
+                </ul>
+            </div><div id="generic_detail">
+                <div class="heading" id="detail_name"></div>
+                <div id="detail_text"></div>
+                <div id="detail_link" class="detail_box"></div>
+                <div id="detail_address" class="detail_box"></div>
+                <div id="detail_phone" class="detail_box"></div>
             </div><div id="sessions_page">
                 <div class="heading" id="session_title"></div>
                 <div id="session_buttons_box">
@@ -145,46 +191,7 @@
                         </ul>
                     </div><div id="session_evaluation_panel">
                         <div class="bodyParagraph" id="evaluation_intro"></div>
-                        <div id="session_evaluation_stack"><div id="question0">
-                                <div class="evaluation_label" id="evaluation0_label"></div>
-                                <ul id="evaluation0_responses" class="evaluation_response_list">
-                                    <li id="evaluation0_template" class="listRowTemplate_template" style="border-top-width: 0px; ">
-                                        <div id="evaluation0_response" class="label_template"></div>
-                                        <div id="evaluation0_arrow" class="listCheck_template">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div><div id="question1">
-                                <div class="evaluation_label" id="evaluation1_label"></div>
-                                <ul id="evaluation1_responses" class="evaluation_response_list">
-                                    <li id="evaluation1_template" class="listRowTemplate_template" style="border-top-width: 0px; ">
-                                        <div id="evaluation1_response" class="label_template"></div>
-                                        <div id="evaluation1_arrow" class="listCheck_template">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div><div id="question2">
-                                <div class="evaluation_label" id="evaluation2_label"></div>
-                                <ul id="evaluation2_responses" class="evaluation_response_list">
-                                    <li id="evaluation2_template" class="listRowTemplate_template" style="border-top-width: 0px; ">
-                                        <div id="evaluation2_response" class="label_template"></div>
-                                        <div id="evaluation2_arrow" class="listCheck_template">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div><div id="question3">
-                                <div class="evaluation_label" id="evaluation3_label"></div>
-                                <ul id="evaluation3_responses" class="evaluation_response_list">
-                                    <li id="evaluation3_template" class="listRowTemplate_template" style="border-top-width: 0px; ">
-                                        <div id="evaluation3_response" class="label_template"></div>
-                                        <div id="evaluation3_arrow" class="listCheck_template">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div><div id="question4">
-                                <div class="evaluation_label" id="evaluation4_label"></div>
-                                <textarea id="evaluation_comments"></textarea>
-                            </div></div>
+                        <div id="session_evaluation_stack"></div>
                         <div id="session_evaluation_buttons" class="button_container">
                             <div class="action_button" id="submit_evaluation_prev"></div>
                             <div class="action_button" id="submit_evaluation_next"></div>

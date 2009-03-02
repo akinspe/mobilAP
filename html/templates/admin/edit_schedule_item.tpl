@@ -14,5 +14,5 @@
 </p>
 </fieldset>
 <p>
-<a href="<?= $App->SCRIPT_NAME ?>?action=edit_schedule&amp;day=<?= $schedule_item->day ?>">return to day</a>
+<a href="<?= $App->SCRIPT_NAME ?>?action=edit_schedule&amp;date=<?= $schedule_item->date ?>">return to day</a>
 </p>

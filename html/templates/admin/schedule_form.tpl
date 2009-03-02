@@ -1,6 +1,6 @@
 <legend>Schedule Data</legend>
 <label>Date</label>
-<?= Utils::html_select_date(array('prefix'=>'', 'field_array'=>'date', 'time'=>$schedule_item->start_ts)) ?>
+<?= Utils::html_select_date(array('prefix'=>'', 'field_array'=>'date', 'time'=>$schedule_item->start_ts, 'end_year'=>'+2')) ?>
 <br>
 
 <label>Start Time</label>

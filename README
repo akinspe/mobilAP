@@ -1,4 +1,4 @@
-mobilAP Version 0.9
+mobilAP Version 0.9.5
 
 This version of the mobilAP conference edition includes two 
 components, a PHP based back-end and a HTML/Javascript based front end.
@@ -10,27 +10,64 @@ The backend has the following requirements:
 
 There are some configurations that have to be made:
 
-x
 1. Copy the contents of the html folder to a folder on your web server. It can be the root, but it doesn't have to be.
 2. Set the db_host, db_user, db_password parameters in "inc/config.php" as necessary
 3. Run setup.php which will create an admin user, and create the appropriate tables
 
 Session configuration and schedule is accomplished using the admin.php script. 
 
-
-NOTES
+RELEASE NOTES
 
 1. None of the admin scripts have any style to them.
-2. There are probably things that don't work right because of some other assumptions that may turn out to be false.
-3. There are probably some redundant files or CSS styles that haven't been cleaned up yet. 
-4. the Js.php script is the main controller for AJAX communication between the DB and the front end.
-5. The use of the APC cache is strongly encouraged. The calls in the code aren't quite there yet. but the stubs are there.
-6. Sorry about the sparse documentation. This should get improved in the future once further developement occurs.
+2. the js.php script is the main controller for AJAX communication between the DB and the front end.
+3. The use of the APC cache is strongly encouraged. The calls in the code aren't quite there yet. but the stubs are there.
+4. Sorry about the sparse documentation. This should get improved in the future once further developement occurs.
+5. A Dashcode project file has been included to aid in customization. (See notes below with important information about using dashcode to customize)
 
-Please send any feedback or suggestions to:
-mobilap@daap.uc.edu
+If you were previously using 0.9 you will need to drop a few tables since the schema has changed. If you don't know what this means, then just remove ALL the tables from your database and then create a new blank database and run setup.php to recreate the tables. If you're advanced enough and know your way around MySQL you can look at setup.php for the table definitions
+
+New Tables:
+- announcements
+- announcements read
+- evaluation_questions
+- evaluation_question_responses
+Dropped Tables
+- session_group_sessions
+Changed Tables:
+- session_evaluations (drop the qX columns since the columns are now generated on the fly as the questions are added, removed)
+- session_groups (add the session_group_detail varchar(100) column)
+
+Issues / Features addressed since 0.9
+==============================================================================
+- Added "Announcements" section to post conference wide announcements (not tied to a session)
+- Added an admin option to export the MySQL database (this feature makes some assumptions that may or may not be true. You may need to alter the path to the mysql binary)
+- Added the concept of "Schedule Groups" that allow you to have multiple items appear as one in the day view and then break out into multiple items. This is handy for simultanous sessions to keep the schedule as short and clean as possible
+- Added an admin ability to view and clear session discussions
+- Fixed several bad links that wouldn't work if you didn't have Apache MultiViews enabled (no extension was used)
+- Session IDs no longer have to be 3 digits, HOWEVER they must still be 3 characters. But those characters can be digits or letters
+- Fixed issue where session ids that started with one or more zeros (0) had various problems
+- You can alter a session ID after it's been created
+- Fixed a typo that prevented editing existing links
+- The Desktop version now shows the presenters in the info section
+- Evaluation questions are now editable. You can create any number of session evaluation questions with any combination of multiple choice or free response questions that will apply to ALL sessions (PLEASE TEST THIS PART THOROUGHLY!)
+- Desktop navigation now includes login link and admin link (if applicable)
+- Fixed issue where you couldn't create a schedule for a future year
+
+
+NOTES ABOUT THE DASHCODE PROJECT FILE
+
+A Dashcode project file has been included to aid in customization. If you download and install the iPhone SDK, you will get a version of Dashcode that will be able to create and edit iPhone OS based web applications. 
+
+Keep in mind that Dashcode does not handle CSS classes perfectly especially when renaming, so beware as you add and remove elements that it does not do unintentional things to the CSS file (it will!). Simply copying and pasting the original main.css file into the dashcode editor will typically reset things.
+
+Due to how Dashcode does it's work, you cannot RUN it inside of Dashcode as is. The reason is that it uses file:// type of URLs in the simulator that make the php scripts not function quite right. Intrepid users need to alter the baseURL variable in the main.js file to add a full url i.e.  http://host.something.com/rootpath/ to make sure the js.php file is properly referenced in the simulator. Do not include a trailing slash. Localhost should work just fine.
+
+You will then need to build the scripts and then replace them (CAREFULLY!) in the mobilAP folder. Be careful not to clobber any CSS or image files that are already there. You then MUST rename the resulting index.html to index_mobile.html for it to work cooperatively with the desktop version.
+
+Please contact mobilap@daap.uc.edu if you have any questions, bug submissions or requests. We make no guarantee, however, with respect to future releases.
 
 Please note that technical support cannot be given, although paid consultation for conference help is available.
 
 Monitor http://daap.uc.edu/mobilap for future updates.
 
+The license is a very liberal BSD Style license. You may alter this as you need as long as you continue to give original attribution to the University of Cincinnati. See the LICENSE file for more information

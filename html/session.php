@@ -9,7 +9,7 @@ if (!$session = mobilAP_session::getSessionByID($session_id)) {
 	exit();
 }
 
-$view = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
+$view = isset($_REQUEST['view']) ? $_REQUEST['view'] : 'info';
 $session->session_questions = $session->getQuestions();
 $session->session_userdata = $session->getUserSubmissions($App->getUserToken());
 
@@ -17,6 +17,7 @@ $session->session_userdata = $session->getUserSubmissions($App->getUserToken());
 switch ($view)
 {
 	case 'info':
+		$session->session_presenters = $session->getPresentersDirectory();
 		break;
 	case 'links':
 		if (isset($_REQUEST['add_link'])) {
@@ -79,9 +80,11 @@ switch ($view)
 		} elseif ($session->session_userdata['evaluation']) {
 			$view = 'evaluation_thanks';
 		}
+		
 		break;
 	default:
 		$view = 'info';
+		$session->session_presenters = $session->getPresentersDirectory();
 		break;
 }
 
@@ -90,28 +93,7 @@ $PAGE = 'sessions';
 $view_template = isset($view_template) ? $view_template : $view;
 
 include('templates/header.tpl');
-include('templates/nav.tpl');
-
-?>
-<h2><?= $session->session_id . ' ' . $session->session_title ?></h2>
-<ul id="session_views">
-<?php foreach (array('info'=>'Info', 'links'=>'Links', 'questions'=>'Questions', 'discussion'=>'Discussion') as $_view=>$_view_title) { ?>
-	<?php if ($view==$_view) { ?>
-	<li class="active"><?= $_view_title ?>
-		<?php } elseif ($_view != 'questions' || count($session->session_questions)>0) { ?>
-	<li><a href="session.php?session_id=<?= $session->session_id ?>&view=<?= $_view ?>"><?= $_view_title ?></a>
-		<?php } else { ?>
-	<li class="disabled"><?= $_view_title ?>
-		<?php } ?>
-	</li>
-<?php } ?>	
-</ul>
-<div class="clearbox"></div>
-<?= $App->getMessages() ?>
-
-<?php
-
-include("templates/session/{$view_template}.tpl");
+include('templates/session/session.tpl');
 include('templates/footer.tpl');
 
 ?>

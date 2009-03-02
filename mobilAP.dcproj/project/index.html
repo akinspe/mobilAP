@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>mobilAP</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=1">
+    <link rel="apple-touch-icon" href="Images/icon.png">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="Parts/Transitions.css">
+    <script type="text/javascript" src="Parts/setup.js" charset="utf-8"></script>
+    <script type="text/javascript" src="utils.js" charset="utf-8"></script>
+    <script type="text/javascript" src="main.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/Header.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/utilities.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/Transitions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/StackLayout.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/Browser.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/Text.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/List.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/PushButton.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Parts/ButtonHandler.js" charset="utf-8"></script>
+</head>
+<body onload="load();">
+    <div apple-part="com.apple.Dashcode.part.browser" id="browser">
+        <div apple-part="com.apple.Dashcode.part.header" apple-part-locked="true" apple-style="image-theme: 1; image-shape: 3; image-button-type: 3; image-opacity: 1.00; image-top-color: 0.592156887,0.65882355,0.741176486,1; image-bottom-color: 0.411764711,0.513725519,0.635294139,1; image-radius: 0,0,0,0; image-border: 0; image-border-color: 0.529399991,0.529399991,0.529399991,1; image-border-width: 0; shine-on: 1; shine-strength: 0.08; shine-alpha-level: 0.00; shine-height: 0.50; glass-arc-height: 0.00; shadow-include-shadow: 0;" apple-group="header" id="header">
+            <div apple-part="com.apple.Dashcode.part.gobackbutton" id="back_button" class="apple-no-children back_button_template dashcode-header-backbutton" apple-part-locked="true" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 11; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" apple-template="true"></div>
+            <div apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="login_button"></div>
+        </div>
+        <div id="subheader"><div id="login_status"></div></div>
+        <div id="login_form">
+            <div id="login_form_fields">
+                <div class="login_label">email:</div>
+                <input type="text" name="" value="" class="apple-textfield apple-no-children login_field" apple-part="com.apple.Dashcode.part.textfield" id="login_userID">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="login_result" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <div apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="login_submit"></div>
+            </div>
+        </div>
+        <div apple-part="com.apple.Dashcode.part.StackLayout" apple-part-locked="true" id="stackLayout" class="stack">
+            <div id="home" apple-part-locked="true">
+                <ul apple-part="com.apple.Dashcode.part.edgeToEdgeList" id="homeList" class="browser_list">
+                    <li id="listRowTemplate" class="listRowTemplate_template" apple-template="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children listTitle_template" apple-text-overflow="ellipsis" id="listTitle" apple-style="part-width-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.box" id="listArrow" class="listArrow_template"></div>
+                    </li>
+                </ul>
+                <img src="Images/logo.png" id="logo"></div>
+            <div id="welcome" apple-part-locked="true" apple-css-background-fill="blank">
+                <div apple-part="com.apple.Dashcode.part.box" id="welcome_box" class="box">
+                    <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="welcomeHeading" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children bodyText" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="welcomeText" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    <div id="demo_container">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children bodyText" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="demo_text" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="sessions" apple-part-locked="true">
+                <div id="session_menu">
+                    <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="session_menu_list">
+                        <li id="session_menu_template" apple-template="true" class="session_menu_template_template" style="border-top-width: 0px; ">
+                            <div id="session_menu_label" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children session_menu_label" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_day" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="programs_list" class="rounded_list">
+                    <li id="programList_template" apple-template="true" class="programList_template" style="border-top-width: 0px; ">
+                        <div id="programList_time" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_time" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;" style=""></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_title" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="programList_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div id="programList_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                        </div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_room" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="programList_room" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_detail" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="programList_detail" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </li>
+                </ul>
+            </div><div id="session_group" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_group_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="session_group_list" class="rounded_list">
+                    <li id="sessionGroupList_template" apple-template="true" class="programList_template" style="border-top-width: 0px; ">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_title" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="sessionGroupList_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div id="sessionGroupList_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                        </div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_room" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="sessionGroupList_room" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_detail" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="sessionGroupList_detail" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </li>
+                </ul>
+            </div><div id="directory" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.box" id="searchBox">
+                    <input type="search" value="" placeholder="Search" results="10" incremental="incremental" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.searchfield" id="searchfield" name="attendeeSearch">
+                    <img src="Images/search_cancel.png" id="searchCancel">
+                </div>
+                <ul apple-part="com.apple.Dashcode.part.edgeToEdgeList" id="directoryList" class="browser_list">
+                    <li id="directoryListTemplate" apple-template="true" class="listRowTemplate_template">
+                        <div id="name" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children listTitle_template" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;"></div>
+                        <div id="arrow1" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                        </div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children organization_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="organization" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </li>
+                </ul>
+            </div><div id="directory_detail" apple-part-locked="true">
+                <div id="directory_top_box">
+                    <div apple-part="com.apple.Dashcode.part.box" id="directory_image_box"><img id="directory_detail_image"></div>
+                    <div id="directory_detail_info_box">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="directory_detail_name" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="directory_detail_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="directory_detail_organization" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="directory_detail_dept" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </div>
+                </div>
+                <div apple-part="com.apple.Dashcode.part.box" id="directory_email_box">
+                    <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="directory_detail_email" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                </div>
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="directory_bio" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+            </div><div id="announcements" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="announcements_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <ul apple-part="com.apple.Dashcode.part.edgeToEdgeList" id="announcements_list">
+                    <li id="announcementListTemplate" apple-template="true" class="listRowTemplate_template">
+                        <div id="announcement_list_title" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children listTitle_template" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div id="announcement_list_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                        </div>
+                    </li>
+                </ul>
+            </div><div id="announcement_detail" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="announcement_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="announcement_timestamp" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="announcement_text" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+            </div><div id="local" apple-part-locked="true">
+                <ul apple-part="com.apple.Dashcode.part.edgeToEdgeList" id="local_list" class="browser_list">
+                    <li id="local_listTemplate" apple-template="true" class="listRowTemplate_template">
+                        <div id="local_label" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children listTitle_template" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;"></div>
+                        <div id="local_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                        </div>
+                    </li>
+                </ul>
+            </div><div id="generic_list" apple-part-locked="true">
+                <ul apple-part="com.apple.Dashcode.part.edgeToEdgeList" id="generic_list_list" class="browser_list">
+                    <li id="genericListTemplate" apple-template="true" class="listRowTemplate_template">
+                        <div id="genericList_label" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label_template" apple-text-overflow="ellipsis"></div>
+                        <div id="genericList_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                        </div>
+                    </li>
+                </ul>
+            </div><div id="generic_detail" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="detail_name" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="detail_text" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <div apple-part="com.apple.Dashcode.part.box" id="detail_link" class="detail_box"></div>
+                <div apple-part="com.apple.Dashcode.part.box" id="detail_address" class="detail_box"></div>
+                <div apple-part="com.apple.Dashcode.part.box" id="detail_phone" class="detail_box"></div>
+            </div><div id="sessions_page" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <div apple-part="com.apple.Dashcode.part.box" id="session_buttons_box">
+                    <div id="session_info_button" class="session_button">Info</div>
+                    <div id="session_links_button" class="session_button">Links</div>
+                    <div id="session_questions_button" class="session_button">Questions</div>
+                    <div id="session_discussion_button" class="session_button">Discuss</div>
+                </div>
+                <div apple-part="com.apple.Dashcode.part.StackLayout" id="session_data_stack"><div id="session_info_panel" apple-part-locked="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_abstract" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="session_presenters_list">
+                            <li id="presenter_template" apple-template="true" class="presenter_template_template" style="border-top-width: 0px; ">
+                                <div id="presenter_name" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children presenter_name" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children presenter_organization_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="presenter_organization" apple-style="part-height-dependent: true;"></div>
+                                <div id="presenter_arrow" apple-part="com.apple.Dashcode.part.box" class="presenter_arrow_template">
+                                </div>
+                            </li>
+                        </ul>
+                        <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="session_rate_button"></div>
+                    </div><div id="session_links_panel" apple-part-locked="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children bodyParagraph" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_links_description" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="session_add_link_button"></div>
+                        <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="session_links_list" class="rounded_list">
+                            <li id="session_links_template" apple-template="true" class="session_links_template_template" style="border-top-width: 0px; ">
+                                <div id="session_links_label" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label_template" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                                <div id="session_links_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                                </div>
+                            </li>
+                        </ul>
+                    </div><div id="session_links_add_panel" apple-part-locked="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="link_url_label" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <input type="text" name="" value="http://" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.textfield" id="link_url_field">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="link_title_label" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <input type="text" name="" value="" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.textfield" id="link_title_field">
+                        <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="links_save_button"></div>
+                    </div><div id="session_questions_panel" apple-part-locked="true">
+                        <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="session_questions_list" class="rounded_list">
+                            <li id="session_question_template" apple-template="true" class="session_question_template_template" style="border-top-width: 0px; ">
+                                <div id="session_question_num" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label_template session_question_num" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children session_question_text" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_question_text" apple-style="part-height-dependent: true;"></div>
+                                <div id="session_question_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                                </div>
+                            </li>
+                        </ul>
+                    </div><div id="session_evaluation_panel" apple-part-locked="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children bodyParagraph" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="evaluation_intro" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div id="session_evaluation_stack"></div>
+                        <div id="session_evaluation_buttons" class="button_container">
+                            <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="submit_evaluation_prev"></div>
+                            <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.294117659,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="submit_evaluation_next"></div>
+                        </div>
+                    </div><div id="session_evaluation_thanks_panel" apple-part-locked="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="evaluation_thanks_text" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </div><div id="session_discussion_panel" apple-part-locked="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children bodyParagraph" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_discussion_description" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <textarea apple-part="com.apple.Dashcode.part.textarea" id="post_text_field"></textarea>
+                        <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="post_view"></div>
+                        <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="post_submit"></div>
+                    </div><div id="session_discussion_view_panel" apple-part-locked="true">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children bodyParagraph" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="session_discussion_count" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div id="session_discussion_paging">
+                            <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="session_discussion_prev"></div>
+                            <div id="session_discussion_page_textbox">
+                                <span id="session_discussion_page"></span>/<span id="session_discussion_page_count"></span>
+                            </div>
+                            <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="session_discussion_next"></div>
+                        </div>
+                        <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="session_discussion_list" class="rounded_list">
+                            <li id="session_discussion_template" apple-template="true" class="session_chat_row_template" style="border-top-width: 0px; ">
+                                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children post_timestamp_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="post_timestamp" apple-style="part-height-dependent: true;"></div>
+                                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children post_user_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="post_user" apple-style="part-height-dependent: true;"></div>
+                                <div id="post_text" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children post_text" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                            </li>
+                        </ul>
+                        <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="session_discussion_post"></div>
+                    </div></div>
+            </div><div id="sessions_question_ask" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="question_text" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="question_responses" class="rounded_list">
+                    <li id="question_response_template" apple-template="true" class="question_response_template_template" style="border-top-width: 0px; ">
+                        <div id="question_response_label" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label_template question_response_text" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div id="response_arrow" apple-part="com.apple.Dashcode.part.box" class="listCheck_template">
+                        </div>
+                    </li>
+                </ul>
+                <div id="session_question_buttons" class="button_container">
+                    <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 0.419607848,0.733333349,0.447058827,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="submit_response"></div>
+                    <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="view_results"></div>
+                </div>
+            </div><div id="sessions_question_response" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="question_response_text" apple-style="part-width-dependent: true;part-height-dependent: true;" style=""></div>
+                <div apple-part="com.apple.Dashcode.part.box" id="question_response_box" class="box">
+                    <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children bodyText" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="question_response_total" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                </div>
+                <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="question_answers" class="rounded_list">
+                    <li id="question_response_list_template" apple-template="true" class="question_response_list_template_template" style="border-top-width: 0px; ">
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children question_response_index" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="question_response_index" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div id="question_response_text_label" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label_template question_response_text" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children label_template_right" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="question_response_count" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </li>
+                </ul>
+                <div apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children action_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 1; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,15,15,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;" id="back_to_questions"></div>
+            </div>
+            <div id="sessions_current" apple-part-locked="true">
+                <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children heading" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="sessions_current_heading" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                <ul apple-part="com.apple.Dashcode.part.roundedRectangleList" id="sessions_current_list" class="rounded_list">
+                    <li id="sessions_current_list_template" apple-template="true" class="programList_template" style="border-top-width: 0px; ">
+                        <div id="sessions_current_time" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_time" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                        <div id="sessions_current_arrow" apple-part="com.apple.Dashcode.part.box" class="listArrow_template">
+                        </div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_title" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="sessions_current_title" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_room" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="sessions_current_room" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                        <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children event_detail" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" id="sessions_current_detail" apple-style="part-width-dependent: true;part-height-dependent: true;"></div>
+                    </li>
+                </ul>
+            </div></div>
+    </div>
+</body>
+</html>

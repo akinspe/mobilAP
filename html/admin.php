@@ -42,8 +42,95 @@ if (isset($_POST['cancel_question'])) {
 	$action='edit_question';
 }
 
+if (isset($_POST['cancel_announcement'])) {
+	$action='announcements';
+}
+
+if (isset($_POST['cancel_session_group'])) {
+	$action='session_groups';
+}
+
+if (isset($_POST['cancel_evaluation_question'])) {
+	$action = "evaluation_questions";
+}
+
 switch ($action)
 {
+	case 'export_data':
+		$sql = mobilAP::export_data_sql();
+		header('Content-type: text/plain');
+		print $sql;
+		exit();
+
+	case 'add_announcement':
+		$announcement = new mobilAP_announcement();
+		$template_file = 'announcement_add.tpl';
+		if (isset($_POST['add_announcement'])) {
+			$announcement_title = isset($_POST['announcement_title']) ? $_POST['announcement_title'] : '';
+			$announcement_text = isset($_POST['announcement_text']) ? $_POST['announcement_text'] : '';
+
+			$ok = true;
+
+			if (!$announcement->setTitle($announcement_title)) {
+				$App->addErrorMessage("Please include a title");
+				$ok = false;
+
+			}
+			if (!$announcement->setText($announcement_text)) {
+				$App->addErrorMessage("Please include some text");
+				$ok = false;
+			}
+
+			if ($ok) {
+				$announcement->postAnnouncement($App->getUserID());
+			} else {
+				break;
+			}
+		} else {
+			break;
+		}
+		
+	case 'edit_announcement':
+		$announcement_id = isset($_REQUEST['announcement_id']) ? $_REQUEST['announcement_id'] : '';
+		if ($announcement = mobilAP_announcement::getAnnouncementById($announcement_id)) {
+			$template_file = 'announcement_edit.tpl';
+
+			if (isset($_POST['update_announcement'])) {
+				$announcement_title = isset($_POST['announcement_title']) ? $_POST['announcement_title'] : '';
+				$announcement_text = isset($_POST['announcement_text']) ? $_POST['announcement_text'] : '';
+	
+				$ok = true;
+	
+				if (!$announcement->setTitle($announcement_title)) {
+					$App->addErrorMessage("Please include a title");
+					$ok = false;
+	
+				}
+				if (!$announcement->setText($announcement_text)) {
+					$App->addErrorMessage("Please include some text");
+					$ok = false;
+				}
+	
+				if ($ok) {
+					$announcement->updateAnnouncement($App->getUserID());
+				} else {
+					break;
+				}
+			} elseif (isset($_POST['delete_announcement'])) {
+				$announcement->deleteAnnouncement($App->getUserID());
+				$action='announcements';
+			} else {
+				break;
+			}
+		} 
+
+	case 'announcements':
+		$announcements = mobilAP_announcement::getAnnouncements();
+		$template_file = 'announcements_admin.tpl';
+		
+		
+		break;
+
 	case 'add_schedule_item':
 	
 		$schedule_item = new mobilAP_schedule_item();
@@ -132,6 +219,30 @@ switch ($action)
 		}
 
 		$template_file = 'edit_schedule.tpl';
+		break;
+
+	case 'edit_session_group':
+		$session_group_id = isset($_REQUEST['session_group_id']) ? $_REQUEST['session_group_id'] : '';
+		if ($session_group = mobilAP_session_group::getSessionGroupByID($session_group_id)) {
+			if (isset($_POST['update_session_group'])) {
+				$session_group_title = isset($_POST['session_group_title']) ? $_POST['session_group_title'] : '';
+				$session_group_detail = isset($_POST['session_group_detail']) ? $_POST['session_group_detail'] : '';
+				$session_group->setTitle($session_group_title);
+				$session_group->setDetail($session_group_detail);
+				$session_group->updateGroup();
+			} elseif (isset($_POST['delete_session_group'])) {
+				$session_group->deleteGroup();
+				$App->addMessage("Session group deleted");
+			} else {
+				$template_file = 'edit_session_group.tpl';
+				break;			
+			}
+		}
+
+	case 'session_groups':
+		$action='session_groups';
+		$session_groups = mobilAP_session_group::getSessionGroups();
+		$template_file = 'session_groups.tpl';
 		break;
 		
 	case 'view_evaluations':
@@ -404,6 +515,21 @@ switch ($action)
 			$action='main';
 		}
 		break;
+		
+
+	case 'delete_discussion':
+		$session_id = isset($_REQUEST['session_id']) ? $_REQUEST['session_id'] : '';
+		if ($session = mobilAP_session::getSessionByID($session_id)) {
+			$post_id = isset($_REQUEST['post_id']) ? $_REQUEST['post_id'] : '';
+			$session->delete_chat($post_id);
+		} 
+
+	case 'view_discussion':
+		$session_id = isset($_REQUEST['session_id']) ? $_REQUEST['session_id'] : '';
+		if ($session = mobilAP_session::getSessionByID($session_id)) {
+			$template_file = 'view_discussion.tpl';
+		} 
+		break;
 
 	case 'view_responses':
 		$session_id = isset($_REQUEST['session_id']) ? $_REQUEST['session_id'] : '';
@@ -475,9 +601,17 @@ switch ($action)
 				$ok = true;
 				$session_title = isset($_POST['session_title'])? $_POST['session_title'] : '';
 				$session_abstract = isset($_POST['session_abstract'])? $_POST['session_abstract'] : '';
+				$edit_session_id = isset($_POST['edit_session_id'])? $_POST['edit_session_id'] : $session_id;
 								
 				$session->setSessionTitle($session_title);
 				$session->setSessionAbstract($session_abstract);
+				
+				$result = $session->setSessionID($edit_session_id);
+				if (mobilAP_Error::isError($result)) {
+					$ok = false;
+					$App->addErrorMessage("Error changing session id: " . $result->getMessage());
+				}
+				
 				if ($ok) {
 					$session->updateSession();
 					$App->addMessage("Session $session_id updated");
@@ -516,6 +650,82 @@ switch ($action)
 		
 		}
 		break;
+	case 'edit_evaluation_response':
+		die();
+		break;
+	case 'edit_evaluation_question':
+		$question_index = isset($_REQUEST['question_index']) ? $_REQUEST['question_index'] : '';
+		
+		if ($question = mobilAP_evaluation_question::getQuestionByIndex($question_index)) {
+			$template_file = 'evaluation_edit_question.tpl';
+			if (isset($_POST['remove_response'])) {
+				$response_index = key($_POST['remove_response']);
+				$question->removeResponse($response_index);
+			}
+
+			if (isset($_POST['add_response'])) {
+				$add_response_text = isset($_POST['add_response_text']) ? $_POST['add_response_text'] : '';
+				$result = $question->addResponse($add_response_text);
+				if (mobilAP_Error::isError($result)) {
+					$App->addErrorMessage("Error adding response: " . $result->getMessage());
+					break;
+				} 
+			}
+			
+			if (isset($_POST['delete_question'])) {
+				$App->addMessage("Question deleted");
+				$question->deleteQuestion();
+				$action='evaluation_questions';
+				$evaluation_questions = mobilAP::getEvaluationQuestions();
+				$template_file = 'evaluation_questions.tpl';
+			}
+		} else {
+			$evaluation_questions = mobilAP::getEvaluationQuestions();
+			$template_file = 'evaluation_questions.tpl';
+		}
+	case 'add_evaluation_question':
+		if ($action=='add_evaluation_question') {
+			$template_file = 'evaluation_add_question.tpl';
+			$question = new mobilAP_evaluation_question();
+		}
+		if (isset($_POST['add_question']) || isset($_POST['update_question'])) {
+			$question_text = isset($_POST['question_text']) ? $_POST['question_text'] : '';
+			$question_response_type = isset($_POST['question_response_type']) ? $_POST['question_response_type'] : $question->question_response_type;
+			$ok = true;
+			if (!$question->setQuestionText($question_text)) {
+				$ok = false;
+				$App->addErrorMessage("Invalid question text");
+			}
+			if (!$question->setQuestionResponseType($question_response_type)) {
+				$ok = false;
+				$App->addErrorMessage("Invalid question response type");
+			}
+			
+			if ($ok) {
+				if ($action=='add_evaluation_question')  {
+					$result = $question->addQuestion();
+					if (mobilAP_Error::isError($result)) {
+						$App->addErrorMessage("Error adding question: " . $result->getMessage());
+						break;
+					} 
+				} else {
+					$result = $question->updateQuestion();
+					if (mobilAP_Error::isError($result)) {
+						$App->addErrorMessage("Error updating question: " . $result->getMessage());
+						break;
+					}					
+				}
+			} else {
+				break;
+			}
+		} else {
+			break;
+		}
+		
+	case 'evaluation_questions':
+		$evaluation_questions = mobilAP::getEvaluationQuestions();
+		$template_file = 'evaluation_questions.tpl';
+		break;
 
 	case 'main':
 	default:
@@ -536,6 +746,7 @@ switch ($action)
 		break;
 		
 	case 'edit_schedule':
+		$session_groups = mobilAP_session_group::getSessionGroups();
 		$template_file = 'edit_schedule.tpl';
 		break;
 		

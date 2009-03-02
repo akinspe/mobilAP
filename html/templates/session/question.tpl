@@ -11,5 +11,6 @@
 </ul>
 
 <input type="submit" name="submit_response" id="submit_response" value="Submit Response">
+<input type="submit" name="submit_response" id="view_results" value="View Results">
 
 </form>

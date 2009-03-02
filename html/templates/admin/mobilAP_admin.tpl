@@ -9,8 +9,19 @@
 <?php } ?>
 
 <?php if ($mobilAP_admin) { ?>
+<h2>Other</h2>
+<ul>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=announcements">Manage Announcements</a></li>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=export_data">Export SQL Data</a></li>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=evaluation_questions">Evaluation Questions</a></li>
+</ul>
+
 <h2>Schedule</h2>
-<p><a href="<?= $App->SCRIPT_NAME ?>?action=add_schedule_item">Add Item</a></p>
+<ul>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=add_schedule_item">Add Item</a></li>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=session_groups">Session Groups</a></li>
+</ul>	
+
 <ul>
 <?php foreach ($mobilAP_days as $date) {  ?>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=edit_schedule&amp;date=<?= $date['date'] ?>"><?= $date['date_str'] ?></a></li>
@@ -18,10 +29,12 @@
 </ul>
 <?php } ?>
 
-
 <h2>Sessions</h2>
 <?php if ($mobilAP_admin) { ?>
 <p><a href="<?= $App->SCRIPT_NAME ?>?action=add_session">Add Session</a></p>
+<?php } 
+if ($sessions) { 
+if ($mobilAP_admin) { ?>
 <table class="wide admin">
 <tr>
 	<th colspan="2">Session</th>
@@ -56,4 +69,7 @@ if ($mobilAP_admin) {
 </table>
 <?php } else { ?>
 </ul>
-<?php } ?>
+<?php } 
+}?>
+
+<a href="index.php">Back to site</a>
