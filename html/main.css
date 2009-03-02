@@ -302,7 +302,7 @@ a {
     height: auto;
     background-color: rgb(51, 51, 51);
     font-size: 12px;
-    background-image: url(Images/search_background%201.png);
+    background-image: url(Images/search_background.png);
     background-repeat: repeat-x;
     background-position: 50% 50%;
 }

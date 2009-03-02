@@ -35,8 +35,8 @@ $_CONFIG = array(
     'default_password'=>'mobilAP',
     'MYSQL_BIN_FOLDER'=>'/usr/local/mysql/bin/', //this is if you use a MySQL package
 //  'MYSQL_BIN_FOLDER'=>'/usr/bin/' //this is for OS X Server (by default)
-    'DEFAULT_LOGIN_URL'=>'/',
-    'DEFAULT_LOGOUT_URL'=>'/'
+    'DEFAULT_LOGIN_URL'=>'index.php',
+    'DEFAULT_LOGOUT_URL'=>'index.php'
 );
 
 function getConfig($var)

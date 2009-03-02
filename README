@@ -1,4 +1,4 @@
-mobilAP Version 0.9.5
+mobilAP Version 0.9.6
 
 This version of the mobilAP conference edition includes two 
 components, a PHP based back-end and a HTML/Javascript based front end.
@@ -36,6 +36,9 @@ Dropped Tables
 Changed Tables:
 - session_evaluations (drop the qX columns since the columns are now generated on the fly as the questions are added, removed)
 - session_groups (add the session_group_detail varchar(100) column)
+
+Bugs addressed since 0.9.5
+- Changed the default "baseURL" property in main.js to work better from a default configuration. In most cases, it would have required changing the value to work. Now the ajax calls are all done in the base script's current folder. This will work in nearly all cases.
 
 Issues / Features addressed since 0.9
 ==============================================================================

@@ -2648,7 +2648,7 @@ class mobilAP_webuser
     function _setSession()
     {
     	$_SESSION['mobilAP_userID'] = $this->getUserID();
-		setCookie('mobilAP_userID', $this->getUserID(), mktime(0,0,0,10,11,2037), getConfig('mobilAP_base_path'));
+		setCookie('mobilAP_userID', $this->getUserID(), mktime(0,0,0,10,11,2037));
     }    
 
     function _getSession()
@@ -2720,7 +2720,7 @@ class mobilAP_webuser
     function _reset()
     {
         unset($_SESSION['mobilAP_userID']);
-		setCookie('mobilAP_userID', '', mktime(0,0,0,10,11,1977), getConfig('mobilAP_base_path'));
+		setCookie('mobilAP_userID', '', mktime(0,0,0,10,11,1977));
 		
         $this->mobilAP_userID = null;
         $this->_setSession();
@@ -3039,7 +3039,17 @@ class mobilAP_evaluation_question
 		{
 			case mobilAP_evaluation_question::RESPONSE_TYPE_TEXT:
 			case mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES:
+				if ($this->question_response_type != $question_response_type) {
+					$this->question_response_type = $question_response_type;
+					$sql = sprintf("ALTER TABLE %s CHANGE q%d q%d %s", mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->question_index, $this->getColumnType());
+					$result = mobilAP::query($sql);
+				}
+			
 				$this->question_response_type = $question_response_type;
+				$sql = sprintf("UPDATE %s SET question_response_type='%s' WHERE question_index=%d", 
+				mobilAP::EVALUATION_QUESTION_TABLE, $this->question_response_type, $this->question_index);
+				$result = mobilAP::query($sql);
+				
 				return true;
 				break;
 		}

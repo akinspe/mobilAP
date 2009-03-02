@@ -1,5 +1,5 @@
 var baseUrl = '';
-var js_script = baseUrl + '/js.php';
+var js_script = baseUrl + 'js.php';
 
 //init handler
 function load()
@@ -131,10 +131,10 @@ var mobilAP = {
             //set cookie to persist login
             if (mobilAP.user.mobilAP_userID) {
                 document.cookie = 
-                'mobilAP_userID=' + mobilAP.user.mobilAP_userID+ '; expires=Sun, 11 Oct 2037 00:00:00 UTC; path=/mobilAP/';
+                'mobilAP_userID=' + mobilAP.user.mobilAP_userID+ '; expires=Sun, 11 Oct 2037 00:00:00 UTC;';
             } else {
                 document.cookie = 
-                'mobilAP_userID=; expires=Sun, 9 Jul 2006 00:00:00 UTC; path=/mobilAP/';
+                'mobilAP_userID=; expires=Sun, 9 Jul 2006 00:00:00 UTC;';
             }
         } catch (e) {
             mobilAP.log(e);
@@ -314,7 +314,7 @@ var mobilAP = {
     	//don't try and load the schedule more than once or while its already loading
         if (!this.schedule_loaded && !this.schedule_loading) {
             this.schedule_loading=true;
-            var url = baseUrl+'js?get=schedule';
+            var url = js_script + '?get=schedule';
             mobilAP.loadURL(js_script + '?get=schedule', mobilAP.processSchedule);
         }
         return this.schedule_data;
@@ -1796,13 +1796,13 @@ var announcement_controller = {
         var date = new Date(announcement.announcement_timestamp*1000);
         document.getElementById('announcement_timestamp').innerHTML = "Posted " + date.formatDate('m/d g:ia');
         document.getElementById('announcement_text').innerHTML = announcement.announcement_text;
-        mobilAP.loadURL(baseUrl + ' js.php?post=readAnnouncement&announcement_id=' + announcement.announcement_id, announcement_controller.getAnnouncements);
+        mobilAP.loadURL(js_script + '?post=readAnnouncement&announcement_id=' + announcement.announcement_id, announcement_controller.getAnnouncements);
         return;
     },
     
 	
     getAnnouncements: function() {
-        mobilAP.loadURL(baseUrl + 'js.php?get=announcements', announcement_controller.processAnnouncements);
+        mobilAP.loadURL(js_script + '?get=announcements', announcement_controller.processAnnouncements);
     },
 
     processAnnouncements: function(xhr) {
