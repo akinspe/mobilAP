@@ -21,20 +21,26 @@ class mobilAP
 	const EVALUATION_QUESTION_TABLE='evaluation_questions';	
 	const EVALUATION_QUESTION_RESPONSE_TABLE='evaluation_question_responses';
 
-	static function flushCache($key)
+	public static function flushCache($key)
 	{
-		//no op
+		if (function_exists('apc_delete')) {
+			apc_delete($key);
+		}
 	}
 
-	static function setCache($key)
+	public static function setCache($key, $value, $ttl=0)
 	{
-		//no op
+		if (function_exists('apc_store')) {
+			return apc_store($key, $value, $ttl);
+		}
 	}
 
-	static function getCache($key)
+	public static function getCache($key)
 	{
+		if (function_exists('apc_fetch')) {
+			return apc_fetch($key);
+		}
 		return false;
-		//no op
 	}
 	
     static function query($sql,$continue=false)
@@ -602,6 +608,7 @@ class mobilAP_schedule_item
 		$sql = "DELETE FROM " . TABLE_PREFIX .  mobilAP::SCHEDULE_TABLE . " 
 				WHERE schedule_id=$this->schedule_id";
 		$result = mobilAP::query($sql);
+		mobilAP::flushCache('mobilAP_schedule');		
 	}
 	
 	public function updateItem()
@@ -621,6 +628,7 @@ class mobilAP_schedule_item
 				session_group_id=$session_group_id
 				WHERE schedule_id=$this->schedule_id";
 		$result = mobilAP::query($sql);
+		mobilAP::flushCache('mobilAP_schedule');		
 		return true;
 	}
 	
