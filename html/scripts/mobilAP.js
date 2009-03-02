@@ -1,8 +1,8 @@
-function confirmClick(e)
+function confirmClick(e, msg)
 {
-	var msg = 'Are you sure?';
+	if (!msg) msg = 'Are you sure?';
     if (!confirm(msg)) {
-        Event.stop(e);
+        e.stopPropagation();
         return false;
     }
     
@@ -11,7 +11,7 @@ function confirmClick(e)
 
 function mobilAP_init()
 {
-	$$('.confirm').invoke('observe', 'click', confirmClick);
+	$('.confirm').click(confirmClick);
 }
 
-window.onload = mobilAP_init;
+$(mobilAP_init);

@@ -6,7 +6,7 @@
 	<meta name = "viewport" content = "width = 425">
 	<title><?= isset($PAGE_TITLE) ? $PAGE_TITLE : getConfig('conference_name') ?></title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
-	<script type="text/javascript" src="scripts/prototype.js"></script>
+	<script type="text/javascript" src="scripts/jquery.js"></script>
 	<script type="text/javascript" src="scripts/mobilAP.js"></script>
 </head>
 <body>

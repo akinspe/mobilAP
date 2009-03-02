@@ -1,5 +1,6 @@
 var _GET = { length: 0};
 var baseUrl = '';
+var js_script = baseUrl + 'js.php';
 
 function processGetVars()
 {
@@ -15,75 +16,6 @@ function processGetVars()
 	}
 }
 
-function getXMLHttpRequest() {
- 		var funcs = [
-		  function() {return new XMLHttpRequest()},
-		  function() {return new ActiveXObject('Msxml2.XMLHTTP')},
-		  function() {return new ActiveXObject('Microsoft.XMLHTTP')}
-		];
-		var transport = false;
-		
-		for (var i=0; i<funcs.length; i++) {
-			var lambda = funcs[i];
-			try {
-				transport = lambda();
-				break;
-			} catch (e) { }
-		}
-		
-		return transport;
-}
-
-function loadURL(url, callback, options) {
-    	
-        var xhr = getXMLHttpRequest();
-        
-        //options are basically method and params to handle POST requests
-        if (typeof options=='undefined') {
-        	options = { method: 'GET', params: '', synchronous: false}
-        }
-
-        options.method = options.method ? options.method : 'GET';
-        options.params = options.params ? options.params : '';
-        options.asynchronous = options.synchronous ? options.synchronous : false;
-
-        console.log('loading (' + options.method + '/' + (options.synchronous ? 'S' : 'A') +'): ' + url + ' (' + options.params + ')');
-
-    	xhr.open(options.method, url, !options.synchronous);
-    	
-    	//add the post header
-        if (options.method == 'POST') {
-			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        }
-
-		//if we have a callback, set it
-        if (callback) {
-            xhr.onreadystatechange = function() {
-            	if (xhr.readyState==4) {
-					callback(xhr);
-				}
-            }
-        }
-
-        xhr.send(options.params);        
-            
-}
-
-function processQuestion(xhr)
-{
-	try {
-		var result = eval("(" + xhr.responseText + ")");
-		if (result.error_message) {
-			alert(result.error_message);
-		} else {
-			question.setQuestion(result);
-		}
-		
-		
-	} catch (e) {
-	}
-}
-
 function load()
 {	
 	CreateList("question_answers", { dataSourceName: "question",  useDataSource: true, "listStyle": "List.ROUNDED_RECTANGLE" }).reloadData();			
@@ -92,16 +24,55 @@ function load()
 		question.question_id = _GET.question_id;
 		question.refreshQuestion();
 		setInterval(question.refreshQuestion, 5000);
+		$('#previous_question').click(function() { question.previousQuestion() });
+		$('#next_question').click(function() { question.nextQuestion() });
 
 	}
 }
 
 var question = {
+	other_questions: [],
+	current_question_index: 0,
 	responses: [],
 	answers: [],
+	nextQuestion: function() {
+		if (this.current_question_index<this.other_questions.length-1) {
+			this.setQuestionIndex(this.current_question_index+1);
+		}
+	},
+	previousQuestion: function() {
+		if (this.current_question_index>0) {
+			this.setQuestionIndex(this.current_question_index-1);
+		}
+	},
+	setQuestionIndex: function(question_index)
+	{
+		if (this.other_questions[question_index]) {
+			this.setQuestion(this.other_questions[question_index]);
+		}		
+	},
 	refreshQuestion: function() {
-		var url = 'js.php?get=question&question_id=' + question.question_id;
-        loadURL(url, processQuestion);
+		$.getJSON(js_script, {'get':'question', 'question_id': question.question_id }, function(json) { question.setQuestion(json); });
+	},
+	getOtherQuestions: function() {
+		if (question.session_id) {
+			$.getJSON(js_script, {'get':'session', 'session_id': question.session_id }, function(json) { question.setSessionData(json); });
+		}
+	},
+	setSessionData: function(session_data) {
+		this.other_questions = session_data.session_questions;
+		for (var i=0; i<this.other_questions.length; i++) {
+			if (this.other_questions[i].question_id == question.question_id) {
+				this.current_question_index = i;
+			}
+		}
+		
+		this.updateButtons();
+	},
+	updateButtons: function() {
+		$('#nav_buttons input[type=button]').hide();
+		if (this.current_question_index > 0) $('#previous_question').show();
+		if (this.current_question_index < this.other_questions.length-1) $('#next_question').show();
 	},
     setQuestion: function(question) {
         this.session_id = question.session_id;
@@ -113,6 +84,8 @@ var question = {
         this.question_maxchoices = question.question_maxchoices;
         this.chart_type = question.chart_type;
         this.response_type = question.response_type;
+		this.getOtherQuestions();
+        this.updateButtons();
         this.updateResults();
         return;
     },
@@ -221,4 +194,4 @@ var question = {
 	}
     
 }
-window.onload = load;
+$(load);
