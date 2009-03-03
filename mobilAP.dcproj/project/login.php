@@ -37,7 +37,6 @@ if ( (isset($_POST['login_submit_x']) || isset($_POST['login_submit'])) && !empt
 				break;
 	
 			case mobilAP_webuser::USER_LOGIN_FAILURE:
-				$App->assign('login_userID', $login_userID);
 				$message = 'Login Failed. Please ensure your email address and password are correct.';
 				break;
 	

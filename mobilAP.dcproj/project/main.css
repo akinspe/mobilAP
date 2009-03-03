@@ -302,7 +302,7 @@ a {
     height: auto;
     background-color: rgb(51, 51, 51);
     font-size: 12px;
-    background-image: url(Images/search_background%201.png);
+    background-image: url(Images/search_background.png);
     background-repeat: repeat-x;
     background-position: 50% 50%;
 }
@@ -1398,12 +1398,12 @@ a {
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     position: absolute;
-    bottom: auto;
+    bottom: 9px;
     width: 60px;
     height: 25px;
     right: 13px;
     left: 243px;
-    top: 62px;
+    top: auto;
 }
 
 #directory_image_box {
@@ -1583,6 +1583,7 @@ a {
     height: auto;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
+    margin-top: 0px;
 }
 
 #question0 {
@@ -2019,7 +2020,7 @@ a {
 }
 
 #announcement_timestamp {
-    color: #dddddd;
+    color: rgb(221, 221, 221);
     font-family: Helvetica;
     font-size: 13px;
     text-overflow: ellipsis;
@@ -2043,5 +2044,5 @@ a {
 .announcement_new {
     background-image: url(Images/new.png);
     background-repeat: no-repeat;
-    background-position: 9px center;
+    background-position: 9px 50%;
 }
