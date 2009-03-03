@@ -138,6 +138,8 @@ class mobilAP
 				if (!in_array($row['session_group_id'], $parsed_session_groups)) {
 					$row['title'] = $session_groups[$row['session_group_id']]->session_group_title;
 					$row['detail'] = $session_groups[$row['session_group_id']]->session_group_detail;
+					$row['start_date'] = strftime('%b %d, %Y %H:%M:%S', $row['start_ts']);
+					$row['end_date'] = strftime('%b %d, %Y %H:%M:%S', $row['end_ts']);
 					$row['session_id'] = '';
 					$row['room'] = '';
 					$parsed_session_groups[] = $row['session_group_id'];
