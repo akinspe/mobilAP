@@ -11,3 +11,4 @@
 <input type="submit" name="cancel_item" value="Cancel">
 </p>
 </fieldset>
+<p><a href="<?= $App->SCRIPT_NAME ?>?action=edit_schedule&amp;date=<?=$schedule_item->date?>">return to day</a></p>
