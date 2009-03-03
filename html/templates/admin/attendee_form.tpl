@@ -48,9 +48,9 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 
 <?php if (getConfig('use_passwords')) { ?>
 	<label id="login_pword_label">Password</label>
-	<input type="text" size="17" maxlength="16" name="password" />
+	<input type="text" size="17" maxlength="16" name="password" value="<?= isset($attendee->password) ? htmlentities($attendee->password) : '' ?>">
 	Note: If left blank, the password will not change
-	<br class="end"/>
+	<br class="end">
 <?php } ?>
 
 <label>Phone</label>

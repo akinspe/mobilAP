@@ -684,7 +684,8 @@ class mobilAP_attendee
 			$result = $attendee->createAttendeeFromObj();
 			if (mobilAP_Error::isError($result)) {
 				return $result;
-			} 
+			}
+			$attendee->setPassword($attendee->password);
 			$attendee->updateAttendee();
 			mobilAP_attendee::deleteImport($import_id);
 		} elseif ($import_id=='all') {
@@ -722,6 +723,7 @@ class mobilAP_attendee
 			$attendee->setEmail($row['email']);
 			$attendee->setLocation($row['city'], $row['state'], $row['country']);
 			$attendee->setPhone($row['phone']);
+			$attendee->password = $row['password'];
 		} else {
 			$attendee = false;
 		}
@@ -750,7 +752,7 @@ class mobilAP_attendee
 		ini_set('auto_detect_line_endings', 1);
 		mobilAP_attendee::purgeImportData();
 		
-		$field_count = 11;
+		$field_count = 12;
 		if (!$handle = fopen($fileName, "r")) {
 			return mobilAP_Error::throwError("Error reading $fileName");
 		}
@@ -858,7 +860,7 @@ class mobilAP_attendee
 
 	function setEmail($email)
 	{
-		if (!empty($email) && !Utils::is_validEmail($email)) {
+		if (!Utils::is_validEmail($email)) {
 			return false;
 		}
 		
@@ -866,7 +868,9 @@ class mobilAP_attendee
 		return true;
 	}
 	
-	function setPassword($password) {
+	function setPassword($password) 
+	{
+		$password = getConfig('use_passwords') && $password!='' ? $password : getConfig('default_password');
 		$sql = sprintf("UPDATE `%s%s` SET
 				md5='%s'
 				WHERE attendee_id='%s'",
@@ -1148,26 +1152,29 @@ class mobilAP_attendee
 			return mobilAP_Error::throwError("Name cannot be blank");
 		}
 		$this->attendee_id = mobilAP_attendee::getNextAttendeeID();
+		
 		$sql = sprintf("INSERT INTO %s%s
-				(attendee_id, email, FirstName, LastName, md5)
+				(attendee_id, email, FirstName, LastName)
 				VALUES
-				('%s', '%s', '%s', '%s', '%s')", 
+				('%s', '%s', '%s', '%s')", 
 				TABLE_PREFIX,
 				mobilAP_attendee::ATTENDEE_TABLE, 
 				$this->attendee_id,
 				mysql_real_escape_string($this->email),
 				mysql_real_escape_string($this->FirstName),
-				mysql_real_escape_string($this->LastName),
-				md5(getConfig('default_password'))
+				mysql_real_escape_string($this->LastName)
 		);
+
 		$result = mobilAP::query($sql, true);
 		if (mobilAP_Error::isError($result)) {
 			if ($result->getCode()==DB_ERROR_ALREADY_EXISTS) {
 				$result = mobilAP_Error::throwError("User already exists", DB_ERROR_ALREADY_EXISTS);
-			}
+			}			
 		} else {
 			$result = true;
 		}
+		
+		return $result;
 	}
 	
 	function deleteAttendee()
@@ -1213,38 +1220,6 @@ class mobilAP_attendee
 
 		mobilAP::flushCache('mobilAP_attendees');
 		mobilAP::flushCache('mobilAP_attendee_summary');
-	}
-	
-	static function createAttendee($email, $FirstName, $LastName, $password)
-	{
-		if (!Utils::is_validEmail($email)) {
-			return mobilAP_Error::throwError("Invalid email: $email");
-		} elseif (strlen($FirstName)==0 || strlen($LastName)==0) {
-			return mobilAP_Error::throwError("Name cannot be blank");
-		}
-		$attendee_id = mobilAP_attendee::getNextAttendeeID();
-		$sql = sprintf("INSERT INTO %s%s
-				(attendee_id, email, FirstName, LastName, md5)
-				VALUES
-				('%s', '%s', '%s', '%s', '%s')", 
-				TABLE_PREFIX,
-				mobilAP_attendee::ATTENDEE_TABLE, 
-				$attendee_id,
-				mysql_real_escape_string($email),
-				mysql_real_escape_string($FirstName),
-				mysql_real_escape_string($LastName),
-				md5($password)
-		);
-		$result = mobilAP::query($sql, true);
-		if (mobilAP_Error::isError($result)) {
-			if ($result->getCode()==DB_ERROR_ALREADY_EXISTS) {
-				$result = mobilAP_Error::throwError("User already exists", DB_ERROR_ALREADY_EXISTS);
-			}
-		} else {
-			$result = mobilAP_attendee::getAttendeeByID($attendee_id);
-		}
-		
-		return $result;
 	}
 	
 	public function setAdmin($admin)

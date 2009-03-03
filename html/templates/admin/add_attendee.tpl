@@ -38,7 +38,7 @@
 
 <?php if (getConfig('use_passwords')) { ?>
 	<label id="login_pword_label">Password</label>
-	<input type="text" size="17" maxlength="16" name="password" />
+	<input type="text" size="17" maxlength="16" name="password" value="<?= isset($attendee->password) ? htmlentities($attendee->password) : '' ?>">
 	<br class="end"/>
 <?php } ?>
 

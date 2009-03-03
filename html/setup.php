@@ -19,7 +19,7 @@ $create_tables = array(
 	"CREATE TABLE IF NOT EXISTS `announcements` (`announcement_id` int(11) NOT NULL auto_increment, `announcement_title` varchar(50) default NULL, `announcement_timestamp` int(11) default NULL, `attendee_id` char(32) default NULL, `announcement_text` text, PRIMARY KEY  (`announcement_id`))",
 	"CREATE TABLE IF NOT EXISTS `announcements_read` ( `announcement_id` int(11) unsigned NOT NULL default '0', `attendee_id` char(32) NOT NULL default '', `read_timestamp` int(11) default NULL,  PRIMARY KEY  (`attendee_id`,`announcement_id`))",
 	"CREATE TABLE IF NOT EXISTS `attendees` (`attendee_id` char(32) NOT NULL default '', `salutation` char(4) default NULL, `FirstName` varchar(50) default NULL, `LastName` varchar(50) default NULL, `organization` varchar(50) default NULL, `title` varchar(50) default NULL, `dept` varchar(50) default NULL, `city` varchar(50) default NULL, `state` varchar(2) default NULL, `country` varchar(2) default NULL, `email` varchar(50) default NULL, `phone` varchar(15) default NULL, `md5` char(32) default NULL, `login_last` int(11) default NULL, `login_now` int(11) default NULL, `checked_in` int(11) default NULL, `directory_active` tinyint(1) NOT NULL default '0', `admin` tinyint(1) NOT NULL default '0', `bio` text, PRIMARY KEY (`attendee_id`), UNIQUE KEY `email` (`email`), KEY `directory_active` (`directory_active`))",
-	"CREATE TABLE IF NOT EXISTS `attendees_import` (`import_id` int(11) NOT NULL auto_increment, `salutation` char(4) default NULL, `LastName` varchar(50) default NULL, `FirstName` varchar(50) default NULL, `organization` varchar(50) default NULL, `title` varchar(50) default NULL, `dept` varchar(50) default NULL, `city` varchar(50) default NULL, `state` varchar(2) default NULL, `country` varchar(2) default NULL, `email` varchar(50) default NULL, `phone` varchar(15) default NULL, PRIMARY KEY (`import_id`))",
+	"CREATE TABLE IF NOT EXISTS `attendees_import` (`import_id` int(11) NOT NULL auto_increment, `salutation` char(4) default NULL, `LastName` varchar(50) default NULL, `FirstName` varchar(50) default NULL, `organization` varchar(50) default NULL, `title` varchar(50) default NULL, `dept` varchar(50) default NULL, `city` varchar(50) default NULL, `state` varchar(2) default NULL, `country` varchar(2) default NULL, `email` varchar(50) default NULL, `phone` varchar(15) default NULL, `password` varchar(32) default NULL, PRIMARY KEY (`import_id`))",
 	"CREATE TABLE IF NOT EXISTS `evaluation_question_responses` (`question_index` tinyint(4) unsigned NOT NULL default '0', `response_index` tinyint(4) unsigned NOT NULL default '0', `response_text` varchar(50) default NULL, `response_value` smallint(6) default NULL,  PRIMARY KEY  (`question_index`,`response_index`))",
 	"CREATE TABLE IF NOT EXISTS `evaluation_questions` (`question_index` tinyint(4) unsigned NOT NULL default '0',`question_text` varchar(100) default NULL,  `question_response_type` char(1) default NULL,  PRIMARY KEY  (`question_index`))",
 	"CREATE TABLE IF NOT EXISTS `poll_answers` (`answer_id` int(11) NOT NULL auto_increment, `question_id` int(11) unsigned default NULL, `response_value` smallint(5) unsigned default NULL, `response_timestamp` int(11) default NULL, `response_userID` char(32) default NULL, PRIMARY KEY (`answer_id`), KEY `question_id` (`question_id`))",
@@ -39,23 +39,51 @@ foreach ($create_tables as $sql) {
 }
 
 $App = new Application();
+$template_file = 'setup.tpl';
 
+$email = isset($_POST['email']) ? $_POST['email'] : '';
+$FirstName = isset($_POST['FirstName']) ? $_POST['FirstName'] : '';
+$LastName = isset($_POST['LastName']) ? $_POST['LastName'] : '';
 if (isset($_POST['submit_setup'])) {
-	$email = isset($_POST['email']) ? $_POST['email'] : '';
-	$FirstName = isset($_POST['FirstName']) ? $_POST['FirstName'] : '';
-	$LastName = isset($_POST['LastName']) ? $_POST['LastName'] : '';
-	$result = mobilAP_attendee::createAttendee($email, $FirstName, $LastName);
-	if (mobilAP_Error::isError($result)) {
-		$App->addErrorMessage("Error creating user: " . $result->getMessage());
-		$template_file="setup.tpl";
-	} else {
-		$result->setAdmin(true);
-		$result->updateAttendee();
-		$template_file="setup_success.tpl";
+	$password = isset($_POST['password']) ? $_POST['password'] : getConfig('default_password');
+	$password_verify = isset($_POST['password_verify']) ? $_POST['password_verify'] : getConfig('default_password');
+	$attendee = new mobilAP_attendee();
+	$ok = true;
+	
+	if (!$attendee->setName('', $FirstName, $LastName)) {
+		$ok = false;
+		$App->addErrorMessage("Please include your full name");
+	}
+
+	if (!$attendee->setEmail($email)) {
+		$ok = false;
+		$App->addErrorMessage("Please include a valid email");
+	}
+
+	if ($password == '') {
+		$ok = false;
+		$App->addErrorMessage("Please include a valid password");
+	}
+
+	if ($password != $password_verify) {
+		$ok = false;
+		$App->addErrorMessage("You did not verify your password correctly.");
 	}
 	
-} else {
-	$template_file = 'setup.tpl';
+	$attendee->setAdmin(true);
+	
+	if ($ok) {
+		$result = $attendee->createAttendeeFromObj();
+		
+		if (mobilAP_Error::isError($result)) {
+			$App->addErrorMessage("Error creating user: " . $result->getMessage());
+		} else {
+			$attendee->setPassword($password);
+			$attendee->updateAttendee();
+			$template_file="setup_success.tpl";
+		}
+	} else {
+	}
 }
 
 include('templates/header.tpl');

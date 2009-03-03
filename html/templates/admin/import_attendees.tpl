@@ -45,6 +45,9 @@
 	<th>Country</th>
 	<th>email</th>
 	<th>Phone</th>
+<?php if (getConfig('use_passwords')) { ?>
+	<th>Password</th>
+<?php } ?>	
 </tr>
 <?php foreach ($import_data as $data) { ?>
 <tr>
@@ -62,6 +65,9 @@
 	<td><?= $data['country'] ?></td>
 	<td><?= $data['email'] ?></td>
 	<td><?= $data['phone'] ?></td>
+<?php if (getConfig('use_passwords')) { ?>
+	<td><?= $data['password'] ?></td>
+<?php } ?>	
 </tr>
 <? }?>
 </table>
