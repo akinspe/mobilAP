@@ -46,6 +46,13 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 <input type="text" name="email" value="<?= htmlentities($attendee->email) ?>" size="50" maxlength="50">
 <br class="end">
 
+<?php if (getConfig('use_passwords')) { ?>
+	<label id="login_pword_label">Password</label>
+	<input type="text" size="17" maxlength="16" name="password" />
+	Note: If left blank, the password will not change
+	<br class="end"/>
+<?php } ?>
+
 <label>Phone</label>
 <input type="text" name="phone" value="<?= htmlentities(Utils::phone_format($attendee->phone,'-')) ?>" size="12" maxlength="15">
 <br class="end">

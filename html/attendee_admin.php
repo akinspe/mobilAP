@@ -99,6 +99,7 @@ switch ($action)
 			$title = isset($_POST['title']) ? $_POST['title'] : ''; 
 			$dept = isset($_POST['dept']) ? $_POST['dept'] : ''; 
 			$email = isset($_POST['email']) ? $_POST['email'] : '';
+			$password = isset($_POST['password']) ? $_POST['password'] : getConfig('default_password');
 
 			$city = isset($_POST['city']) ? $_POST['city'] : '';
 			$state = isset($_POST['state']) ? $_POST['state'] : '';
@@ -132,6 +133,7 @@ switch ($action)
 					$App->addErrorMessage("There was an error creating the attendee: " . $result->getMessage());
 					break;
 				} else {
+					$attendee->setPassword($password);
 					$result = $attendee->updateAttendee();
 					$attendee_id = $attendee->attendee_id;
 					$App->addMessage("Attendee created");
@@ -172,6 +174,7 @@ switch ($action)
 				$title = isset($_POST['title']) ? $_POST['title'] : ''; 
 				$dept = isset($_POST['dept']) ? $_POST['dept'] : ''; 
 				$email = isset($_POST['email']) ? $_POST['email'] : '';
+				$password = isset($_POST['password']) ? $_POST['password'] : '';
 				$city = isset($_POST['city']) ? $_POST['city'] : '';
 				$state = isset($_POST['state']) ? $_POST['state'] : '';
 				$country = isset($_POST['country']) ? $_POST['country'] : '';
@@ -194,6 +197,10 @@ switch ($action)
 				if (!$attendee->setEmail($email)) {
 					$ok = false;
 					$App->addErrorMessage("Please include a valid email");
+				}
+
+				if (getConfig('use_passwords') && $password != '') {
+					$attendee->setPassword($password);
 				}
 				
 				$result = $attendee->uploadDirectoryImage();

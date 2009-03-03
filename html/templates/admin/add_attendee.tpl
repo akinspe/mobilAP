@@ -36,6 +36,12 @@
 <input type="text" name="email" value="<?= htmlentities($attendee->email) ?>" size="50" maxlength="50">
 <br class="end">
 
+<?php if (getConfig('use_passwords')) { ?>
+	<label id="login_pword_label">Password</label>
+	<input type="text" size="17" maxlength="16" name="password" />
+	<br class="end"/>
+<?php } ?>
+
 <label>Administrator?</label>
 <input type="checkbox" name="admin" value="-1"<?php if ($attendee->admin) echo " CHECKED" ?>>
 <br class="end">

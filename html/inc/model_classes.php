@@ -865,6 +865,17 @@ class mobilAP_attendee
 		$this->email = $email;
 		return true;
 	}
+	
+	function setPassword($password) {
+		$sql = sprintf("UPDATE `%s%s` SET
+				md5='%s'
+				WHERE attendee_id='%s'",
+				TABLE_PREFIX,
+				mobilAP_attendee::ATTENDEE_TABLE,
+				md5($password),
+				$this->attendee_id);
+		$result = mobilAP::query($sql);
+	}
 
 	function setLocation($city, $state, $country)
 	{
@@ -1204,7 +1215,7 @@ class mobilAP_attendee
 		mobilAP::flushCache('mobilAP_attendee_summary');
 	}
 	
-	static function createAttendee($email, $FirstName, $LastName)
+	static function createAttendee($email, $FirstName, $LastName, $password)
 	{
 		if (!Utils::is_validEmail($email)) {
 			return mobilAP_Error::throwError("Invalid email: $email");
@@ -1222,7 +1233,7 @@ class mobilAP_attendee
 				mysql_real_escape_string($email),
 				mysql_real_escape_string($FirstName),
 				mysql_real_escape_string($LastName),
-				md5(getConfig('default_password'))
+				md5($password)
 		);
 		$result = mobilAP::query($sql, true);
 		if (mobilAP_Error::isError($result)) {

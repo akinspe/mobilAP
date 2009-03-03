@@ -1,5 +1,6 @@
 var baseUrl = '';
 var js_script = baseUrl + 'js.php';
+var login_script = baseUrl + 'login.php';
 
 //init handler
 function load()
@@ -10,6 +11,11 @@ function load()
     browserController.browserHandler();
     if (!Transition.areTransformsSupported()) {
         mobilAP.hide_login_form();
+    }
+    
+    if (!mobilAP.USE_PASSWORDS) {
+        document.getElementById('login_password').style.display = 'none';
+        document.getElementById('login_password_label').style.display = 'none';
     }
 
 	//generic orientation handler
@@ -47,6 +53,7 @@ function load()
 }
 
 var mobilAP = {
+    USE_PASSWORDS: false,
 	LOGGING: false,
     ERROR_NO_USER:-1,
     ERROR_USER_ALREADY_SUBMITTED:-2,
@@ -84,6 +91,7 @@ var mobilAP = {
         
         //zero out values
         document.getElementById('login_userID').value='';
+        document.getElementById('login_password').value='';
         document.getElementById('login_result').innerHTML='';
         document.getElementById('login_button').object.setText('Cancel');        
         
@@ -214,23 +222,28 @@ var mobilAP = {
     
     logout: function()
     {
-        var url=baseUrl+ 'login.php?action=logout&js=true';
+        var url=login_script + '?action=logout&js=true';
         mobilAP.loadURL(url, mobilAP.processUser);
     },
     login_submit: function() {
 		var login_userID = document.getElementById('login_userID').value;
+		//if we use passwords
+        var login_pass = document.getElementById('login_password').value;
 		
-		if (mobilAP.login(login_userID)) {
+		if (mobilAP.login(login_userID, login_pass)) {
 			document.getElementById('login_result').innerHTML='Logging in...';    
 		}
     },
-    login: function(login_userID)
+    login: function(login_userID, login_pass)
     {
-        if (login_userID.length==0) {
+        if (login_userID.length==0 || (mobilAP.USE_PASSWORDS && login_pass.length==0)) {
             return false;
         }
-        var url=baseUrl+ 'login.php';
+        var url=login_script;
         var params='login_userID=' + escape(login_userID) + '&login_submit=js&js=true';
+        if (mobilAP.USE_PASSWORDS) {
+            params += '&login_pword=' + escape(login_pass);
+        }
         
         var options = { method: 'POST', params: params };
         
@@ -249,7 +262,7 @@ var mobilAP = {
                 document.getElementById('login_result').innerHTML='';
             }
         } catch (e) {    
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with login: " + xhr.responseText);
             return;
         }
         
@@ -332,7 +345,7 @@ var mobilAP = {
             }
         } catch (e) {
             mobilAP.log(e);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with schedule: " + xhr.responseText);
             var schedule_data = [];
         }
         
@@ -367,7 +380,7 @@ var mobilAP = {
         try {
             var attendee_summary = eval("(" + xhr.responseText + ")");
         } catch (e) {
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with attendee summary: " + xhr.responseText);
             var attendee_summary = {};
         }
         mobilAP.setAttendeeSummary(attendee_summary);
@@ -420,7 +433,7 @@ var mobilAP = {
             var content = eval("(" + xhr.responseText + ")");
             document.getElementById(element).innerHTML=content;
         } catch (e) {
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with content: " + xhr.responseText);
         }
     }
 }
@@ -983,12 +996,7 @@ var session = {
     },
     setTitle: function(title) {
         this.session_title = title;
-        if (this.session_id==100 || !this.session_id) {
-            document.getElementById('session_title').innerHTML=this.session_title;
-        } else {
-            document.getElementById('session_title').innerHTML=this.session_id + ' ' + this.session_title;
-        }
-        
+        document.getElementById('session_title').innerHTML=this.session_title;
     },
     setAbstract: function(abstract) {
         this.session_abstract = abstract;
@@ -1323,7 +1331,6 @@ var session_evaluation = {
             mobilAP.log("Invalid evaluation question: " + questionIndex);
         }
         
-        mobilAP.log('Current question: ' + this.currentQuestion + ' Total: ' + this.evaluation_questions.length);
         document.getElementById('submit_evaluation_prev').style.display = this.currentQuestion>0 ? '' : 'none';
         document.getElementById('submit_evaluation_next').object.setText(this.currentQuestion<(this.evaluation_questions.length-1) ? 'Next' : 'Finish');
     },
