@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing Session <?= $session->session_id ?></h1>
 
 <?= $App->getMessages() ?>
@@ -57,3 +58,4 @@ foreach ($question->responses as $response_id=>$response) { ?>
 <input type="submit" name="delete_question" value="Remove Question" class="confirm">
 </p>
 </form>
+</div>

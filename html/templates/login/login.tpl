@@ -1,4 +1,8 @@
+<?php 	include("templates/nav.tpl"); ?>
+<div class="content">
+<h1>Login</h1>
 <?= $App->getMessages() ?>
+<p>Your login is your email address</p>
 <form id="login_form" action="login.php" method="POST">
 <?php if ($referrer) { ?>
 	<input type="hidden" name="referrer" value="<?= htmlentities($referrer) ?>">
@@ -14,3 +18,4 @@ if (getConfig('use_passwords')) { ?>
 ?>
 	<input type="submit" name="login_submit" id="login_submit" value="login">
 </form>
+</div>

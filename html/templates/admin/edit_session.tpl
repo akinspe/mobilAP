@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing Session <?= $session->session_id ?></h1>
 
 <?= $App->getMessages() ?>
@@ -105,5 +106,4 @@ $session_chat = $session->get_Chat();
 <a href="<?= $App->SCRIPT_NAME ?>?action=view_discussion&amp;session_id=<?= $session->session_id ?>">view discussion</a>
 
 </form>
-
-<p><a href="<?= $App->SCRIPT_NAME ?>">view all sessions</a></p>
+</div>

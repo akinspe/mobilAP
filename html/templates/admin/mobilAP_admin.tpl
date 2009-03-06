@@ -1,3 +1,4 @@
+<div class="content">
 <h1>mobilAP Administration</h1>
 
 <?= $App->getMessages() ?>
@@ -71,5 +72,4 @@ if ($mobilAP_admin) {
 </ul>
 <?php } 
 }?>
-
-<a href="index.php">Back to site</a>
+</div>

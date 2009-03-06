@@ -1,4 +1,5 @@
-<h2>Editing Announcement</h2>
+<div class="content">
+<h1>Editing Announcement</h1>
 
 <?= $App->getMessages() ?>
 
@@ -21,3 +22,4 @@
 </p>
 
 </form>
+</div>

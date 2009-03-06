@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing Session <?= $session->session_id ?></h1>
 <h2>Question: <?= $question->question_text ?></h2>
 
@@ -20,3 +21,4 @@
 </p>
 
 </form>
+</div>

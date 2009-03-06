@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing Session Group <?= $session_group->session_group_title ?></h1>
 
 <?= $App->getMessages() ?>
@@ -15,3 +16,4 @@
 	<input type="submit" name="delete_session_group" value="Delete" class="confirm">
 </p>
 </form>
+</div>

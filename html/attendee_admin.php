@@ -290,6 +290,7 @@ if ($action=='main')
 }
 
 include('templates/header.tpl');
+include("templates/nav.tpl");
 include("templates/admin/$template_file");
 include('templates/footer.tpl');
 

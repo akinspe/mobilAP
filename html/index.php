@@ -13,13 +13,7 @@ $App = new Application();
 $PAGE_TITLE = "mobilAP";
 $PAGE = 'index';
 include('templates/header.tpl');
-include('templates/nav.tpl');
-
-?>
-<h1>mobileAP Home</h1>
-
-<?php
-
+include('templates/index.tpl');
 include('templates/footer.tpl');
 
 ?>

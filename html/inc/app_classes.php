@@ -11,6 +11,8 @@
 require_once('utils.php');
 require_once('model_classes.php');
 
+$PAGE = '';
+
 class Application
 {
     public $messages = array();

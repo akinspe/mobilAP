@@ -20,6 +20,7 @@ $js = isset($_REQUEST['js']) ? true : false;
 
 
 $PAGE_TITLE ='mobilAP Login';
+$PAGE = 'login';
 
 $login_file='login.tpl';
 $login_result = $_POST;

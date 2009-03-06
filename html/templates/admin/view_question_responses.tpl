@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing Session <?= $session->session_id ?></h1>
 
 <?= $App->getMessages() ?>
@@ -32,3 +33,4 @@ foreach ($answers[$response->response_value] as $answer) { ?>
 <a href="<?= $App->SCRIPT_NAME ?>?action=edit_question&amp;session_id=<?= $session->session_id ?>&amp;question_id=<?= $question->question_id ?>">Return to question</a>
 </p>
 </form>
+</div>

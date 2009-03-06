@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Attendee Administration</h1>
 
 <?= $App->getMessages() ?>
@@ -74,3 +75,4 @@
 <?php } ?>
 
 <a href="<?= $App->SCRIPT_NAME ?>">Back to attendee list</a>
+</div>

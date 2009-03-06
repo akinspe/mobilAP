@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Evaluation Summary</h1>
 
 <p><?= count($evaluations) ?> evaluations submitted</p>
@@ -30,4 +31,4 @@ foreach ($evaluations as $evaluation) {
 	}
 } ?>
 </ul>
-
+</div>

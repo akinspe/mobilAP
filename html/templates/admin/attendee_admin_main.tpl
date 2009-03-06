@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Attendee Administration</h1>
 
 <?= $App->getMessages() ?>
@@ -51,7 +52,4 @@ foreach ($attendees as $attendee) {
 
 } ?>
 </table>
-	
-<p>	
-<a href="admin.php">Return to admin</a>
-</p>
+</div>

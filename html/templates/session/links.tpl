@@ -1,3 +1,4 @@
+<p>Here you can find and post links that are relevant to this session.</p>
 <ul id="session_links">
 <?php
 foreach ($session->session_links as $link) { ?>

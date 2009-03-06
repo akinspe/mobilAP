@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Add new Session</h1>
 <?= $App->getMessages() ?>
 <form action="<?= $App->SCRIPT_NAME ?>" method="POST">
@@ -11,5 +12,4 @@
 </p>
 
 </form>
-
-<p><a href="<?= $App->SCRIPT_NAME ?>">return to admin</a></p>
+</div>

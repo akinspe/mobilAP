@@ -22,5 +22,3 @@ if (count($evaluation_questions)>0) { ?>
 ?>
 
 </div>
-
-<p><a href="admin.php">Back to admin</a></p>

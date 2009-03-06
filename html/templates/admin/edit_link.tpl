@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing Session <?= $session->session_id ?></h1>
 
 <?= $App->getMessages() ?>
@@ -22,3 +23,4 @@
 </p>
 
 </form>
+</div>

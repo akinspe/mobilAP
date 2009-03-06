@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing Session <?= $session->session_id ?></h1>
 
 <?= $App->getMessages() ?>
@@ -23,3 +24,4 @@ can be left to the default). Also you can choose the type of chart shown when th
 <input type="submit" name="cancel_session" value="Cancel">
 </p>
 </form>
+</div>

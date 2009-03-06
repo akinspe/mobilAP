@@ -15,6 +15,3 @@ foreach ($presenters as $presenter) { ?>
 <?php } ?>
 </ul>
 <?php } ?>
-
-
-<p><a href="session.php?session_id=<?= $session->session_id ?>&view=evaluation">Rate this session</a>

@@ -1,3 +1,4 @@
+<div class="content">
 <h1>Editing <?= $schedule_item->title ?></h1>
 
 <form action="<?= $App->SCRIPT_NAME ?>" method="POST">
@@ -16,3 +17,4 @@
 <p>
 <a href="<?= $App->SCRIPT_NAME ?>?action=edit_schedule&amp;date=<?= $schedule_item->date ?>">return to day</a>
 </p>
+</div>
