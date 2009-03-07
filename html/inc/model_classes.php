@@ -968,6 +968,136 @@ class mobilAP_attendee
 		return $photo_file;
 	}
 
+	function getThumbSize()
+	{	
+		if (!file_exists($this->getPhotoFile())) {
+			return mobilAP::throwError("Error locating original file");
+		}
+
+		if (!$imageData = getimagesize($this->getPhotoFile())) {
+			return mobilAP_Error::throwError("Error processing JPEG file");
+		}
+		
+		$BaseWidth = $imageData[0];
+		$BaseHeight = $imageData[1];
+		$width = getConfig('thumb_width');
+		$height = getConfig('thumb_height');
+		
+		$aspect = $BaseWidth / $BaseHeight;
+		$boxAspect = $width / $height;
+		
+		if ($aspect>=$boxAspect) {
+			$newWidth = $width;
+			$newHeight = floor($width / $aspect);
+		} else {
+			$newHeight = $height;
+			$newWidth = floor ($height * $aspect);
+		}
+		
+		if (
+			($newWidth >= $BaseWidth) &&
+			($newHeight >= $BaseHeight)
+		   ) 
+		{
+			$newWidth = $BaseWidth;
+			$newHeight = $BaseHeight;
+		}
+		
+		return array($newWidth, $newHeight);
+	}
+
+	function rotatePhoto($deg)
+	{
+		if (!is_numeric($deg)) {
+			return DAAP::raiseError("Invalid rotation $deg");
+		}
+
+		$files = array($this->getPhotoFile(), $this->getPhotoThumb());
+		foreach($files  as $fileName) {
+		
+			if (!getConfig('use_gd') && file_exists('/usr/bin/sips')) {
+				$options = array(
+					"-r $deg"
+				);
+		
+				$exec = sprintf("%s %s %s", '/usr/bin/sips', implode(' ', $options), escapeshellarg($fileName));
+				echo $exec;
+				$result = exec($exec, $output, $retVal);
+		
+				if ($retVal != 0) {
+					return DAAP::raiseError("Error rotating image $retVal");
+				}
+			} else {
+				// try GD
+				if (!function_exists('ImageCreateFromJPEG')) {
+					return mobilAP::throwError("GD Functions not available");
+				}
+			
+				$im = ImageCreateFromJPEG($fileName);
+				$rotate = imagerotate($im, $deg*-1, 0);	
+				
+				// Write image
+				if (!ImageJPEG($rotate, $fileName)) {
+					return mobilAP_Error::throwError("Error rotating image");
+				}
+				
+			}
+		}
+	}
+
+	private function createPhotoThumb() 
+	{
+		if (!file_exists($this->getPhotoFile())) {
+			return mobilAP::throwError("Error locating original file");
+		}
+				
+		// Remove current thumb
+		if (file_exists($this->getPhotoThumb())) {
+			unlink($this->getPhotoThumb());
+		}
+		
+		list($image_width, $image_height) = getimagesize($this->getPhotoFile());
+		list($thumb_width, $thumb_height) = $this->getThumbSize();
+		
+		// use SIPS if it's available. GD functions are not part of default OS X install, but SIPS is
+		if (file_exists('/usr/bin/sips')) {
+		
+			$options = array(
+				"-z {$thumb_height} {$thumb_width}",
+				"-s format JPEG"
+			);
+		
+			$exec = sprintf("%s %s %s --out %s", '/usr/bin/sips', implode(' ', $options), escapeshellarg($this->getPhotoFile()), escapeshellarg($this->getPhotoThumb()));
+			$result = exec($exec . " 2>&1", $output, $retVal);
+		
+			if ($retVal!==0) {
+				return mobilAP_Error::throwError("Error creating thumbnail");
+			}
+		
+			return true;
+		} else {
+			// try GD
+			if (!function_exists('ImageCreateFromJPEG')) {
+				return mobilAP::throwError("GD Functions not available");
+			}
+		
+			$im = ImageCreateFromJPEG($this->getPhotoFile());
+			
+			// Create thumb canvas
+			$thumb = ImageCreateTrueColor($thumb_width, $thumb_height);
+			
+			// Resize image onto thumb canvas
+			ImageCopyResampled($thumb, $im, 0, 0, 0, 0, $thumb_width, $thumb_height, $image_width, $image_height);
+			
+			// Write image
+			if (!ImageJPEG($thumb, $this->getPhotoThumb())) {
+				return mobilAP_Error::throwError("Error creating thumbnail");
+			}
+			
+			return true;
+		}
+	}
+	
 	function uploadDirectoryImage()
 	{
 		$FILES = array();
@@ -1004,63 +1134,13 @@ class mobilAP_attendee
 				return mobilAP_Error::throwError("Image must be JPEG");
 			}
 			
-			if (!$imageData = getimagesize($file['tmp_name'])) {
-				return mobilAP_Error::throwError("Error processing JPEG file");
-			}
-			
 			if (!move_uploaded_file($file['tmp_name'], $this->getPhotoFile())) {
 				return mobilAP_Error::throwError("Error saving file");
 			}
+
 			chmod($this->getPhotoFile(), 0644);
-			$thumbFile = $this->getPhotoThumb();
-			
-			$BaseWidth = $imageData[0];
-			$BaseHeight = $imageData[1];
-			$width = 150;
-			$height = 150;
-			
-			$aspect = $BaseWidth / $BaseHeight;
-        	$boxAspect = $width / $height;
-        	
-			if ($aspect>=$boxAspect) {
-				$newWidth = $width;
-				$newHeight = floor($width / $aspect);
-			} else {
-				$newHeight = $height;
-				$newWidth = floor ($height * $aspect);
-			}
-			
-			if (
-				($newWidth >= $BaseWidth) &&
-				($newHeight >= $BaseHeight)
-			   ) 
-			{
-				$newWidth = $BaseWidth;
-				$newHeight = $BaseHeight;
-			}
-			
-			if ($newHeight==$BaseHeight && $newWidth==$BaseWidth) {
-				if (!copy($this->getPhotoFile(), $this->getPhotoThumb())) {
-					return mobilAP_Error::throwError("Error creating thumbnail");
-				} else {
-					return;
-				}
-			}
-			
-			
-			$options = array(
-				"-z {$newHeight} {$newWidth}",
-				"-s format JPEG"
-			);
-		
-			$exec = sprintf("%s %s %s --out %s", '/usr/bin/sips', implode(' ', $options), escapeshellarg($this->getPhotoFile()), escapeshellarg($this->getPhotoThumb()));
-			$result = exec($exec . " 2>&1", $output, $retVal);
-		
-			if ($retVal!==0) {
-				return mobilAP_Error::throwError("Error creating thumbnail");
-			}
-		
-			return true;
+			$result = $this->createPhotoThumb();
+			return $result;
 		}
 	}
 	

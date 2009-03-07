@@ -204,7 +204,7 @@ switch ($action)
 				}
 				
 				$result = $attendee->uploadDirectoryImage();
-				if (mobilAP_Error::isError($result) && $result->getCode() != FILEUPLOAD_ERROR_NO_UPLOAD) {
+				if (mobilAP_Error::isError($result)) {
 					$ok = false;
 					$App->addErrorMessage("Error uploading image: " . $result->getMessage());
 				}
@@ -235,7 +235,7 @@ switch ($action)
 
 			if (isset($_POST['rotate'])) {
 				$dir = key($_POST['rotate']);
-				$result = $attendee->rotate($dir);
+				$result = $attendee->rotatePhoto($dir);
 							
 			}
 			
