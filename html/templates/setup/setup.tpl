@@ -1,4 +1,5 @@
-<h2>mobilAP Installation</h2>
+<div class="content">
+<h1>mobilAP Installation</h1>
 
 <?php echo $App->getMessages() ?>
 
@@ -13,7 +14,7 @@
 <input type="text" name="email" value="<?= htmlentities($email) ?>">
 <br>
 
-<?php if (getConfig('use_passwords')) { ?>
+<?php if (getConfig('USE_PASSWORDS')) { ?>
 	<label>Password</label>
 	<input type="password" size="17" maxlength="16" name="password" value="">
 	<br class="end">
@@ -26,3 +27,4 @@
 <input type="submit" name="submit_setup" value="Setup">
 
 </form>
+</div>

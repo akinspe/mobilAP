@@ -46,7 +46,7 @@
 	<th>Country</th>
 	<th>email</th>
 	<th>Phone</th>
-<?php if (getConfig('use_passwords')) { ?>
+<?php if (getConfig('USE_PASSWORDS')) { ?>
 	<th>Password</th>
 <?php } ?>	
 </tr>
@@ -66,7 +66,7 @@
 	<td><?= $data['country'] ?></td>
 	<td><?= $data['email'] ?></td>
 	<td><?= $data['phone'] ?></td>
-<?php if (getConfig('use_passwords')) { ?>
+<?php if (getConfig('USE_PASSWORDS')) { ?>
 	<td><?= $data['password'] ?></td>
 <?php } ?>	
 </tr>
