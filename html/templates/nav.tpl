@@ -2,7 +2,9 @@
 	<li<?php if ($PAGE=='index') echo ' class="active"'; ?>><a href="index.php">Welcome</a></li>
 	<li<?php if ($PAGE=='announcements') echo ' class="active"'; ?>><a href="announcements.php">Announcements</a></li>
 	<li<?php if ($PAGE=='sessions') echo ' class="active"'; ?>><a href="sessions.php">Sessions</a></li>
+	<?php if (!getConfig('HIDE_ATTENDEE_DIRECTORY')) { ?>
 	<li<?php if ($PAGE=='attendee_directory') echo ' class="active"'; ?>><a href="attendee_directory.php">Attendee Directory</a></li>
+	<?php } ?>
 <?php if ($App->is_LoggedIn()) { 
 	$user = $App->getUser();
 	$show_admin = $user->isAdmin() || $user->isPresenter();
