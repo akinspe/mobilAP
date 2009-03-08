@@ -34,6 +34,6 @@ switch ($evaluation_question->question_response_type)
 <?php } ?>
 
 <br>
-<input type="submit" name="submit_evaluation" value="Submit Post">
+<input type="submit" name="submit_evaluation" value="Submit Evaluation">
 </form>
 	
