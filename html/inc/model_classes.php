@@ -1674,7 +1674,7 @@ class mobilAP_session
 		$result = mobilAP::query($sql);
 		$links = array();
 		while ($row=mysql_fetch_assoc($result)) {
-			$links[] = mobilAP_link::loadLinkFromArray($row);
+			$links[] = mobilAP_session_link::loadLinkFromArray($row);
 		}
 		
 		return $links;				
@@ -1733,7 +1733,7 @@ class mobilAP_session
 		$result = mobilAP::query($sql);
 		$link = false;
 		if ($row=mysql_fetch_assoc($result)) {
-			$link = mobilAP_link::loadLinkFromArray($row);
+			$link = mobilAP_session_link::loadLinkFromArray($row);
 		}
 		return $link;
 	}
@@ -2131,7 +2131,7 @@ class mobilAP_session_group
 	}
 }
 
-class mobilAP_link
+class mobilAP_session_link
 {
 	var $link_id;
 	var $session_id;
@@ -2185,7 +2185,7 @@ class mobilAP_link
 	
 	function loadLinkFromArray($arr)
 	{
-		$link = new mobilAP_link();
+		$link = new mobilAP_session_link();
 		$link->link_id = $arr['link_id'];
 		$link->session_id = $arr['session_id'];
 		$link->link_url = $arr['link_url'];
