@@ -258,6 +258,7 @@ switch ($action)
 
 			$template_file = 'view_evaluations.tpl';
 			$evaluations = $session->getEvaluations();
+			$evaluation_questions = mobilAP::getEvaluationQuestions();
 			$eval_summary = $session->getEvaluationSummary();
 		}
 		

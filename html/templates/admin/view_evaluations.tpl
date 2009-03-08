@@ -3,32 +3,34 @@
 
 <p><?= count($evaluations) ?> evaluations submitted</p>
 
+<?php
 
-<h2>Responses</h2>
-<p>Average response:
-(Exceptional=1, Good=2, Fair=3, Poor=4)
-
-<ol>
-	<li>Value of session: <?= $eval_summary['q0'] ?></li>
-	<li>Relevance of Information Presented: <?= $eval_summary['q1'] ?></li>
-	<li>Effectiveness of Presenters: <?= $eval_summary['q2'] ?></li>
-	<li>From what I learned in this session, I will make changes: 
-		<ul>
-			<li>Definately: <?= $eval_summary['q3'][1] ?></li>
-			<li>Maybe: <?= $eval_summary['q3'][2] ?></li>
-			<li>Possibly: <?= $eval_summary['q3'][3] ?></li>
-			<li>Unlikely: <?= $eval_summary['q3'][4] ?></li>
-		</ul>
-	</li>		
+foreach ($evaluation_questions as $index=>$evaluation_question)
+{ ?>
+<h3><?= sprintf("%d. %s", $index+1, $evaluation_question->question_text) ?></h3>
+<?php 
+switch ($evaluation_question->question_response_type)
+{
+	case 'M': ?>
+	Average: <?= $eval_summary['q' . $index]['avg'] ?>
+<ol class="evaluation_responses">
+<?php 
+	foreach ($evaluation_question->responses as $response) { ?>
+		<li><b><?= $response['response_text'] ?></b> <?= $eval_summary['q' . $index]['count'][$response['response_value']] ?></li>
+	<?php } ?>
 </ol>
-<h2>Comments</h2>
-<ul>
+<?php	
+		break;
+	case 'T': ?>
+<ul class="evaluation_responses">
 <?php
-foreach ($evaluations as $evaluation) {
-	if ($evaluation['q4']) { ?>
-<li><?= $evaluation['q4'] ?></li>
-<?php
-	}
-} ?>
+	foreach ($eval_summary['q' . $index]  as $response) { ?>
+		<li><?= $response ?></li>
+	<?php } ?>
 </ul>
+<?php
+		break;
+} ?>
+<?php } ?>
+
 </div>

@@ -1052,7 +1052,6 @@ class mobilAP_attendee
 				);
 		
 				$exec = sprintf("%s %s %s", '/usr/bin/sips', implode(' ', $options), escapeshellarg($fileName));
-				echo $exec;
 				$result = exec($exec, $output, $retVal);
 		
 				if ($retVal != 0) {
@@ -1661,23 +1660,56 @@ class mobilAP_session
 
 	public function getEvaluationSummary()
 	{
-		$sql = "SELECT avg(q0) q0, avg(q1) q1, avg(q2) q2  FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+		$evaluation_questions = mobilAP::getEvaluationQuestions();
+		$avg_fields = array();
+		$text_fields = array();
+		$data = array();
+		foreach ($evaluation_questions as $question) {
+			if ($question->question_response_type == mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES) {
+				$data['q' . $question->question_index] = array('avg'=>0, 'count'=>array());
+				foreach ($question->responses as $response) {
+					$data['q' . $question->question_index]['count'][$response['response_value']] = 0;
+				}
+				
+				$avg_fields[] = sprintf("avg(q%d) q%d", $question->question_index, $question->question_index);
+				$count_fields[] = sprintf("q%d", $question->question_index);
+			} else {
+				$data['q' . $question->question_index] = array();
+				$text_fields[] = sprintf("q%d", $question->question_index);
+			}
+		}
+	
+		$sql = "SELECT " . implode(',', $avg_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
 				WHERE session_id='$this->session_id'";
-			
+
 		$result = mobilAP::query($sql);
-		if ($data=mysql_fetch_assoc($result)) {
-		} else {
-			$data = array('q0'=>0,'q1'=>0,'q2'=>0);
+		if ($row=mysql_fetch_assoc($result)) {
+			foreach ($row as $idx=>$avg) {
+				if ($avg) {
+					$data[$idx]['avg'] = $avg;
+				}
+			}
 		}
 
-		$data['q3']=array('1'=>0, '2'=>0, '3'=>0, '4'=>0);
-		$sql = "SELECT q3  FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . " 
+		$sql = "SELECT " . implode(',', $count_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
 				WHERE session_id='$this->session_id'";
-		
+
 		$result = mobilAP::query($sql);
-		while ($row = mysql_fetch_assoc($result)) {
-			if ($row['q3']) {
-				$data['q3'][$row['q3']]++;
+		if ($row=mysql_fetch_assoc($result)) {
+			foreach ($row as $idx=>$value) {
+				$data[$idx]['count'][$value]++;
+			}
+		}
+
+		$sql = "SELECT " . implode(',', $text_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
+				WHERE session_id='$this->session_id'";
+
+		$result = mobilAP::query($sql);
+		while ($row=mysql_fetch_assoc($result)) {
+			foreach ($row as $idx=>$text) {
+				if ($text) {
+					$data[$idx][] = $text;
+				}
 			}
 		}
 
@@ -3155,16 +3187,18 @@ class mobilAP_evaluation_question
 			case mobilAP_evaluation_question::RESPONSE_TYPE_TEXT:
 			case mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES:
 
-				if ($this->question_response_type != $question_response_type) {
+				if (!is_null($this->question_index) && ($this->question_response_type != $question_response_type)) {
 					$this->question_response_type = $question_response_type;
 					$sql = sprintf("ALTER TABLE %s%s CHANGE q%d q%d %s", TABLE_PREFIX, mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->question_index, $this->getColumnType());
 					$result = mobilAP::query($sql);
 				}
 			
 				$this->question_response_type = $question_response_type;
-				$sql = sprintf("UPDATE %s%s SET question_response_type='%s' WHERE question_index=%d", 
-				TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $this->question_response_type, $this->question_index);
-				$result = mobilAP::query($sql);
+				if (!is_null($this->question_index)) {
+					$sql = sprintf("UPDATE %s%s SET question_response_type='%s' WHERE question_index=%d", 
+					TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $this->question_response_type, $this->question_index);
+					$result = mobilAP::query($sql);
+				}
 				
 				return true;
 				break;
