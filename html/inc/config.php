@@ -26,24 +26,33 @@ if (get_magic_quotes_gpc()) {
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
 
-
-$_CONFIG = array(
+$_DBCONFIG = array(
     'db_host'=>'localhost',
     'db_user'=>'mobilAP',
     'db_password'=>'mobilAP',
     'db_database'=>'mobilAP',
-	'use_passwords' =>false, //false means no password, true means password
+);
+
+$_CONFIG = array(
     'default_password'=>'mobilAP', //in truth there's always passwords, this is used if you choose not to use passwords. i.e. everyone has the same password
     'MYSQL_BIN_FOLDER'=>'/usr/local/mysql/bin/', //this is if you use a MySQL package
 //  'MYSQL_BIN_FOLDER'=>'/usr/bin/' //this is for OS X Server (by default)
     'DEFAULT_LOGIN_URL'=>'index.php',
-    'DEFAULT_LOGOUT_URL'=>'index.php'
+    'DEFAULT_LOGOUT_URL'=>'index.php',
+    'thumb_width'=>150, // directory thumbnail width
+    'thumb_height'=>150 // directory thumbnail height
 );
 
 define('TABLE_PREFIX', '');
 
+function getDBConfig($var)
+{
+	global $_DBCONFIG;
+	return isset($_DBCONFIG[$var]) ? $_DBCONFIG[$var] : null;
+}
+
 function getConfig($var)
 {
 	global $_CONFIG;
-	return isset($_CONFIG[$var]) ? $_CONFIG[$var] : null;
+	return isset($_CONFIG[$var]) ? $_CONFIG[$var] : mobilAP::getConfig($var);
 }
