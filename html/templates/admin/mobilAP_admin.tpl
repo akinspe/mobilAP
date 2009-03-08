@@ -12,6 +12,7 @@
 <?php if ($mobilAP_admin) { ?>
 <h2>Other</h2>
 <ul>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=settings">Settings</a></li>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=announcements">Manage Announcements</a></li>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=export_data">Export SQL Data</a></li>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=evaluation_questions">Evaluation Questions</a></li>

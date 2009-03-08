@@ -11,6 +11,7 @@
 require_once('inc/app_classes.php');
 
 $PAGE_TITLE = 'Administration';
+$PAGE = 'admin';
 $App = new Application();
 
 if (!$App->is_LoggedIn()) {
@@ -651,7 +652,7 @@ switch ($action)
 		}
 		break;
 	case 'edit_evaluation_response':
-		die();
+		die('edit_evaluation_response not written');
 		break;
 	case 'edit_evaluation_question':
 		$question_index = isset($_REQUEST['question_index']) ? $_REQUEST['question_index'] : '';
@@ -725,6 +726,19 @@ switch ($action)
 	case 'evaluation_questions':
 		$evaluation_questions = mobilAP::getEvaluationQuestions();
 		$template_file = 'evaluation_questions.tpl';
+		break;
+
+	case 'settings':
+		if (isset($_POST['update_settings'])) {
+			$setting = isset($_POST['setting']) ? $_POST['setting'] : array();
+			foreach ($setting as $var=>$value) {
+				mobilAP::setConfig($var, $value);
+			}
+
+			$App->addMessage("Settings updated");
+		}
+		
+		$template_file = 'admin_settings.tpl';
 		break;
 
 	case 'main':

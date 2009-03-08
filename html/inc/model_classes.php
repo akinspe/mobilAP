@@ -42,11 +42,42 @@ class mobilAP
 		}
 		return false;
 	}
+
+	function getConfigs()
+	{
+		$configs = array();
+		$sql = sprintf("SELECT config_var, config_value FROM %sconfig", TABLE_PREFIX);
+		$result = mobilAP::query($sql);
+		while ($row = mysql_fetch_assoc($result)) {
+			$configs[$row['config_var']] = $row['config_value'];
+		}
+	
+		return $configs;
+	}
+
+	function getConfig($var)
+	{
+		$sql = sprintf("SELECT config_value FROM %sconfig WHERE config_var='%s'" , TABLE_PREFIX , addslashes($var));
+		$result = mobilAP::query($sql);
+		if ($row = mysql_fetch_assoc($result)) {
+			$config_value = $row['config_value'];
+		} else {
+			$config_value = false;
+		}
+	
+		return $config_value;
+	}
+	
+	function setConfig($var, $value)
+	{
+		$sql = sprintf("REPLACE INTO %sconfig (config_var, config_value) VALUES ('%s', '%s')", TABLE_PREFIX, addslashes($var), addslashes($value));
+		$result = mobilAP::query($sql);
+	}
 	
     static function query($sql,$continue=false)
     {
-        $conn = mysql_connect(getConfig('db_host'), getConfig('db_user'), getConfig('db_password')) or die("Error connecting: " . mysql_error());
-        mysql_select_db(getConfig('db_database')) or die("Error selecting DB: " . mysql_error());
+        $conn = mysql_connect(getDBConfig('db_host'), getDBConfig('db_user'), getDBConfig('db_password')) or die("Error connecting: " . mysql_error());
+        mysql_select_db(getDBConfig('db_database')) or die("Error selecting DB: " . mysql_error());
         $result = mysql_query($sql, $conn);
         if (!$result) {
         	if (!$continue) {
@@ -872,7 +903,7 @@ class mobilAP_attendee
 	
 	function setPassword($password) 
 	{
-		$password = getConfig('use_passwords') && $password!='' ? $password : getConfig('default_password');
+		$password = getConfig('USE_PASSWORDS') && $password!='' ? $password : getConfig('default_password');
 		$sql = sprintf("UPDATE `%s%s` SET
 				md5='%s'
 				WHERE attendee_id='%s'",
