@@ -493,7 +493,7 @@ var directoryController = {
         try {
             var attendees = eval("(" + xhr.responseText + ")");
         } catch (e) {
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with attendees: " + xhr.responseText);
             var attendees = [];
         }
         directoryController._loading = false;
@@ -526,7 +526,7 @@ var directoryController = {
         try {
             var attendee = eval("(" + xhr.responseText + ")");
         } catch (e) {
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with attendee: " + xhr.responseText);
             return;
         }
         directoryController.setDirectoryDetail(attendee);
@@ -750,9 +750,7 @@ var session_group = {
                 session_group._loading = false;
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with session group data " + xhr.responseText);
             session_group._loading = false;
         }
     },    
@@ -887,9 +885,7 @@ var session = {
                 session._loading = false;
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error wth session data: " + xhr.responseText);
             session._loading = false;
         }
     },    
@@ -1081,9 +1077,7 @@ var session = {
                 session_chat.view_posts();
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error loading chat: " + xhr.responseText);
         }
     },
     setUserData: function(userdata)
@@ -1136,9 +1130,7 @@ var session_links = {
                 session.setLinks(session_links);
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error loading links " + xhr.responseText);
         }
     },
     submit: function() {
