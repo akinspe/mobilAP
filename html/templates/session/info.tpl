@@ -1,4 +1,6 @@
-<p><?= $session->session_abstract ?></p>
+<div id="session_abstract">
+<?= $session->session_abstract ?>
+</div>
 
 <?php 
 $presenters = $session->getPresenters();
