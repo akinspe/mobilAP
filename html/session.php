@@ -34,11 +34,16 @@ switch ($view)
 
 	case 'question_results':
 		$question_id = isset($_REQUEST['question_id']) ? $_REQUEST['question_id'] : '';
+		$view = 'questions';
+		$view_template = 'question_results';
 		if ($question = $session->getQuestionById($question_id)) {
 			break;
 		} else {
 		}
 	case 'question':
+		$view = 'questions';
+		$view_template = 'question';
+		
 		$question_id = isset($_REQUEST['question_id']) ? $_REQUEST['question_id'] : '';
 		if ($question = $session->getQuestionById($question_id)) {
 			if (isset($_POST['submit_response'])) {
@@ -47,10 +52,10 @@ switch ($view)
 				if (mobilAP_Error::isError($result) && $result->getCode() != mobilAP_session::ERROR_USER_ALREADY_SUBMITTED) {
 					$App->addErrorMessage($result->getMessage());
 				} else {
-					$view = 'question_results';
+					$view_template = 'question_results';
 				}
-			} elseif (isset($session->session_userdata['questions'][$question_id])) {
-				$view = 'question_results';
+			} elseif (isset($session->session_userdata['questions'][$question_id]) || isset($_POST['view_results'])) {
+				$view_template = 'question_results';
 			}
 			break;
 		} else {
