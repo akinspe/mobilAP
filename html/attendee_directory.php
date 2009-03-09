@@ -2,7 +2,7 @@
 
 require_once('inc/app_classes.php');
 
-if (getConfig('HIDE_ATTENDEE_DIRECTORY')) {
+if (!getConfig('SHOW_ATTENDEE_DIRECTORY')) {
 	header("Location: " . getConfig('DEFAULT_LOGIN_URL'));
 	exit();
 }

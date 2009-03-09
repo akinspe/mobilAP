@@ -26,7 +26,7 @@ foreach ($attendees as $attendee)
 	<li><?php
 	if ($letter != $attendee->LastName[0]) { ?><a name="<?= $attendee->LastName[0] ?>"></a><?php } 
 		?><div class="directory_list_name"><a href="attendee_directory.php?view_attendee=<?= $attendee->attendee_id ?>"><?= sprintf("%s %s", $attendee->FirstName, $attendee->LastName) ?></a></div>
-	<?php if ($attendee->organization) { ?><div class="directory_list_organization"><?= $attendee->organization ?></div><?php } ?>
+	<?php if (getConfig('SHOW_AD_ORG') && $attendee->organization) { ?><div class="directory_list_organization"><?= $attendee->organization ?></div><?php } ?>
 	</li>
 <?php
 	$letter = $attendee->LastName[0];
