@@ -8,7 +8,7 @@
 
 */
 
-//ini_set('display_errors', 'off');
+ini_set('display_errors', 'off');
 set_magic_quotes_runtime(0);
 
 if (get_magic_quotes_gpc()) {
@@ -33,14 +33,31 @@ $_DBCONFIG = array(
     'db_database'=>'mobilAP',
 );
 
-$_CONFIG = array(
+$_BASECONFIG = array (
     'default_password'=>'mobilAP', //in truth there's always passwords, this is used if you choose not to use passwords. i.e. everyone has the same password
-    'MYSQL_BIN_FOLDER'=>'/usr/local/mysql/bin/', //this is if you use a MySQL package
-//  'MYSQL_BIN_FOLDER'=>'/usr/bin/' //this is for OS X Server (by default)
-    'DEFAULT_LOGIN_URL'=>'index.php',
+    'MYSQL_BIN_FOLDER'=>'/usr/local/mysql/bin/', //set to the path of the mysql binary. Used for SQL exports
+    'DEFAULT_LOGIN_URL'=>'index.php', 
     'DEFAULT_LOGOUT_URL'=>'index.php',
     'thumb_width'=>150, // directory thumbnail width
     'thumb_height'=>150 // directory thumbnail height
+);
+
+/* CONFIGURATION VARIABLES
+	These values are overwritten in the database config table. The values here are defaults. You can reset
+	to the defaults using the admin interface
+*/
+
+$_CONFIG = array(
+    'USE_PASSWORDS'=>false,
+    'SHOW_ATTENDEE_DIRECTORY'=>true, 
+    'SHOW_AD_PHOTOS'=>true,
+    'SHOW_AD_TITLE'=>true,
+    'SHOW_AD_ORG'=>true,
+    'SHOW_AD_DEPT'=>true,
+    'SHOW_AD_EMAIL'=>true,
+    'SHOW_AD_PHONE'=>false,
+    'SHOW_AD_LOCATION'=>false,
+    'SHOW_AD_BIO'=>true,
 );
 
 define('TABLE_PREFIX', '');
@@ -53,6 +70,7 @@ function getDBConfig($var)
 
 function getConfig($var)
 {
-	global $_CONFIG;
-	return isset($_CONFIG[$var]) ? $_CONFIG[$var] : mobilAP::getConfig($var);
+	global $_BASECONFIG, $_CONFIG;
+	$config = array_merge($_BASECONFIG, $_CONFIG, mobilAP::getConfigs());
+	return isset($config[$var]) ? $config[$var] : null;
 }
