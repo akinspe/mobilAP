@@ -45,6 +45,11 @@ class mobilAP
 
 	function getConfigs()
 	{
+		static $configs;
+		if ($configs) {
+			return $configs;
+		}
+	
 		$configs = array();
 		$sql = sprintf("SELECT config_var, config_value FROM %sconfig", TABLE_PREFIX);
 		$result = mobilAP::query($sql);
@@ -57,15 +62,8 @@ class mobilAP
 
 	function getConfig($var)
 	{
-		$sql = sprintf("SELECT config_value FROM %sconfig WHERE config_var='%s'" , TABLE_PREFIX , addslashes($var));
-		$result = mobilAP::query($sql);
-		if ($row = mysql_fetch_assoc($result)) {
-			$config_value = $row['config_value'];
-		} else {
-			$config_value = false;
-		}
-	
-		return $config_value;
+		$configs = mobilAP::getConfigs();
+		return isset($configs[$var]) ? $configs[$var] : null;
 	}
 	
 	function setConfig($var, $value)
