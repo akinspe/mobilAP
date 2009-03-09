@@ -730,6 +730,10 @@ switch ($action)
 		break;
 
 	case 'settings':
+		if (isset($_POST['reset_settings'])) {
+			mobilAP::resetConfigs();
+		}
+		
 		if (isset($_POST['update_settings'])) {
 			$setting = isset($_POST['setting']) ? $_POST['setting'] : array();
 			foreach ($setting as $var=>$value) {

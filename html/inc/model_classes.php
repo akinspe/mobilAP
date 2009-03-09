@@ -72,6 +72,12 @@ class mobilAP
 		$result = mobilAP::query($sql);
 	}
 	
+	function resetConfigs()
+	{
+		$sql = sprintf("DELETE FROM %sconfig", TABLE_PREFIX);
+		$result = mobilAP::query($sql);
+	}
+	
     static function query($sql,$continue=false)
     {
         $conn = mysql_connect(getDBConfig('db_host'), getDBConfig('db_user'), getDBConfig('db_password')) or die("Error connecting: " . mysql_error());
