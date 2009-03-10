@@ -87,6 +87,7 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 
 </fieldset>
 
+<?php if (getConfig('SHOW_AD_PHOTOS')) { ?>
 <fieldset id="directory_image_fieldset">
 <legend>Directory Image</legend>
 
@@ -106,3 +107,4 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 </div>
 
 </fieldset>
+<?php } ?>

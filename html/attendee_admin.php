@@ -203,10 +203,12 @@ switch ($action)
 					$attendee->setPassword($password);
 				}
 				
-				$result = $attendee->uploadDirectoryImage();
-				if (mobilAP_Error::isError($result)) {
-					$ok = false;
-					$App->addErrorMessage("Error uploading image: " . $result->getMessage());
+				if (getConfig('SHOW_AD_PHOTOS')) {
+					$result = $attendee->uploadDirectoryImage();
+					if (mobilAP_Error::isError($result)) {
+						$ok = false;
+						$App->addErrorMessage("Error uploading image: " . $result->getMessage());
+					}
 				}
 				
 				
