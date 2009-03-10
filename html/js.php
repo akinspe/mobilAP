@@ -17,6 +17,9 @@ $data = false;
 if (isset($_REQUEST['get'])) {
 	switch ($_REQUEST['get'])
 	{
+		case 'configs':
+			$data = array_merge($_CONFIG, mobilAP::getConfigs());
+			break;
 		case 'schedule':
 			if (!$data = mobilAP::getCache('mobilAP_schedule')) {
 				$data = mobilAP::getSchedule();
