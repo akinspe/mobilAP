@@ -17,6 +17,7 @@ $App = new Application();
 if (!$App->is_LoggedIn()) {
 
 	include("templates/header.tpl");
+	include("templates/nav.tpl");
 	include("templates/not_logged_in.tpl");
 	include("templates/footer.tpl");
 	exit();
