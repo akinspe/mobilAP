@@ -13,11 +13,6 @@ function load()
         mobilAP.hide_login_form();
     }
     
-    if (!mobilAP.USE_PASSWORDS) {
-        document.getElementById('login_password').style.display = 'none';
-        document.getElementById('login_password_label').style.display = 'none';
-    }
-
 	//generic orientation handler
     window.addEventListener('orientationchange', mobilAP.orientationchanged);
 
@@ -42,6 +37,7 @@ function load()
     }
     
     //setup user stuff
+    mobilAP.getConfigs();
     mobilAP.getLogin();
     mobilAP.getSchedule();
     
@@ -53,7 +49,6 @@ function load()
 }
 
 var mobilAP = {
-    USE_PASSWORDS: false,
 	LOGGING: false,
     ERROR_NO_USER:-1,
     ERROR_USER_ALREADY_SUBMITTED:-2,
@@ -81,6 +76,12 @@ var mobilAP = {
         //mobilAP.log("Orientation changed, now: " + window.orientation);
     },
     show_login_form: function() {
+
+		if (!mobilAP.USE_PASSWORDS) {
+			document.getElementById('login_password').style.display = 'none';
+			document.getElementById('login_password_label').style.display = 'none';
+		}
+
         //turn on visibility first
         document.getElementById('login_form').style.visibility='visible';
 
@@ -360,18 +361,7 @@ var mobilAP = {
         programSchedule.setDay();
         programSchedule.setCurrentSession();
     },
-    //bare bones static schedule so we can load the schedule lazily, but still have the structure.
-    //BTW this probably won't work in the future if want everything to be dynamic
     schedule_data: [],
-    /*
-    schedule_data: [ 
-    
-        { day: 'wed', date: new Date(2008, 7, 6), schedule: [] },
-        { day: 'thurs', date: new Date(2008, 7, 7), schedule: [] },
-        { day: 'fri', date: new Date(2008, 7, 8), schedule: [] }
-    ],
-    */
-    
     attendee_summary: {},
     getAttendeeSummary: function() {
         mobilAP.loadURL(js_script + '?get=attendee_summary', mobilAP.processAttendeeSummary);
@@ -435,6 +425,32 @@ var mobilAP = {
         } catch (e) {
             mobilAP.log("Error with content: " + xhr.responseText);
         }
+    },
+    getConfigs: function()
+    {
+        var url = js_script + "?get=configs";
+        mobilAP.loadURL(js_script + '?get=configs', mobilAP.processConfigs);
+    },
+    processConfigs: function(xhr)
+    {
+        try {
+            var configs = eval("(" + xhr.responseText + ")");
+            for (var config_var in configs) {
+            	switch (configs[config_var])
+            	{
+            		case '0':
+            		case '1':
+            		case '-1':
+    		            mobilAP[config_var] = parseInt(configs[config_var]) ? true : false;
+	            		break;
+	            	default:
+						mobilAP[config_var] = configs[config_var];
+						break;
+				}
+            }
+        } catch (e) {  }
+        
+        browserController.reload();
     }
 }
 
@@ -493,7 +509,7 @@ var directoryController = {
         try {
             var attendees = eval("(" + xhr.responseText + ")");
         } catch (e) {
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with attendees: " + xhr.responseText);
             var attendees = [];
         }
         directoryController._loading = false;
@@ -526,7 +542,7 @@ var directoryController = {
         try {
             var attendee = eval("(" + xhr.responseText + ")");
         } catch (e) {
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with attendee: " + xhr.responseText);
             return;
         }
         directoryController.setDirectoryDetail(attendee);
@@ -750,9 +766,7 @@ var session_group = {
                 session_group._loading = false;
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error with session group data " + xhr.responseText);
             session_group._loading = false;
         }
     },    
@@ -887,9 +901,7 @@ var session = {
                 session._loading = false;
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error wth session data: " + xhr.responseText);
             session._loading = false;
         }
     },    
@@ -1081,9 +1093,7 @@ var session = {
                 session_chat.view_posts();
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error loading chat: " + xhr.responseText);
         }
     },
     setUserData: function(userdata)
@@ -1136,9 +1146,7 @@ var session_links = {
                 session.setLinks(session_links);
             }
         } catch (e) {
-            mobilAP.log(e);
-            mobilAP.log("Error loading " + xhr.url);
-            mobilAP.log(xhr.responseText);
+            mobilAP.log("Error loading links " + xhr.responseText);
         }
     },
     submit: function() {
@@ -1878,17 +1886,23 @@ var browserController = {
         
         var sections = [];
         for (var i=0; i<this._sections.length; i++) {
-            if (this._sections[i].tag=='current_session') {
-                this._sections[i].home = programSchedule.currentSessions.length>0;
+        	switch (this._sections[i].tag)
+        	{
+        		case 'current_session':
+					this._sections[i].home = programSchedule.currentSessions.length>0;
+					break;
+        		case 'directory':
+					this._sections[i].home = mobilAP.SHOW_ATTENDEE_DIRECTORY;
+					break;
+				case 'announcements':
+					var name = 'Announcements';
+					if (announcement_controller.new_announcements>0) {
+						name += ' (' + announcement_controller.new_announcements + ' new)';
+					}
+					this._sections[i].name=name;
+					break;
             }
-            if (this._sections[i].tag=='announcements') {
-                var name = 'Announcements';
-                if (announcement_controller.new_announcements>0) {
-                    name += ' (' + announcement_controller.new_announcements + ' new)';
-                }
-                this._sections[i].name=name;
-            }
-
+            
             if (this._sections[i].home) {
                 sections.push(this._sections[i]);
             }
