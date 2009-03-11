@@ -117,10 +117,17 @@ class mobilAP
 		}
 
 		$id = strtolower($id);
+		
+    	$where = array(
+    		sprintf("u.%s='%s'", $field, addslashes($id))
+    	);
+    	
+    	if (getConfig('USE_PASSWORDS')) {
+    		$where[] = "md5='" . addslashes($password) . "'";
+    	}
 
 		$sql = "SELECT attendee_id FROM " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u 
-				WHERE u.$field='" . addslashes($id) . "' AND
-		`md5`='" . md5($password) . "'";
+				WHERE " . implode(" AND ", $where);
 		
 		$result = mobilAP::query($sql);
 		return mysql_num_rows($result)>0;
