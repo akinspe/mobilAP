@@ -223,6 +223,26 @@ switch ($action)
 		$template_file = 'edit_schedule.tpl';
 		break;
 
+	case 'add_session_group':
+		$template_file = 'add_session_group.tpl';
+		if (isset($_POST['add_session_group'])) {
+			$session_group = new mobilap_session_group();
+			$session_group_title = isset($_POST['session_group_title']) ? $_POST['session_group_title'] : '';
+			$session_group_detail = isset($_POST['session_group_detail']) ? $_POST['session_group_detail'] : '';
+			$session_group->setTitle($session_group_title);
+			$session_group->setDetail($session_group_detail);
+			$result = $session_group->createGroup();
+			if (mobilAP_Error::isError($result)) {
+				$App->addErrorMessage("Error creating session group: " . $result->getMessage());
+				break;
+			} else {
+				$App->addMessage("Session group created");
+			}
+			
+		} else {
+			break;
+		}
+
 	case 'edit_session_group':
 		$session_group_id = isset($_REQUEST['session_group_id']) ? $_REQUEST['session_group_id'] : '';
 		if ($session_group = mobilAP_session_group::getSessionGroupByID($session_group_id)) {
