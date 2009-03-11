@@ -135,10 +135,11 @@ class mobilAP
 
 	static function getDays()
 	{
-		$sql = "SELECT DISTINCT DATE(`start_date`) `date`, UNIX_TIMESTAMP(DATE(`start_date`)) date_ts FROM " .  TABLE_PREFIX . mobilAP::SCHEDULE_TABLE . " d ORDER BY 1 ASC";
+		$sql = "SELECT DISTINCT DATE(`start_date`) `date` FROM " .  TABLE_PREFIX . mobilAP::SCHEDULE_TABLE . " d ORDER BY 1 ASC";
 		$result = mobilAP::query($sql);
 		$days = array();
 		while ($row = mysql_fetch_assoc($result)) {
+			$row['date_ts'] = strtotime($row['date']);
 			$row['date_str'] = strftime("%b %d, %Y", $row['date_ts']);
 			$days[] = $row;
 		}
