@@ -2046,3 +2046,11 @@ a {
     background-repeat: no-repeat;
     background-position: 9px 50%;
 }
+
+#session_room {
+	text-align: center;
+}
+
+#session_time {
+	text-align: center;
+}

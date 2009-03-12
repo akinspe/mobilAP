@@ -7,6 +7,7 @@ function load()
 {
     //needed by dashcode
     dashcode.setupParts();
+    document.title = dashcodePartSpecs.header.rootTitle;
     
     browserController.browserHandler();
     if (!Transition.areTransformsSupported()) {
@@ -38,8 +39,6 @@ function load()
     
     //setup user stuff
     mobilAP.getConfigs();
-    mobilAP.getLogin();
-    mobilAP.getSchedule();
     
     //reload current sessions every minute
     programSchedule.reloadTimer = setInterval(programSchedule.setCurrentSession, 60000);
@@ -55,6 +54,7 @@ var mobilAP = {
     login_form_visible: false,
     user: {},
     isIPhone: navigator.userAgent.match(new RegExp('iPhone;.*AppleWebKit/.*Mobile/')) ? true: false,
+    userdata: { questions: null, evaluation: false},
     
     //generic logging function. uses the LOGGING var to turn on or off logging globally
 	log: function(msg) {
@@ -137,13 +137,17 @@ var mobilAP = {
             var user = eval("(" + xhr.responseText + ")");
             mobilAP.user = user;
             
+            //cookie persists for a week
+            var d = new Date();
+            d.setTime(d.getTime() + 604800000);
+            
             //set cookie to persist login
             if (mobilAP.user.mobilAP_userID) {
                 document.cookie = 
-                'mobilAP_userID=' + mobilAP.user.mobilAP_userID+ '; expires=Sun, 11 Oct 2037 00:00:00 UTC;';
+                mobilAP.SITE_PREFIX + '_mobilAP_userID=' + mobilAP.user.mobilAP_userID+ '; expires=' + d.toGMTString() + '; path=' + mobilAP.mobilAP_base_path;
             } else {
                 document.cookie = 
-                'mobilAP_userID=; expires=Sun, 9 Jul 2006 00:00:00 UTC;';
+                mobilAP.SITE_PREFIX + '_mobilAP_userID=; expires=Sun, 9 Jul 2006 00:00:00 UTC; path=' + mobilAP.mobilAP_base_path;
             }
         } catch (e) {
             mobilAP.log(e);
@@ -451,6 +455,8 @@ var mobilAP = {
         } catch (e) {  }
         
         browserController.reload();
+		mobilAP.getLogin();
+		mobilAP.getSchedule();
     }
 }
 
@@ -712,6 +718,8 @@ var programSchedule = {
             rowElement.onclick = function() {
             	//set the title before loading
                 session.setTitle(event_data.title);
+                session.setTime(event_data.start_date, event_data.end_date);
+                session.setRoom(event_data.room);
                 session.loadSessionData(event_data.session_id);
                 mobilAP.showSessionDetail();
             }
@@ -1009,6 +1017,17 @@ var session = {
     setTitle: function(title) {
         this.session_title = title;
         document.getElementById('session_title').innerHTML=this.session_title;
+    },
+
+	setTime: function(start_time, end_time)
+	{
+		this.session_start_time = start_time;
+		this.session_end_time = end_time;		
+        document.getElementById('session_time').innerHTML= this.session_start_time.formatDate('g:i') + ' - ' + this.session_end_time.formatDate('g:i');
+	},
+    setRoom: function(room) {
+        this.session_room = room;
+        document.getElementById('session_room').innerHTML=this.session_room;
     },
     setAbstract: function(abstract) {
         this.session_abstract = abstract;
