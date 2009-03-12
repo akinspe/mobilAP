@@ -784,6 +784,11 @@ var session_group = {
     },
     setSessionGroup: function (session_group) {
         this.schedule_items = session_group.schedule_items;
+		for (var i=0; i<this.schedule_items.length; i++) {
+			this.schedule_items[i].start_date = new Date(this.schedule_items[i].start_date);
+			this.schedule_items[i].end_date = new Date(this.schedule_items[i].end_date);
+		}
+
         this.session_group_title = session_group.session_group_title;
         this.session_group_detail = session_group.session_group_detail;
         this.updateElements();
@@ -806,6 +811,8 @@ var session_group = {
             rowElement.onclick = function() {
             	//set the title before loading
                 session.setTitle(event_data.title);
+                session.setTime(event_data.start_date, event_data.end_date);
+                session.setRoom(event_data.room);
                 session.loadSessionData(event_data.session_id);
                 mobilAP.showSessionDetail();
             }

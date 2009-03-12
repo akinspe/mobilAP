@@ -2175,10 +2175,10 @@ class mobilAP_session_group
 		while ($row = mysql_fetch_assoc($result)) {
 			$schedule_item = new mobilAP_schedule_item();
 			$schedule_item->schedule_id = $row['schedule_id'];
-			$schedule_item->start_date = $row['start_date'];
+			$schedule_item->start_date = strftime('%b %d, %Y %H:%M:%S', $row['start_ts']);
 			$schedule_item->start_ts = $row['start_ts'];
 			$schedule_item->date = strftime('%Y-%m-%d', $schedule_item->start_ts);
-			$schedule_item->end_date = $row['end_date'];
+			$schedule_item->end_date = strftime('%b %d, %Y %H:%M:%S', $row['end_ts']);
 			$schedule_item->end_ts = $row['end_ts'];
 			$schedule_item->title = $row['title'];
 			$schedule_item->detail = $row['detail'];
