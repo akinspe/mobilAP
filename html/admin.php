@@ -225,8 +225,8 @@ switch ($action)
 
 	case 'add_session_group':
 		$template_file = 'add_session_group.tpl';
+		$session_group = new mobilap_session_group();
 		if (isset($_POST['add_session_group'])) {
-			$session_group = new mobilap_session_group();
 			$session_group_title = isset($_POST['session_group_title']) ? $_POST['session_group_title'] : '';
 			$session_group_detail = isset($_POST['session_group_detail']) ? $_POST['session_group_detail'] : '';
 			$session_group->setTitle($session_group_title);
