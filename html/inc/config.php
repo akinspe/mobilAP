@@ -53,7 +53,7 @@ $_BASECONFIG = array (
 */
 
 $_CONFIG = array(
-    'mobilAP_base_path'=>'/mobilAP' // set this to the path of your mobilAP folder
+    'mobilAP_base_path'=>'/mobilAP', // set this to the path of your mobilAP folder
 	'SITE_PREFIX'=>SITE_PREFIX,
     'USE_PASSWORDS'=>false,
     'SHOW_ATTENDEE_DIRECTORY'=>true, 
