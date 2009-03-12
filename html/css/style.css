@@ -9,6 +9,7 @@ body {
 label {
 	display: block;
 	font-weight: bold;
+	margin-top: 1em;
 }
 
 a {
@@ -81,6 +82,8 @@ legend {
 .content {
 	padding: 0 1em 3em 1em;
 }
+
+/* NAV */
 
 .nav {
 	margin: 0;
