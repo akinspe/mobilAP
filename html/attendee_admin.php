@@ -272,7 +272,7 @@ if ($action=='main')
 	
 	$template_file = 'attendee_admin_main.tpl';
 	
-	$attendees = mobilAP_attendee::getAttendees(array('order'=>$sort));
+	$attendees = mobilAP_attendee::getAttendees(array('order'=>$sort, 'only_active'=>false));
 
 	$usedLetters = array();
 	$attendee_total = 0;

@@ -95,7 +95,7 @@ if (isset($_REQUEST['get'])) {
 			break;
 		case 'attendees':
 			if (!$data = mobilAP::getCache('mobilAP_attendees')) {
-				$data = mobilAP_attendee::getAttendees(array('only_active'=>getConfig('show_only_active_attendees')));
+				$data = mobilAP_attendee::getAttendees();
 			}
 			break;
 			

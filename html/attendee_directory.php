@@ -13,7 +13,7 @@ $PAGE_TITLE = 'Attendee Directory';
 $PAGE = 'attendee_directory';
 
 if (!$attendees = mobilAP::getCache('mobilAP_attendees')) {
-	$attendees = mobilAP_attendee::getAttendees(array('only_active'=>getConfig('show_only_active_attendees')));
+	$attendees = mobilAP_attendee::getAttendees();
 }
 
 $attendee = isset($_GET['view_attendee']) ? mobilAP_attendee::getAttendeeById($_GET['view_attendee']) : false;

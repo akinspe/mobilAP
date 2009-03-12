@@ -856,7 +856,7 @@ class mobilAP_attendee
 
 	function setDirectoryActive($active)
 	{
-		$this->directory_active = $active ? DB_TRUE : DB_FALSE;
+		$this->directory_active = $active ? -1 : 0;
 	}
 
 	public function setBio($bio_text)
@@ -1386,6 +1386,7 @@ class mobilAP_attendee
 		$order = 'LastName,FirstName';
 		$args = is_array($args) ? $args : array();
 		$where = array();
+		$only_active = true;
 		
 		foreach ($args as $arg=>$value) 
 		{
@@ -1395,15 +1396,17 @@ class mobilAP_attendee
 					$$arg = $value;
 					break;
 				case 'only_active':
-					if ($value) {
-						$where[] = 'directory_active';
-					}
+					$$arg = $value ? true : false;
 					break;
 			}
 		}
 		
 		if ($order !='LastName') {
 			$order .=',LastName,FirstName';
+		}
+		
+		if ($only_active) {
+			$where[] = 'directory_active';
 		}
 		
 		
@@ -2805,14 +2808,15 @@ class mobilAP_webuser
     
     function _setSession()
     {
-    	$_SESSION['mobilAP_userID'] = $this->getUserID();
-		setCookie('mobilAP_userID', $this->getUserID(), mktime(0,0,0,10,11,2037));
+    	$_SESSION[SITE_PREFIX . '_mobilAP_userID'] = $this->getUserID();
+    	//set expiration to 1 week
+		setCookie(SITE_PREFIX . '_mobilAP_userID', $this->getUserID(), time()+604800, getConfig('mobilAP_base_path'));
     }    
 
     function _getSession()
     {
     	
-        $mobilAP_userID = isset($_COOKIE['mobilAP_userID']) ? $_COOKIE['mobilAP_userID'] : '';
+        $mobilAP_userID = isset($_COOKIE[SITE_PREFIX . '_mobilAP_userID']) ? $_COOKIE[SITE_PREFIX . '_mobilAP_userID'] : '';
         
         if ($mobilAP_userID) {
 
@@ -2877,8 +2881,8 @@ class mobilAP_webuser
     
     function _reset()
     {
-        unset($_SESSION['mobilAP_userID']);
-		setCookie('mobilAP_userID', '', mktime(0,0,0,10,11,1977));
+        unset($_SESSION[SITE_PREFIX . '_mobilAP_userID']);
+		setCookie(SITE_PREFIX . '_mobilAP_userID', '', mktime(0,0,0,10,11,1977), getConfig('mobilAP_base_path'));
 		
         $this->mobilAP_userID = null;
         $this->_setSession();
