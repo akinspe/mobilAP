@@ -26,6 +26,11 @@ if (get_magic_quotes_gpc()) {
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
 
+/* these constants allow you to avoid clashes on the same server they are used for DB tables and for cookies */
+define('SITE_PREFIX', '');
+define('TABLE_PREFIX', '');
+
+
 $_DBCONFIG = array(
     'db_host'=>'localhost',
     'db_user'=>'mobilAP',
@@ -48,6 +53,8 @@ $_BASECONFIG = array (
 */
 
 $_CONFIG = array(
+    'mobilAP_base_path'=>'/mobilAP' // set this to the path of your mobilAP folder
+	'SITE_PREFIX'=>SITE_PREFIX,
     'USE_PASSWORDS'=>false,
     'SHOW_ATTENDEE_DIRECTORY'=>true, 
     'SHOW_AD_PHOTOS'=>true,
@@ -59,8 +66,6 @@ $_CONFIG = array(
     'SHOW_AD_LOCATION'=>false,
     'SHOW_AD_BIO'=>true,
 );
-
-define('TABLE_PREFIX', '');
 
 function getDBConfig($var)
 {
