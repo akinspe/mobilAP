@@ -653,7 +653,7 @@ class mobilAP_schedule_item
 		$sql = "DELETE FROM " . TABLE_PREFIX .  mobilAP::SCHEDULE_TABLE . " 
 				WHERE schedule_id=$this->schedule_id";
 		$result = mobilAP::query($sql);
-		mobilAP::flushCache('mobilAP_schedule');		
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_schedule');		
 	}
 	
 	public function updateItem()
@@ -673,7 +673,7 @@ class mobilAP_schedule_item
 				session_group_id=$session_group_id
 				WHERE schedule_id=$this->schedule_id";
 		$result = mobilAP::query($sql);
-		mobilAP::flushCache('mobilAP_schedule');		
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_schedule');		
 		return true;
 	}
 	
@@ -1263,8 +1263,8 @@ class mobilAP_attendee
 				$result = mobilAP_Error::throwError("User already exists", DB_ERROR_ALREADY_EXISTS);
 			}
 		}
-		mobilAP::flushCache('mobilAP_attendees');
-		mobilAP::flushCache('mobilAP_attendee_summary');
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_attendees');
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_attendee_summary');
 		return $result;	
 	}
 
@@ -1342,8 +1342,8 @@ class mobilAP_attendee
 				$this->attendee_id);
 		$result = mobilAP::query($sql);
 
-		mobilAP::flushCache('mobilAP_attendees');
-		mobilAP::flushCache('mobilAP_attendee_summary');
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_attendees');
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_attendee_summary');
 	}
 	
 	public function setAdmin($admin)
@@ -1433,7 +1433,7 @@ class mobilAP_attendee
 	
 	static function getWelcomeImageSrc()
 	{
-		if (!$attendee_summary = mobilAP::getCache('mobilAP_attendee_summary')) {
+		if (!$attendee_summary = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendee_summary')) {
 			$attendee_summary = mobilAP_attendee::getAttendeeSummary();
 		}
 		
@@ -2086,7 +2086,7 @@ class mobilAP_session
 		session_abstract='" . addslashes($this->session_abstract) . "'
 		WHERE session_id='$this->session_id'";
 		
-		mobilAP::flushCache('mobilAP_schedule');		
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_schedule');		
 		$result = mobilAP::query($sql);
 		
 	}

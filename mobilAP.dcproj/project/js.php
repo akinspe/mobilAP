@@ -21,9 +21,9 @@ if (isset($_REQUEST['get'])) {
 			$data = array_merge($_CONFIG, mobilAP::getConfigs());
 			break;
 		case 'schedule':
-			if (!$data = mobilAP::getCache('mobilAP_schedule')) {
+			if (!$data = mobilAP::getCache(SITE_PREFIX . '_mobilAP_schedule')) {
 				$data = mobilAP::getSchedule();
-				mobilAP::setCache('mobilAP_schedule', $data, 600);
+				mobilAP::setCache(SITE_PREFIX . '_mobilAP_schedule', $data, 600);
 			}
 			break;
 			
@@ -81,9 +81,9 @@ if (isset($_REQUEST['get'])) {
 			break;			
 	
 		case 'attendee_summary':
-			if (!$data = mobilAP::getCache('mobilAP_attendee_summary')) {
+			if (!$data = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendee_summary')) {
 				$data = mobilAP_attendee::getAttendeeSummary();
-				mobilAP::setCache('mobilAP_attendee_summary', $data, 600);
+				mobilAP::setCache(SITE_PREFIX . '_mobilAP_attendee_summary', $data, 600);
 			}
 			break;	
 	
@@ -94,8 +94,8 @@ if (isset($_REQUEST['get'])) {
 			}
 			break;
 		case 'attendees':
-			if (!$data = mobilAP::getCache('mobilAP_attendees')) {
-				$data = mobilAP_attendee::getAttendees(array('only_active'=>getConfig('show_only_active_attendees')));
+			if (!$data = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendees')) {
+				$data = mobilAP_attendee::getAttendees();
 			}
 			break;
 			

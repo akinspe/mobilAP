@@ -4,9 +4,9 @@ require_once('inc/app_classes.php');
 
 $App = new Application();
 
-if (!$schedule = mobilAP::getCache('mobilAP_schedule')) {
+if (!$schedule = mobilAP::getCache(SITE_PREFIX . '_mobilAP_schedule')) {
 	$schedule = mobilAP::getSchedule();
-	mobilAP::setCache('mobilAP_schedule', $schedule, 600);
+	mobilAP::setCache(SITE_PREFIX . '_mobilAP_schedule', $schedule, 600);
 }
 
 $day_index = isset($_GET['day_index']) ? $_GET['day_index'] : 0;

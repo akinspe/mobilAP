@@ -12,7 +12,7 @@ $App = new Application();
 $PAGE_TITLE = 'Attendee Directory';
 $PAGE = 'attendee_directory';
 
-if (!$attendees = mobilAP::getCache('mobilAP_attendees')) {
+if (!$attendees = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendees')) {
 	$attendees = mobilAP_attendee::getAttendees();
 }
 
