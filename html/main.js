@@ -868,11 +868,16 @@ var current_sessions = {
 
 //handler for session. the big boy
 var session = {
-    SESSION_RELOAD_INTERVAL: 60,
+    SESSION_RELOAD_INTERVAL: 30,
+	SESSION_FLAGS_LINKS:1,
+	SESSION_FLAGS_ATTENDEE_LINKS:2,
+	SESSION_FLAGS_DISCUSSION:4,
+	SESSION_FLAGS_EVALUATION:8,
     _loading:false,
     current_panel: null,
     active_button: '',
     session_id: '000',
+    isPresenter: false,
     session_title: 'Session',
     session_abstract: '',
     session_question: null,
@@ -881,6 +886,7 @@ var session = {
     session_presenters: [],
     session_chat:[],
     session_userdata: [],
+    session_flags: 0,
     last_chat: 0,
     browserBackHandler: function(view) {
         mobilAP.log('session.browserBackHandler (' + view + ')');
@@ -922,6 +928,7 @@ var session = {
     },    
     setSessionData: function(session_data) {
         this.session_id = session_data.session_id;
+        this.isPresenter = session_data.isPresenter;
         this.setTitle(session_data.session_title);
         this.setAbstract(session_data.session_abstract);
         this.setUserData(session_data.session_userdata);
@@ -929,6 +936,7 @@ var session = {
         this.setQuestions(session_data.session_questions);
         this.setPresenters(session_data.session_presenters);
         this.setChat(session_data.session_chat);
+        this.setSessionFlags(session_data.session_flags);
     },
     reloadTimer: null,
     reloadInterval: null,
@@ -987,6 +995,9 @@ var session = {
             case 'links_add':
                 active_button='links';
             case 'links':
+            	if (!(this.session_flags & session.SESSION_FLAGS_LINKS)) {
+            		return;
+            	}
                 break;
             case 'question_response':
             case 'question_ask':
@@ -999,10 +1010,16 @@ var session = {
             case 'evaluation':
             case 'evaluation_thanks':
                 active_button='info';
+            	if (!(this.session_flags & session.SESSION_FLAGS_EVALUATION)) {
+            		return;
+            	}
                 break;
             case 'discussion_view':
                 active_button='discussion';
             case 'discussion':
+            	if (!(this.session_flags & session.SESSION_FLAGS_DISCUSSION)) {
+            		return;
+            	}
                 reloadInterval = 10;
                 break;
             default:
@@ -1044,6 +1061,32 @@ var session = {
         this.session_links = links;
         document.getElementById('session_links_list').object.reloadData();
         document.getElementById('session_links_list').style.display=this.session_links.length>0 ? 'block' : 'none';
+    },
+    setSessionFlags: function(flags) {
+    	this.session_flags = parseInt(flags);
+    	if (this.session_flags & session.SESSION_FLAGS_LINKS) {
+            removeClassName('session_links_button', 'button_disabled');
+        } else {
+            addClassName('session_links_button', 'button_disabled');
+        }
+
+    	if (!(this.session_flags & session.SESSION_FLAGS_ATTENDEE_LINKS) && !this.isPresenter) {
+            document.getElementById('session_add_link_button').style.display = 'none';
+        } else {
+            document.getElementById('session_add_link_button').style.display = 'block';
+        }
+
+    	if (this.session_flags & session.SESSION_FLAGS_DISCUSSION) {
+            removeClassName('session_discussion_button', 'button_disabled');
+        } else {
+            addClassName('session_discussion_button', 'button_disabled');
+        }
+
+    	if (this.session_flags & session.SESSION_FLAGS_EVALUATION) {
+            document.getElementById('session_rate_button').style.display = 'block';
+        } else {
+            document.getElementById('session_rate_button').style.display = 'none';
+        }
     },
     setQuestion: function(question_index) 
     {

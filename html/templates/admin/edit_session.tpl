@@ -38,6 +38,7 @@ if (count($session_presenters)>0) { ?>
 
 <?php if ($mobilAP_admin) { ?>
 <p>
+	Add new presenter (use email):
 	<input type="text" name="add_presenter_id"> <input type="submit" name="add_presenter" value="Add presenter">
 </p>
 <?php } ?>

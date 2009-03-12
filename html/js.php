@@ -36,6 +36,7 @@ if (isset($_REQUEST['get'])) {
 				$data->session_presenters = $data->getPresentersDirectory();
 				$data->session_chat = $data->get_chat();
 				$data->session_userdata = $data->getUserSubmissions($user->getUserToken());
+				$data->isPresenter = $data->isPresenter($user->getUserToken());
 			}
 			
 			break;

@@ -17,19 +17,22 @@ $session->session_userdata = $session->getUserSubmissions($App->getUserToken());
 switch ($view)
 {
 	case 'info':
-		$session->session_presenters = $session->getPresentersDirectory();
 		break;
 	case 'links':
-		if (isset($_REQUEST['add_link'])) {
-			$link_url = isset($_REQUEST['link_url']) ? $_REQUEST['link_url'] : '';
-			$link_text = isset($_REQUEST['link_text']) ? $_REQUEST['link_text'] : '';
-			$result = $session->addLink($link_url, $link_text, $App->getUserToken());
-			if (mobilAP_Error::isError($result)) {
-				$App->addErrorMessage($result->getMessage());
-			}
-		} 
-
-		$session->session_links = $session->getLinks();
+		if ($session->session_flags & mobilAP_session::SESSION_FLAGS_LINKS) {
+			if (isset($_REQUEST['add_link'])) {
+				$link_url = isset($_REQUEST['link_url']) ? $_REQUEST['link_url'] : '';
+				$link_text = isset($_REQUEST['link_text']) ? $_REQUEST['link_text'] : '';
+				$result = $session->addLink($link_url, $link_text, $App->getUserToken());
+				if (mobilAP_Error::isError($result)) {
+					$App->addErrorMessage($result->getMessage());
+				}
+			} 
+	
+			$session->session_links = $session->getLinks();
+		} else {
+			$view = 'info';
+		}
 		break;
 
 	case 'question_results':
@@ -64,32 +67,39 @@ switch ($view)
 		$view = count($session->session_questions)>0 ? 'questions' : 'info';
 		break;
 	case 'discussion':
-		if (isset($_REQUEST['add_discussion'])) {
-			$post_text = isset($_POST['post_text']) ? $_POST['post_text'] : '';
-			$result = $session->post_chat($post_text, $App->getUserToken());
-			if (mobilAP_Error::isError($result)) {
-				$App->addErrorMessage($result->getMessage());
+		if ($session->session_flags & mobilAP_session::SESSION_FLAGS_DISCUSSION) {
+			if (isset($_REQUEST['add_discussion'])) {
+				$post_text = isset($_POST['post_text']) ? $_POST['post_text'] : '';
+				$result = $session->post_chat($post_text, $App->getUserToken());
+				if (mobilAP_Error::isError($result)) {
+					$App->addErrorMessage($result->getMessage());
+				}
 			}
+			$session->session_chat = $session->get_chat();
+		} else {
+			$view = 'info';
 		}
-		$session->session_chat = $session->get_chat();
 		break;
 	case 'evaluation':
-		if (isset($_POST['submit_evaluation'])) {
-			$responses = isset($_REQUEST['responses']) ? $_REQUEST['responses'] : array();
-			$result = $session->addEvaluation($App->getUserToken(), $responses);
-			if (mobilAP_Error::isError($result) && $result->getCode() != mobilAP_session::ERROR_USER_ALREADY_SUBMITTED) {
-				$App->addErrorMessage($result->getMessage());
-			} else {
+		if ($session->session_flags & mobilAP_session::SESSION_FLAGS_EVALUATION) {
+			if (isset($_POST['submit_evaluation'])) {
+				$responses = isset($_REQUEST['responses']) ? $_REQUEST['responses'] : array();
+				$result = $session->addEvaluation($App->getUserToken(), $responses);
+				if (mobilAP_Error::isError($result) && $result->getCode() != mobilAP_session::ERROR_USER_ALREADY_SUBMITTED) {
+					$App->addErrorMessage($result->getMessage());
+				} else {
+					$view = 'evaluation_thanks';
+				}
+			} elseif ($session->session_userdata['evaluation']) {
 				$view = 'evaluation_thanks';
 			}
-		} elseif ($session->session_userdata['evaluation']) {
-			$view = 'evaluation_thanks';
+		} else {
+			$view = 'info';
 		}
 		
 		break;
 	default:
 		$view = 'info';
-		$session->session_presenters = $session->getPresentersDirectory();
 		break;
 }
 

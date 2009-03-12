@@ -1524,9 +1524,15 @@ class mobilAP_session
 	const SESSION_EVALUATION_TABLE='session_evaluations';
 	const ERROR_NO_USER=-1;
 	const ERROR_USER_ALREADY_SUBMITTED=-2;
+	const SESSION_FLAGS_DEFAULT=15;
+	const SESSION_FLAGS_LINKS=1;
+	const SESSION_FLAGS_ATTENDEE_LINKS=2;
+	const SESSION_FLAGS_DISCUSSION=4;
+	const SESSION_FLAGS_EVALUATION=8;
 	var $session_id;
 	var $session_title;
 	var $session_abstract;
+	var $session_flags=mobilAP_session::SESSION_FLAGS_DEFAULT;
 	
 	public function setSessionID($session_id)
 	{
@@ -1561,6 +1567,12 @@ class mobilAP_session
 		return true;
 	}
 	
+	public function setSessionFlags($session_flags)
+	{
+		$this->session_flags = intval($session_flags);
+		return true;
+	}
+	
 	/* this function gets what a user has done with a session, most notably if they've finished the evaluation or answered the questions */
 	public function getUserSubmissions($userID)
 	{
@@ -1586,6 +1598,7 @@ class mobilAP_session
 		$session->session_id = (string) $arr['session_id'];
 		$session->session_title = $arr['session_title'];
 		$session->session_abstract = $arr['session_abstract'];
+		$session->session_flags = intval($arr['session_flags']);
 		return $session;
 	}
 	
@@ -1946,9 +1959,10 @@ class mobilAP_session
 			return mobilAP_Error::throwError("Link text cannot be blank");
 		} elseif (!$user = mobilAP_attendee::getAttendeeById($post_user)) {
 			return mobilAP_Error::throwError("You must login to post a link", mobilAP_session::ERROR_NO_USER);
+		} elseif ($this->session_flags & mobilAP_session::SESSION_FLAGS_ATTENDEE_LINKS && !$this->isPresenter($post_user)) {
+			return mobilAP_Error::throwError("Posting of links to this session has been disabled");
 		}
-		
-		
+
 		$ts = time();
 		
 		$link_type = $this->isPresenter($post_user) ? 'A' : 'U';
@@ -2026,6 +2040,8 @@ class mobilAP_session
 			return mobilAP_Error::throwError("Text cannot be empty");
 		} elseif (!$user = mobilAP_attendee::getAttendeeById($post_user)) {
 			return mobilAP_Error::throwError("Please login to participate in the discussion", mobilAP_session::ERROR_NO_USER);
+		} elseif (!($this->session_flags & mobilAP_session::SESSION_FLAGS_DISCUSSION)) {
+			return mobilAP_Error::throwError("Discussion to this session has been disabled");
 		}
 
 		
@@ -2081,14 +2097,14 @@ class mobilAP_session
 	
 	public function updateSession()
 	{
-		$sql = "UPDATE " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " SET
-		session_title='" . addslashes($this->session_title) . "',
-		session_abstract='" . addslashes($this->session_abstract) . "'
-		WHERE session_id='$this->session_id'";
-		
-		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_schedule');		
+		$sql = sprintf("UPDATE %s%s SET
+		session_title='%s', session_abstract='%s', session_flags=%d
+		WHERE session_id='%s'",
+		TABLE_PREFIX, mobilAP_session::SESSION_TABLE,
+		addslashes($this->session_title), addslashes($this->session_abstract), $this->session_flags,
+		$this->session_id);
 		$result = mobilAP::query($sql);
-		
+		mobilAP::flushCache(SITE_PREFIX . '_mobilAP_schedule');				
 	}
 	
 }

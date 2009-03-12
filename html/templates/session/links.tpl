@@ -7,6 +7,10 @@ foreach ($session->session_links as $link) { ?>
 <?php } ?>
 </ul>
 
+<?php 
+
+if ($App->is_LoggedIn()) { 
+	if ( ($session->session_flags & mobilAP_session::SESSION_FLAGS_ATTENDEE_LINKS) || $session->isPresenter($App->getUserID())) { ?>
 <form action="session.php" id="add_link_form">
 <input type="hidden" name="session_id" value="<?= $session->session_id ?>">
 <input type="hidden" name="view" value="<?= $view ?>">
@@ -18,6 +22,14 @@ foreach ($session->session_links as $link) { ?>
 <input type="text" name="link_text" value="" id="link_text">
 
 <input type="submit" name="add_link" id="add_link" value="Add Link">
+<?php } else { ?>
+
+<?php } 
+} elseif ($session->session_flags & mobilAP_session::SESSION_FLAGS_ATTENDEE_LINKS) { ?>
+	<p class="message">You must login to post links</p>
+<?php
+}
+?>
 
 </fieldset>
 </form>

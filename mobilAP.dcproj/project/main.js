@@ -7,6 +7,7 @@ function load()
 {
     //needed by dashcode
     dashcode.setupParts();
+    document.title = dashcodePartSpecs.header.rootTitle;
     
     browserController.browserHandler();
     if (!Transition.areTransformsSupported()) {
@@ -38,8 +39,6 @@ function load()
     
     //setup user stuff
     mobilAP.getConfigs();
-    mobilAP.getLogin();
-    mobilAP.getSchedule();
     
     //reload current sessions every minute
     programSchedule.reloadTimer = setInterval(programSchedule.setCurrentSession, 60000);
@@ -55,6 +54,7 @@ var mobilAP = {
     login_form_visible: false,
     user: {},
     isIPhone: navigator.userAgent.match(new RegExp('iPhone;.*AppleWebKit/.*Mobile/')) ? true: false,
+    userdata: { questions: null, evaluation: false},
     
     //generic logging function. uses the LOGGING var to turn on or off logging globally
 	log: function(msg) {
@@ -137,13 +137,17 @@ var mobilAP = {
             var user = eval("(" + xhr.responseText + ")");
             mobilAP.user = user;
             
+            //cookie persists for a week
+            var d = new Date();
+            d.setTime(d.getTime() + 604800000);
+            
             //set cookie to persist login
             if (mobilAP.user.mobilAP_userID) {
                 document.cookie = 
-                'mobilAP_userID=' + mobilAP.user.mobilAP_userID+ '; expires=Sun, 11 Oct 2037 00:00:00 UTC;';
+                mobilAP.SITE_PREFIX + '_mobilAP_userID=' + mobilAP.user.mobilAP_userID+ '; expires=' + d.toGMTString() + '; path=' + mobilAP.mobilAP_base_path;
             } else {
                 document.cookie = 
-                'mobilAP_userID=; expires=Sun, 9 Jul 2006 00:00:00 UTC;';
+                mobilAP.SITE_PREFIX + '_mobilAP_userID=; expires=Sun, 9 Jul 2006 00:00:00 UTC; path=' + mobilAP.mobilAP_base_path;
             }
         } catch (e) {
             mobilAP.log(e);
@@ -451,6 +455,8 @@ var mobilAP = {
         } catch (e) {  }
         
         browserController.reload();
+		mobilAP.getLogin();
+		mobilAP.getSchedule();
     }
 }
 
@@ -712,6 +718,8 @@ var programSchedule = {
             rowElement.onclick = function() {
             	//set the title before loading
                 session.setTitle(event_data.title);
+                session.setTime(event_data.start_date, event_data.end_date);
+                session.setRoom(event_data.room);
                 session.loadSessionData(event_data.session_id);
                 mobilAP.showSessionDetail();
             }
@@ -776,6 +784,11 @@ var session_group = {
     },
     setSessionGroup: function (session_group) {
         this.schedule_items = session_group.schedule_items;
+		for (var i=0; i<this.schedule_items.length; i++) {
+			this.schedule_items[i].start_date = new Date(this.schedule_items[i].start_date);
+			this.schedule_items[i].end_date = new Date(this.schedule_items[i].end_date);
+		}
+
         this.session_group_title = session_group.session_group_title;
         this.session_group_detail = session_group.session_group_detail;
         this.updateElements();
@@ -798,6 +811,8 @@ var session_group = {
             rowElement.onclick = function() {
             	//set the title before loading
                 session.setTitle(event_data.title);
+                session.setTime(event_data.start_date, event_data.end_date);
+                session.setRoom(event_data.room);
                 session.loadSessionData(event_data.session_id);
                 mobilAP.showSessionDetail();
             }
@@ -853,11 +868,16 @@ var current_sessions = {
 
 //handler for session. the big boy
 var session = {
-    SESSION_RELOAD_INTERVAL: 60,
+    SESSION_RELOAD_INTERVAL: 30,
+	SESSION_FLAGS_LINKS:1,
+	SESSION_FLAGS_ATTENDEE_LINKS:2,
+	SESSION_FLAGS_DISCUSSION:4,
+	SESSION_FLAGS_EVALUATION:8,
     _loading:false,
     current_panel: null,
     active_button: '',
     session_id: '000',
+    isPresenter: false,
     session_title: 'Session',
     session_abstract: '',
     session_question: null,
@@ -866,6 +886,7 @@ var session = {
     session_presenters: [],
     session_chat:[],
     session_userdata: [],
+    session_flags: 0,
     last_chat: 0,
     browserBackHandler: function(view) {
         mobilAP.log('session.browserBackHandler (' + view + ')');
@@ -907,6 +928,7 @@ var session = {
     },    
     setSessionData: function(session_data) {
         this.session_id = session_data.session_id;
+        this.isPresenter = session_data.isPresenter;
         this.setTitle(session_data.session_title);
         this.setAbstract(session_data.session_abstract);
         this.setUserData(session_data.session_userdata);
@@ -914,6 +936,7 @@ var session = {
         this.setQuestions(session_data.session_questions);
         this.setPresenters(session_data.session_presenters);
         this.setChat(session_data.session_chat);
+        this.setSessionFlags(session_data.session_flags);
     },
     reloadTimer: null,
     reloadInterval: null,
@@ -972,6 +995,9 @@ var session = {
             case 'links_add':
                 active_button='links';
             case 'links':
+            	if (!(this.session_flags & session.SESSION_FLAGS_LINKS)) {
+            		return;
+            	}
                 break;
             case 'question_response':
             case 'question_ask':
@@ -984,10 +1010,16 @@ var session = {
             case 'evaluation':
             case 'evaluation_thanks':
                 active_button='info';
+            	if (!(this.session_flags & session.SESSION_FLAGS_EVALUATION)) {
+            		return;
+            	}
                 break;
             case 'discussion_view':
                 active_button='discussion';
             case 'discussion':
+            	if (!(this.session_flags & session.SESSION_FLAGS_DISCUSSION)) {
+            		return;
+            	}
                 reloadInterval = 10;
                 break;
             default:
@@ -1010,6 +1042,17 @@ var session = {
         this.session_title = title;
         document.getElementById('session_title').innerHTML=this.session_title;
     },
+
+	setTime: function(start_time, end_time)
+	{
+		this.session_start_time = start_time;
+		this.session_end_time = end_time;		
+        document.getElementById('session_time').innerHTML= this.session_start_time.formatDate('g:i') + ' - ' + this.session_end_time.formatDate('g:i');
+	},
+    setRoom: function(room) {
+        this.session_room = room;
+        document.getElementById('session_room').innerHTML=this.session_room;
+    },
     setAbstract: function(abstract) {
         this.session_abstract = abstract;
         document.getElementById('session_abstract').innerHTML=this.session_abstract;
@@ -1018,6 +1061,32 @@ var session = {
         this.session_links = links;
         document.getElementById('session_links_list').object.reloadData();
         document.getElementById('session_links_list').style.display=this.session_links.length>0 ? 'block' : 'none';
+    },
+    setSessionFlags: function(flags) {
+    	this.session_flags = parseInt(flags);
+    	if (this.session_flags & session.SESSION_FLAGS_LINKS) {
+            removeClassName('session_links_button', 'button_disabled');
+        } else {
+            addClassName('session_links_button', 'button_disabled');
+        }
+
+    	if (!(this.session_flags & session.SESSION_FLAGS_ATTENDEE_LINKS) && !this.isPresenter) {
+            document.getElementById('session_add_link_button').style.display = 'none';
+        } else {
+            document.getElementById('session_add_link_button').style.display = 'block';
+        }
+
+    	if (this.session_flags & session.SESSION_FLAGS_DISCUSSION) {
+            removeClassName('session_discussion_button', 'button_disabled');
+        } else {
+            addClassName('session_discussion_button', 'button_disabled');
+        }
+
+    	if (this.session_flags & session.SESSION_FLAGS_EVALUATION) {
+            document.getElementById('session_rate_button').style.display = 'block';
+        } else {
+            document.getElementById('session_rate_button').style.display = 'none';
+        }
     },
     setQuestion: function(question_index) 
     {

@@ -9,3 +9,11 @@
 <label>Session Abstract</label>
 <textarea name="session_abstract" rows="15" cols="60"><?= htmlentities($session->session_abstract) ?></textarea>
 <br class="end">
+
+<label>Options</label>
+<ul>
+	<li><input type="checkbox" name="session_flags[]" value="<?= mobilAP_session::SESSION_FLAGS_LINKS ?>"<?php if ($session->session_flags & mobilAP_session::SESSION_FLAGS_LINKS) echo ' checked';?>> Show Links</li>
+	<li><input type="checkbox" name="session_flags[]" value="<?= mobilAP_session::SESSION_FLAGS_ATTENDEE_LINKS ?>"<?php if ($session->session_flags & mobilAP_session::SESSION_FLAGS_ATTENDEE_LINKS) echo ' checked';?>> Allow non-presenters to post links</li>
+	<li><input type="checkbox" name="session_flags[]" value="<?= mobilAP_session::SESSION_FLAGS_DISCUSSION ?>"<?php if ($session->session_flags & mobilAP_session::SESSION_FLAGS_DISCUSSION) echo ' checked';?>> Enable Discussion</li>
+	<li><input type="checkbox" name="session_flags[]" value="<?= mobilAP_session::SESSION_FLAGS_EVALUATION ?>"<?php if ($session->session_flags & mobilAP_session::SESSION_FLAGS_EVALUATION) echo ' checked';?>> Enable Evaluation</li>
+</ul>	

@@ -42,8 +42,10 @@ if ($mobilAP_admin) { ?>
 	<th colspan="2">Session</th>
 	<th>Evaluations</th>
 	<th>Links</th>
+	<th>User Links</th>
 	<th>Questions</th>
 	<th>Posts</th>
+	<th>New Posts</th>
 </tr>
 <?php } else { ?>
 <ul>
@@ -57,10 +59,12 @@ if ($mobilAP_admin) {
 <tr class="row<?= $i %2 ? 1 : 2 ?>">
 	<td><?= $session->session_id ?></td>
 	<td><a href="<?= $App->SCRIPT_NAME ?>?action=edit_session&amp;session_id=<?= $session->session_id ?>"><?= $session->session_title ?></a></td>
-	<td align="center"><?= count($session->session_evaluations) ?></td>
-	<td align="center"><?= count($session->session_links) ?></td>
+	<td align="center"><?= $session->session_flags & mobilAP_session::SESSION_FLAGS_EVALUATION ? count($session->session_evaluations) : 'Disabled' ?></td>
+	<td align="center"><?= $session->session_flags & mobilAP_session::SESSION_FLAGS_LINKS ? count($session->session_links) : 'Disabled' ?></td>
+	<td align="center"><?= $session->session_flags & mobilAP_session::SESSION_FLAGS_ATTENDEE_LINKS ? 'Enabled' : 'Disabled' ?></td>
 	<td align="center"><?= count($session->session_questions) ?></td>
 	<td align="center"><?= count($session->session_chat) ?></td>
+	<td align="center"><?= $session->session_flags & mobilAP_session::SESSION_FLAGS_DISCUSSION ? 'Enabled' : 'Disabled' ?></td>
 </tr>
 <?php } else { ?>
 <li><?= $session->session_id ?> <a href="<?= $App->SCRIPT_NAME ?>?action=edit_session&amp;session_id=<?= $session->session_id ?>"><?= $session->session_title ?></a></li>

@@ -624,10 +624,12 @@ switch ($action)
 				$ok = true;
 				$session_title = isset($_POST['session_title'])? $_POST['session_title'] : '';
 				$session_abstract = isset($_POST['session_abstract'])? $_POST['session_abstract'] : '';
+				$session_flags = isset($_POST['session_flags'])? array_sum($_POST['session_flags']) : 0;
 				$edit_session_id = isset($_POST['edit_session_id'])? $_POST['edit_session_id'] : $session_id;
 								
 				$session->setSessionTitle($session_title);
 				$session->setSessionAbstract($session_abstract);
+				$session->setSessionFlags($session_flags);
 				
 				$result = $session->setSessionID($edit_session_id);
 				if (mobilAP_Error::isError($result)) {
