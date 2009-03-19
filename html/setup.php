@@ -32,7 +32,7 @@ $create_tables = array(
 	"CREATE TABLE IF NOT EXISTS `session_groups` (`session_group_id` int(11) NOT NULL auto_increment, `session_group_title` varchar(100) default NULL, `session_group_detail` varchar(100) default NULL, PRIMARY KEY  (`session_group_id`))",
 	"CREATE TABLE IF NOT EXISTS `session_links` (`link_id` int(11) NOT NULL auto_increment, `session_id` char(3) default NULL, `link_url` varchar(200) default NULL, `link_text` varchar(150) default NULL, `post_user` char(32) default NULL, `link_type` char(1) default NULL, `post_timestamp` int(11) default NULL, PRIMARY KEY (`link_id`), KEY `session_id` (`session_id`))",
 	"CREATE TABLE IF NOT EXISTS `session_presenters` (`session_id` char(3) NOT NULL default '', `presenter_id` char(32) NOT NULL default '', `index` tinyint(4) unsigned default NULL, PRIMARY KEY (`session_id`,`presenter_id`), UNIQUE KEY `session_id` (`session_id`,`index`))",
-	"CREATE TABLE IF NOT EXISTS `sessions` (`session_id` char(3) NOT NULL default '', `session_title` varchar(100) default NULL, `session_abstract` text, `session_flags` int(10) unsigned default 15, PRIMARY KEY (`session_id`))"
+	"CREATE TABLE IF NOT EXISTS `sessions` (`session_id` char(3) NOT NULL default '', `session_title` varchar(100) default NULL, `session_abstract` text, `session_flags` int(10) unsigned NOT NULL default 15, PRIMARY KEY (`session_id`))"
 );
 
 foreach ($create_tables as $sql) {
