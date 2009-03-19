@@ -1,4 +1,4 @@
-mobilAP Version 0.9.6
+mobilAP Version 0.9.7
 
 This version of the mobilAP conference edition includes two 
 components, a PHP based back-end and a HTML/Javascript based front end.
@@ -10,32 +10,61 @@ The backend has the following requirements:
 
 There are some configurations that have to be made:
 
-1. Copy the contents of the html folder to a folder on your web server. It can be the root, but it doesn't have to be.
+1. Copy the contents of the html folder to a folder on your web server (i.e. /mobilAP). It can be the root, but it doesn't have to be.
 2. Set the db_host, db_user, db_password parameters in "inc/config.php" as necessary
-3. Run setup.php which will create an admin user, and create the appropriate tables
+3. Set the mobilAP_base_path parameter in "inc/config.php" to be the name of the folder you created (i.e. '/' or '/mobilAP'). This is vital to ensure logins work properly
+4. Run setup.php which will create an admin user, and create the appropriate tables
 
 Session configuration and schedule is accomplished using the admin.php script. 
 
 RELEASE NOTES
 
-1. None of the admin scripts have any style to them.
+1. Some basic style has been added. There is plenty of room for CSS customization
 2. the js.php script is the main controller for AJAX communication between the DB and the front end.
-3. The use of the APC cache is strongly encouraged. The calls in the code aren't quite there yet. but the stubs are there.
+3. The use of the APC cache is strongly encouraged. There is now some simple code for caching often used data.
 4. Sorry about the sparse documentation. This should get improved in the future once further developement occurs.
 5. A Dashcode project file has been included to aid in customization. (See notes below with important information about using dashcode to customize)
 
+If you were previously using 0.9.6 you will need add a table and change 2 others. See the setup.php file for schema information.
+
+New tables since 0.9.6 
+- config
+
+Changed tables since 0.9.6
+- attendee_import (add the password varchar(32) column)
+- sessions (add the session_flags int (10) unsigned default 15 column)
+
 If you were previously using 0.9 you will need to drop a few tables since the schema has changed. If you don't know what this means, then just remove ALL the tables from your database and then create a new blank database and run setup.php to recreate the tables. If you're advanced enough and know your way around MySQL you can look at setup.php for the table definitions
 
-New Tables:
+New Tables since 0.9
 - announcements
 - announcements read
 - evaluation_questions
 - evaluation_question_responses
-Dropped Tables
+Dropped Tables since 0.9
 - session_group_sessions
-Changed Tables:
+Changed Tables since 0.9
 - session_evaluations (drop the qX columns since the columns are now generated on the fly as the questions are added, removed)
 - session_groups (add the session_group_detail varchar(100) column)
+
+New Features since 0.9.6
+- Basic CSS styling on the non-MobileSafari version
+- Certain settings can be administered via the admin interface. This will allow for some customization of certain features without editing the source code. This includes:
+	- Requiring or not requiring passwords for attendees
+	- Showing or hiding fields/photos in the attendee directory
+- Links, Evaluations and Discussion can be turned on or off per session
+- Room and time information show up on session screens.
+- Added support for APC cache (where available)
+
+
+Selected Bugs addressed since 0.9.6
+(there has been much work therefore not everything may be listed here)
+- Fixes issues that arose when the root path was Changed
+- Fixed many issues with session groups
+- Use GD for image thumbnails and rotations if necessary (still uses SIPS on Mac OS X servers)
+- The question "results" page works and uses jquery
+- Fixed various bugs with evaluation questions
+
 
 Bugs addressed since 0.9.5
 - Changed the default "baseURL" property in main.js to work better from a default configuration. In most cases, it would have required changing the value to work. Now the ajax calls are all done in the base script's current folder. This will work in nearly all cases.
