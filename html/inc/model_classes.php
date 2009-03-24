@@ -123,7 +123,7 @@ class mobilAP
     	);
     	
     	if (getConfig('USE_PASSWORDS')) {
-    		$where[] = "md5='" . addslashes($password) . "'";
+    		$where[] = "md5='" . md5($password) . "'";
     	}
 
 		$sql = "SELECT attendee_id FROM " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u 
