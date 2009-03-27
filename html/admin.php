@@ -763,6 +763,7 @@ switch ($action)
 				mobilAP::setConfig($var, $value);
 			}
 
+			mobilAP::getConfigs(true);
 			$App->addMessage("Settings updated");
 		}
 		

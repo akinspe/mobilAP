@@ -43,16 +43,19 @@ class mobilAP
 		return false;
 	}
 
-	function getConfigs()
+	function getConfigs($refresh=false)
 	{
 		static $configs;
-		if ($configs) {
+		if ($configs && !$refresh) {
 			return $configs;
 		}
 	
 		$configs = array();
 		$sql = sprintf("SELECT config_var, config_value FROM %sconfig", TABLE_PREFIX);
-		$result = mobilAP::query($sql);
+		$result = mobilAP::query($sql, true);
+		if (mobilAP_Error::isError($result)) {
+			return $configs;
+		}
 		while ($row = mysql_fetch_assoc($result)) {
 			$configs[$row['config_var']] = $row['config_value'];
 		}
@@ -76,6 +79,7 @@ class mobilAP
 	{
 		$sql = sprintf("DELETE FROM %sconfig", TABLE_PREFIX);
 		$result = mobilAP::query($sql);
+		mobilAP::getConfigs(true);
 	}
 	
     static function query($sql,$continue=false)
@@ -86,7 +90,7 @@ class mobilAP
         if (!$result) {
         	if (!$continue) {
         		$bt = debug_backtrace();
-				die("Error with query: " . mysql_error());
+				die(sprintf("Error with query (%s @ %d): %s", $bt[0]['file'], $bt[0]['line'], mysql_error()));
 			} 
 			
 			$errno = mysql_errno();
