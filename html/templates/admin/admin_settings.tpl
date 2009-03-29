@@ -64,10 +64,19 @@
 
 <label>Use Passwords</label>
 <p class="explanation">You can require attendees to enter a password when logging in. You assign passwords either at import
-or by editing the user in the attendee administration</p>
+or by editing the user in the attendee administration. The default password is: &quot;<?= getConfig('default_password') ?>&quot;</p>
 <input type="radio" name="setting[USE_PASSWORDS]" value="-1"<?= getConfig('USE_PASSWORDS') ? " checked": ''?>> Yes
 <input type="radio" name="setting[USE_PASSWORDS]" value="0"<?= getConfig('USE_PASSWORDS') ? '' : " checked"?>> No
 <br class="end">
+
+<?php if (!getConfig('USE_PASSWORDS')) { ?>
+<label>Require Password for admins</label>
+<p class="explanation">You can require admins to enter a password when logging in. This will allow attendees to
+login without a password, but prevent unauthorized administration without a password. The default password is: &quot;<?= getConfig('default_password') ?>&quot;</p>
+<input type="radio" name="setting[USE_ADMIN_PASSWORDS]" value="-1"<?= getConfig('USE_ADMIN_PASSWORDS') ? " checked": ''?>> Yes
+<input type="radio" name="setting[USE_ADMIN_PASSWORDS]" value="0"<?= getConfig('USE_ADMIN_PASSWORDS') ? '' : " checked"?>> No
+<br class="end">
+<?php } ?>
 
 </fieldset>
 

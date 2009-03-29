@@ -8,9 +8,9 @@
 	<input type="hidden" name="referrer" value="<?= htmlentities($referrer) ?>">
 <?php  } ?>
 	<label id="login_userID_label">email</label>
-	<input type="text" size="30" name="login_userID" maxlength="50" value="" accesskey="l" tabindex="0" id="login_userID_input" class="login_input">
+	<input type="text" size="30" name="login_userID" maxlength="50" value="<?= htmlentities($login_userID) ?>" accesskey="l" tabindex="0" id="login_userID_input" class="login_input">
 <?php
-if (getConfig('USE_PASSWORDS')) { ?>
+if ($show_password_box) { ?>
 	<label id="login_pword_label">password</label>
 	<input type="password" size="17" maxlength="16" name="login_pword" tabindex="0" id="login_pword_input" class="login_input">
 <?php

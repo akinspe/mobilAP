@@ -128,6 +128,8 @@ class mobilAP
     	
     	if (getConfig('USE_PASSWORDS')) {
     		$where[] = "md5='" . md5($password) . "'";
+    	} elseif (getConfig('USE_ADMIN_PASSWORDS')) {
+    		$where[] = "(!admin || md5='" . md5($password) . "')";
     	}
 
 		$sql = "SELECT attendee_id FROM " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u 
@@ -919,7 +921,7 @@ class mobilAP_attendee
 	
 	function setPassword($password) 
 	{
-		$password = getConfig('USE_PASSWORDS') && $password!='' ? $password : getConfig('default_password');
+		$password = $password != '' && (getConfig('USE_PASSWORDS') || (getConfig('USE_ADMIN_PASSWORDS') && $this->admin))  ? $password : getConfig('default_password');
 		$sql = sprintf("UPDATE `%s%s` SET
 				md5='%s'
 				WHERE attendee_id='%s'",
@@ -2773,6 +2775,8 @@ class mobilAP_webuser
 	const USER_NOT_FOUND=-1;
 	const USER_ALREADY_LOGGED_IN=-2;
 	const USER_LOGIN_FAILURE=-3;
+	const USER_REQUIRES_PASSWORD=-4;
+	const USER_ADMIN_LOGIN_FAILURE=-5;
 	var $mobilAP_userID;
     var $user;
     
@@ -2867,7 +2871,6 @@ class mobilAP_webuser
         	return mobilAP_Error::throwError("User $userID is not a user", mobilAP_webuser::USER_NOT_FOUND);
         } else {
 			
-            
             if ($login = mobilAP::Auth($userID, $pword, $mode)) {
 
                 $this->setmobilAP_userID($user->email);
@@ -2891,6 +2894,10 @@ class mobilAP_webuser
                                 
                 return true;
                 
+            } elseif (getConfig('USE_ADMIN_PASSWORDS') && $user->admin && $pword==getConfig('default_password')) {
+				return mobilAP_Error::throwError("This account requires a password", mobilAP_webuser::USER_REQUIRES_PASSWORD);
+            } elseif (getConfig('USE_ADMIN_PASSWORDS') && $user->admin) {
+				return mobilAP_Error::throwError("Login Failure.", mobilAP_webuser::USER_ADMIN_LOGIN_FAILURE);
             } else {
 				return mobilAP_Error::throwError("Login Failure.", mobilAP_webuser::USER_LOGIN_FAILURE);
             }

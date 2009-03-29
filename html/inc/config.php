@@ -9,6 +9,8 @@
 */
 
 ini_set('display_errors', 'off');
+ini_set('session.use_only_cookies', 1);
+
 set_magic_quotes_runtime(0);
 
 if (get_magic_quotes_gpc()) {
@@ -53,9 +55,10 @@ $_BASECONFIG = array (
 */
 
 $_CONFIG = array(
-    'mobilAP_base_path'=>'/mobilAP', // set this to the path of your mobilAP folder
+    'mobilAP_base_path'=>'/', // set this to the path of your mobilAP folder
 	'SITE_PREFIX'=>SITE_PREFIX,
     'USE_PASSWORDS'=>false,
+    'USE_ADMIN_PASSWORDS'=>false,
     'SHOW_ATTENDEE_DIRECTORY'=>true, 
     'SHOW_AD_PHOTOS'=>true,
     'SHOW_AD_TITLE'=>true,

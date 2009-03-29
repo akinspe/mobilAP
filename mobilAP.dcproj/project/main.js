@@ -51,6 +51,7 @@ var mobilAP = {
 	LOGGING: false,
     ERROR_NO_USER:-1,
     ERROR_USER_ALREADY_SUBMITTED:-2,
+    ERROR_USER_REQUIRES_PASSWORD:-4,
     login_form_visible: false,
     user: {},
     isIPhone: navigator.userAgent.match(new RegExp('iPhone;.*AppleWebKit/.*Mobile/')) ? true: false,
@@ -246,7 +247,7 @@ var mobilAP = {
         }
         var url=login_script;
         var params='login_userID=' + escape(login_userID) + '&login_submit=js&js=true';
-        if (mobilAP.USE_PASSWORDS) {
+        if (login_pass) {
             params += '&login_pword=' + escape(login_pass);
         }
         
@@ -262,6 +263,11 @@ var mobilAP = {
             if (result.error_message) {
                 document.getElementById('login_result').innerHTML=result.error_message;
                 mobilAP.getLogin();
+                if (result.error_code==mobilAP.ERROR_USER_REQUIRES_PASSWORD) {
+					document.getElementById('login_password').style.display = 'block';
+					document.getElementById('login_password_label').style.display = 'block';
+                }
+                
                 return;
             } else {
                 document.getElementById('login_result').innerHTML='';

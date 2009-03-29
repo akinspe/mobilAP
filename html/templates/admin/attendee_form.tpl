@@ -46,10 +46,10 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 <input type="text" name="email" value="<?= htmlentities($attendee->email) ?>" size="50" maxlength="50">
 <br class="end">
 
-<?php if (getConfig('USE_PASSWORDS')) { ?>
+<?php if (getConfig('USE_PASSWORDS') || (getConfig('USE_ADMIN_PASSWORDS') && $attendee->admin)) { ?>
 	<label id="login_pword_label">Password</label>
 	<input type="text" size="17" maxlength="16" name="password" value="<?= isset($attendee->password) ? htmlentities($attendee->password) : '' ?>">
-	Note: If left blank, the password will not change
+	Note: If left blank, the password will not change.
 	<br class="end">
 <?php } ?>
 

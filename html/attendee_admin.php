@@ -199,7 +199,7 @@ switch ($action)
 					$App->addErrorMessage("Please include a valid email");
 				}
 
-				if (getConfig('USE_PASSWORDS') && $password != '') {
+				if ($password != '' && (getConfig('USE_PASSWORDS') || (getConfig('USE_ADMIN_PASSWORDS') && $attendee->admin))) {
 					$attendee->setPassword($password);
 				}
 				

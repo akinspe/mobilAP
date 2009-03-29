@@ -17,6 +17,7 @@ $login_pword = isset($_POST['login_pword']) ? $_POST['login_pword'] : getConfig(
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $referrer = isset($_REQUEST['referrer']) ? urldecode($_REQUEST['referrer']) : '';
 $js = isset($_REQUEST['js']) ? true : false;
+$show_password_box = getConfig('USE_PASSWORDS');
 
 
 $PAGE_TITLE ='mobilAP Login';
@@ -37,11 +38,19 @@ if ( (isset($_POST['login_submit_x']) || isset($_POST['login_submit'])) && !empt
 				$message = 'You are already logged in.';
 				break;
 	
+			case mobilAP_webuser::USER_ADMIN_LOGIN_FAILURE:
+				$show_password_box = true;
 			case mobilAP_webuser::USER_LOGIN_FAILURE:
 				$message = 'Login Failed. Please ensure your email address and password are correct.';
 				break;
+
+			case mobilAP_webuser::USER_REQUIRES_PASSWORD:
+				$message = 'This account requires a password';
+				$show_password_box = true;
+				break;
 	
 			case mobilAP_webuser::USER_NOT_FOUND:
+				$login_userID = '';
 				$message = 'Login Failed. An account for this email address could not be found.';
 				break;
 	
