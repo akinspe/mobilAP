@@ -2890,6 +2890,7 @@ class mobilAP_webuser
 						u.attendee_id='" . $this->getUserID() . "'";
 	
 				$result = mobilAP::query($sql);                
+				session_regenerate_id(true);
                 $this->_setSession();
                                 
                 return true;
@@ -2912,6 +2913,7 @@ class mobilAP_webuser
 		setCookie(SITE_PREFIX . '_mobilAP_userID', '', mktime(0,0,0,10,11,1977), getConfig('mobilAP_base_path'));
 		
         $this->mobilAP_userID = null;
+		session_regenerate_id(true);
         $this->_setSession();
     }
     
@@ -2926,7 +2928,7 @@ class mobilAP_webuser
     	}
     	
     	$this->_reset();
-    	session_destroy();
+		session_regenerate_id(true);
 
         return true;
     }
