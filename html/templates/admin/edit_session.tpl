@@ -53,7 +53,7 @@ if (count($session_links)>0) { ?>
 <?php
 	foreach ($session_links as $link) {
 ?>
-	<li><?= htmlentities($link->link_text) ?> ( <?= $link->link_url ?>) <a href="<?= $App->SCRIPT_NAME ?>?action=edit_link&amp;session_id=<?= $session->session_id ?>&amp;link_id=<?= $link->link_id ?>">edit</a></li>
+	<li><?= htmlentities($link->link_text) ?> ( <?= htmlentities($link->link_url) ?>) <a href="<?= $App->SCRIPT_NAME ?>?action=edit_link&amp;session_id=<?= $session->session_id ?>&amp;link_id=<?= $link->link_id ?>">edit</a></li>
 <?php
 	} ?>
 </ul>	
