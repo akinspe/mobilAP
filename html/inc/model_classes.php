@@ -1973,7 +1973,7 @@ class mobilAP_session
 	
 	public function addLink($link_url, $link_text, $post_user)
 	{
-		if (!filter_var($link_url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED)) {
+		if (!Utils::is_validURL($link_url)) {
 			return mobilAP_Error::throwError("Invalid url");
 		} elseif (empty($link_text)) {
 			return mobilAP_Error::throwError("Link text cannot be blank");
