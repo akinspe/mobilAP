@@ -11,6 +11,11 @@
 
 require_once('inc/app_classes.php');
 
+if (getConfig('SETUP_COMPLETE')) {
+	header("Location: index.php");
+	exit();
+}
+
 $sql = "SHOW TABLES";
 $result = mobilAP::query($sql);
 ini_set('display_errors','on');
@@ -82,6 +87,8 @@ if (isset($_POST['submit_setup'])) {
 			$attendee->setPassword($password);
 			$attendee->updateAttendee();
 			$template_file="setup_success.tpl";
+
+			mobilAP::setConfig('SETUP_COMPLETE', -1);
 		}
 	} else {
 	}
