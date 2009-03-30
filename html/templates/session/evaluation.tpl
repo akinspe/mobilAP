@@ -10,7 +10,7 @@
 
 foreach ($evaluation_questions as $index=>$evaluation_question)
 { ?>
-<h3><?= sprintf("%d. %s", $index+1, $evaluation_question->question_text) ?></h3>
+<h3><?= sprintf("%d. %s", $index+1, htmlentities($evaluation_question->question_text)) ?></h3>
 <?php 
 switch ($evaluation_question->question_response_type)
 {
@@ -18,7 +18,7 @@ switch ($evaluation_question->question_response_type)
 <ul class="evaluation_responses">
 <?php 
 	foreach ($evaluation_question->responses as $response) { ?>
-		<li><input type="radio" name="responses[<?= $index ?>]" value="<?= $response['response_value'] ?>"> <?= $response['response_text'] ?></li>
+		<li><input type="radio" name="responses[<?= $index ?>]" value="<?= $response['response_value'] ?>"> <?= htmlentities($response['response_text']) ?></li>
 	<?php } ?>
 </ul>
 <?php	

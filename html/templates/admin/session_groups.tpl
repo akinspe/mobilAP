@@ -9,7 +9,7 @@ sessions at that time. It provides a convenient way to keep the schedule compact
 
 <ul>
 <?php foreach ($session_groups as $session_group) { ?>
-	<li><a href="<?= $App->SCRIPT_NAME ?>?action=edit_session_group&amp;session_group_id=<?= $session_group->session_group_id ?>"><?= $session_group->session_group_title ?></a></li>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=edit_session_group&amp;session_group_id=<?= $session_group->session_group_id ?>"><?= htmlentities($session_group->session_group_title) ?></a></li>
 <?php } ?>
 </ul>
 

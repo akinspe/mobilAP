@@ -7,7 +7,7 @@
 <ul>
 <?php
 foreach ($announcements as $announcement) { ?>
-	<li><a href="admin.php?action=edit_announcement&amp;announcement_id=<?= $announcement->announcement_id ?>"><?= $announcement->announcement_title ?></a></li>
+	<li><a href="admin.php?action=edit_announcement&amp;announcement_id=<?= $announcement->announcement_id ?>"><?= htmlentities($announcement->announcement_title) ?></a></li>
 <?php } ?>
 </ul>
 </div>

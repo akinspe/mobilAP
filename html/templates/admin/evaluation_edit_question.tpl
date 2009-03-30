@@ -16,7 +16,7 @@
 <?php 
 $responses = $question->getResponses();
 foreach ($responses as $idx=>$response) { ?>
-	<li><input type="submit" name="remove_response[<?= $response['response_index'] ?>]" value="Remove" class="confirm"> <?= $response['response_text'] ?>	
+	<li><input type="submit" name="remove_response[<?= $response['response_index'] ?>]" value="Remove" class="confirm"> <?= htmlentities($response['response_text']) ?>	
 	</li>
 <?php } ?>
 </ol>

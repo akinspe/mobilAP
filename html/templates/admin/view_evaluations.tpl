@@ -7,7 +7,7 @@
 
 foreach ($evaluation_questions as $index=>$evaluation_question)
 { ?>
-<h3><?= sprintf("%d. %s", $index+1, $evaluation_question->question_text) ?></h3>
+<h3><?= sprintf("%d. %s", $index+1, htmlentities($evaluation_question->question_text)) ?></h3>
 <?php 
 switch ($evaluation_question->question_response_type)
 {
@@ -16,7 +16,7 @@ switch ($evaluation_question->question_response_type)
 <ol class="evaluation_responses">
 <?php 
 	foreach ($evaluation_question->responses as $response) { ?>
-		<li><b><?= $response['response_text'] ?></b> <?= $eval_summary['q' . $index]['count'][$response['response_value']] ?></li>
+		<li><b><?= htmlentities($response['response_text']) ?></b> <?= $eval_summary['q' . $index]['count'][$response['response_value']] ?></li>
 	<?php } ?>
 </ol>
 <?php	
@@ -25,7 +25,7 @@ switch ($evaluation_question->question_response_type)
 <ul class="evaluation_responses">
 <?php
 	foreach ($eval_summary['q' . $index]  as $response) { ?>
-		<li><?= $response ?></li>
+		<li><?= htmlentities($response) ?></li>
 	<?php } ?>
 </ul>
 <?php

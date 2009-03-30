@@ -31,7 +31,7 @@
 	$sessions = mobilAP_session::getSessions();
 	foreach ($sessions as $session) {
 ?>
-	<option value="<?= $session->session_id ?>"<?= ($schedule_item->session_id==$session->session_id) ? ' selected' : '' ?>><?= $session->session_id ?>: <?= $session->session_title ?></option>
+	<option value="<?= $session->session_id ?>"<?= ($schedule_item->session_id==$session->session_id) ? ' selected' : '' ?>><?= $session->session_id ?>: <?= htmlentities($session->session_title) ?></option>
 <?php } ?>	
 </select>
 <br>
@@ -43,7 +43,7 @@
 	$session_groups = mobilAP_session_group::getSessionGroups();
 	foreach ($session_groups as $session_group) {
 ?>
-	<option value="<?= $session_group->session_group_id ?>"<?= ($schedule_item->session_group_id==$session_group->session_group_id) ? ' selected' : '' ?>><?= $session_group->session_group_title ?></option>
+	<option value="<?= $session_group->session_group_id ?>"<?= ($schedule_item->session_group_id==$session_group->session_group_id) ? ' selected' : '' ?>><?= htmlentities($session_group->session_group_title) ?></option>
 <?php } ?>	
 </select>
 <br>

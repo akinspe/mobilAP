@@ -7,13 +7,13 @@
 <input type="hidden" name="session_id" value="<?= $session->session_id ?>">
 <input type="hidden" name="question_id" value="<?= $question->question_id ?>">
 
-<h2><?= $question->question_text ?></h2>
+<h2><?= htmlentities($question->question_text) ?></h2>
 
 <?php	
 $answers = $question->getAllAnswers();
 
 foreach ($question->responses as $response) { ?>
-<h3><?= $response->response_text ?></h3>
+<h3><?= htmlentities($response->response_text) ?></h3>
 <p><?= $question->answers[$response->response_value] ?> responses</p>
 <?php
 if (isset($answers[$response->response_value])) { ?>
@@ -26,8 +26,6 @@ foreach ($answers[$response->response_value] as $answer) { ?>
 </ul>
 <?php 
 }
-//print_r($question);
-//print_r($answers);
 ?>
 <p>
 <a href="<?= $App->SCRIPT_NAME ?>?action=edit_question&amp;session_id=<?= $session->session_id ?>&amp;question_id=<?= $question->question_id ?>">Return to question</a>

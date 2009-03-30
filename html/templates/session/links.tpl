@@ -2,7 +2,7 @@
 <ul id="session_links">
 <?php
 foreach ($session->session_links as $link) { ?>
-<li><a href="<?= $link->link_url ?>"><?= $link->link_text ?></a></li>
+<li><a href="<?= $link->link_url ?>"><?= htmlentities($link->link_text) ?></a></li>
 
 <?php } ?>
 </ul>

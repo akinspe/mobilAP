@@ -4,7 +4,7 @@
 
 <ol id="question_responses">
 <?php foreach ($question->responses as $response) { ?>
-<li><?= $response->response_text ?> <?= $question->answers[$response->response_value] ?></li>
+<li><?= htmlentities($response->response_text) ?> <?= $question->answers[$response->response_value] ?></li>
 <?php } ?>
 </ol>
 

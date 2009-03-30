@@ -53,7 +53,7 @@ if (count($session_links)>0) { ?>
 <?php
 	foreach ($session_links as $link) {
 ?>
-	<li><?= $link->link_text ?> ( <?= $link->link_url ?>) <a href="<?= $App->SCRIPT_NAME ?>?action=edit_link&amp;session_id=<?= $session->session_id ?>&amp;link_id=<?= $link->link_id ?>">edit</a></li>
+	<li><?= htmlentities($link->link_text) ?> ( <?= $link->link_url ?>) <a href="<?= $App->SCRIPT_NAME ?>?action=edit_link&amp;session_id=<?= $session->session_id ?>&amp;link_id=<?= $link->link_id ?>">edit</a></li>
 <?php
 	} ?>
 </ul>	
@@ -74,7 +74,7 @@ if (count($session_questions)>0) { ?>
 <ol>
 <?php 
 	foreach ($session_questions as $question) { ?>
-	<li><a href="<?= $App->SCRIPT_NAME ?>?action=edit_question&amp;session_id=<?= $session->session_id ?>&amp;question_id=<?= $question->question_id ?>"><?= $question->question_text ?></a></li>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=edit_question&amp;session_id=<?= $session->session_id ?>&amp;question_id=<?= $question->question_id ?>"><?= htmlentities($question->question_text) ?></a></li>
 <?php } ?>
 </ol>
 <?php } else { ?>

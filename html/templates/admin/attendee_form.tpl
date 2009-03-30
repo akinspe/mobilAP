@@ -83,8 +83,6 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 	<input type="submit" name="delete_attendee" value="Delete Attendee">
 </p>	
 
-
-
 </fieldset>
 
 <?php if (getConfig('SHOW_AD_PHOTOS')) { ?>

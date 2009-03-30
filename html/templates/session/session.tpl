@@ -3,7 +3,7 @@ include('templates/nav.tpl');
 include('templates/session/session_nav.tpl'); 
 ?>
 <div class="content">
-<h1><?= $session->session_id . ' ' . $session->session_title ?></h1>
+<h1><?= sprintf("%s %s", $session->session_id, htmlentities($session->session_title)) ?></h1>
 <?= $App->getMessages() ?>
 
 <?php

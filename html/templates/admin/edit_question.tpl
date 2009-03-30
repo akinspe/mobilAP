@@ -24,14 +24,14 @@ Use this address to view a automatically updating display of question results:
 <?php 
 
 foreach ($question->responses as $response_id=>$response) { ?>
-	<li><input type="submit" name="remove_response[<?= $response->response_value ?>]" value="Remove" class="confirm"> <?= $response->response_text ?>	
+	<li><input type="submit" name="remove_response[<?= $response->response_value ?>]" value="Remove" class="confirm"> <?= htmlentities($response->response_text) ?>	
 	<a href="<?= $App->SCRIPT_NAME ?>?action=edit_response&amp;session_id=<?= $session->session_id ?>&amp;question_id=<?= $question->question_id ?>&amp;response_value=<?= $response->response_value ?>">edit</a>
 	</li>
 <?php } ?>
 </ol>
 
 <label>Add response</label>
-<input type="text" name="add_response_text" id="add_response_text" value=""{if $response_type=='U'} class="user_search_field"{/if}>
+<input type="text" name="add_response_text" id="add_response_text">
 <input type="submit" name="add_response" value="add" id="add_response"> 
 <br class="end">
 
@@ -46,7 +46,7 @@ foreach ($question->responses as $response_id=>$response) { ?>
 	<li>Total: <?= $question->answers['total'] ?></li>
 <?php	
 foreach ($question->responses as $response_id=>$response) { ?>
-	<li><?= $response->response_text ?> <?= $question->answers[$response->response_value] ?></li>
+	<li><?= htmlentities($response->response_text) ?> <?= $question->answers[$response->response_value] ?></li>
 <?php } ?>
 </ul>
 <a href="<?= $App->SCRIPT_NAME ?>?action=view_responses&amp;session_id=<?= $session->session_id ?>&amp;question_id=<?= $question->question_id ?>">View Detailed Results</a>

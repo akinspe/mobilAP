@@ -44,7 +44,7 @@ foreach ($attendees as $attendee) {
 <tr class="">
 	<td align="center"><?= $attendee->checked_in ? 'x' : '' ?></td>
 	<td><a href="<?= $App->SCRIPT_NAME ?>?action=edit&amp;attendee_id=<?= $attendee->attendee_id ?>"><?= $attendee->FirstName ?> <?= $attendee->LastName ?></a></td>
-	<td><?= substr($attendee->organization,0,35) ?></td>
+	<td><?= htmlentities(substr($attendee->organization,0,35)) ?></td>
 	<td><?= $attendee->directory_active ? 'Y' : 'N' ?></td>
 </tr>
 <?php 

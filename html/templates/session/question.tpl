@@ -1,4 +1,4 @@
-<h2><?= $question->question_text ?></h2>
+<h2><?= htmlentities($question->question_text) ?></h2>
 <form action="session.php" id="add_question_form" method="POST">
 <input type="hidden" name="session_id" value="<?= $session->session_id ?>">
 <input type="hidden" name="view" value="question">
@@ -6,7 +6,7 @@
 
 <ol id="question_responses">
 <?php foreach ($question->responses as $response) { ?>
-<li><input type="<?= $question->question_maxchoices >1 ? 'checkbox' : 'radio' ?>" name="response[]" value="<?= $response->response_value ?>"> <?= $response->response_text ?></li>
+<li><input type="<?= $question->question_maxchoices >1 ? 'checkbox' : 'radio' ?>" name="response[]" value="<?= $response->response_value ?>"> <?= htmlentities($response->response_text) ?></li>
 <?php } ?>
 </ol>
 

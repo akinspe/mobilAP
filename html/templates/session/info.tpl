@@ -12,7 +12,7 @@ if (count($presenters)>0) { ?>
 foreach ($presenters as $presenter) { ?>
 	<li>
 		<div class="directory_list_name"><a href="attendee_directory.php?view_attendee=<?= $presenter->attendee_id ?>"><?= sprintf("%s %s", $presenter->FirstName, $presenter->LastName) ?></a></div>
-	<?php if ($presenter->organization) { ?><div class="directory_list_organization"><?= $presenter->organization ?></div><?php } ?>
+	<?php if ($presenter->organization) { ?><div class="directory_list_organization"><?= htmlentities($presenter->organization) ?></div><?php } ?>
 	</li>
 <?php } ?>
 </ul>

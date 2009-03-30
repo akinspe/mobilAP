@@ -18,11 +18,11 @@
 <tr class="row<?= $i %2 ? 1 : 2 ?>">
 	<td><?= strtolower(strftime('%I:%M%p', $schedule_item['start_ts'])) ?></td>
 	<td><?= strtolower(strftime('%I:%M%p', $schedule_item['end_ts'])) ?></td>
-	<td><?= $schedule_item['room'] ?></td>
-	<td><a href="<?= $App->SCRIPT_NAME ?>?action=edit_schedule_item&amp;schedule_id=<?= $schedule_item['schedule_id'] ?>"><?= $schedule_item['title'] ?></a></td>
-	<td><?= $schedule_item['detail'] ?></td>
+	<td><?= htmlentities($schedule_item['room']) ?></td>
+	<td><a href="<?= $App->SCRIPT_NAME ?>?action=edit_schedule_item&amp;schedule_id=<?= $schedule_item['schedule_id'] ?>"><?= htmlentities($schedule_item['title']) ?></a></td>
+	<td><?= htmlentities($schedule_item['detail']) ?></td>
 	<td><?= $schedule_item['session_id'] ?></td>
-	<td><?= $schedule_item['session_group_id'] ? $session_groups[$schedule_item['session_group_id']]->session_group_title : '' ?></td>
+	<td><?= $schedule_item['session_group_id'] ? htmlentities($session_groups[$schedule_item['session_group_id']]->session_group_title) : '' ?></td>
 </tr>	
 <?php $i++; } ?>
 

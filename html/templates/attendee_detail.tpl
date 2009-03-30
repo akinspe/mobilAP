@@ -6,9 +6,9 @@
 <?php if (getConfig('SHOW_AD_PHOTOS')) { ?><div id="directory_image_box"><img id="directory_detail_image" src="<?= $attendee->getImageURL() ?>"></div><?php } ?>
 		<div id="directory_detail_info_box">
 			<div id="directory_detail_name"><?= sprintf("%s %s", $attendee->FirstName, $attendee->LastName) ?></div>
-<?php if (getConfig('SHOW_AD_TITLE')) { ?><div id="directory_detail_title"><?= $attendee->title ?></div><?php } ?>
-<?php if (getConfig('SHOW_AD_ORG')) { ?><div id="directory_detail_organization"><?= $attendee->organization ?></div><?php } ?>
-<?php if (getConfig('SHOW_AD_DEPT')) { ?><div id="directory_detail_dept"><?= $attendee->dept ?></div><?php } ?>
+<?php if (getConfig('SHOW_AD_TITLE')) { ?><div id="directory_detail_title"><?= htmlentities($attendee->title) ?></div><?php } ?>
+<?php if (getConfig('SHOW_AD_ORG')) { ?><div id="directory_detail_organization"><?= htmlentities(attendee->organization) ?></div><?php } ?>
+<?php if (getConfig('SHOW_AD_DEPT')) { ?><div id="directory_detail_dept"><?= htmlentities($attendee->dept) ?></div><?php } ?>
 <?php if (getConfig('SHOW_AD_LOCATION')) { ?><div id="directory_detail_location"><?= sprintf("%s%s %s %s", $attendee->city, $attendee->state ? ', ': '', $attendee->state, $attendee->country == 'US' ? '' : $attendee->country) ?></div><?php } ?>
 		</div>
 	</div>
