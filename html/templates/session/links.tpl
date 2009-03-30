@@ -11,7 +11,7 @@ foreach ($session->session_links as $link) { ?>
 
 if ($App->is_LoggedIn()) { 
 	if ( ($session->session_flags & mobilAP_session::SESSION_FLAGS_ATTENDEE_LINKS) || $session->isPresenter($App->getUserID())) { ?>
-<form action="session.php" id="add_link_form">
+<form action="session.php" id="add_link_form" method="POST">
 <input type="hidden" name="session_id" value="<?= $session->session_id ?>">
 <input type="hidden" name="view" value="<?= $view ?>">
 <fieldset>

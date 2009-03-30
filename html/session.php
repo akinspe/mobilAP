@@ -20,7 +20,7 @@ switch ($view)
 		break;
 	case 'links':
 		if ($session->session_flags & mobilAP_session::SESSION_FLAGS_LINKS) {
-			if (isset($_REQUEST['add_link'])) {
+			if (isset($_POST['add_link'])) {
 				$link_url = isset($_REQUEST['link_url']) ? $_REQUEST['link_url'] : '';
 				$link_text = isset($_REQUEST['link_text']) ? $_REQUEST['link_text'] : '';
 				$result = $session->addLink($link_url, $link_text, $App->getUserToken());
