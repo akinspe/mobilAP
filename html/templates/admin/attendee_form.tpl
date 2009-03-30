@@ -80,7 +80,7 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 <p>
 	<input type="submit" name="update_attendee" value="Save Data">
 	<input type="submit" name="cancel_attendee" value="Don't Save">
-	<input type="submit" name="delete_attendee" value="Delete Attendee">
+	<input type="submit" name="delete_attendee" value="Delete Attendee" class="confirm">
 </p>	
 
 </fieldset>
