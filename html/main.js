@@ -37,6 +37,8 @@ function load()
         addClassName(body, 'desktop');
     }
     
+    mobilAP.textField = document.getElementById('browser').innerText ? 'innerText' : 'textContent';
+    
     //setup user stuff
     mobilAP.getConfigs();
     
@@ -94,7 +96,7 @@ var mobilAP = {
         //zero out values
         document.getElementById('login_userID').value='';
         document.getElementById('login_password').value='';
-        document.getElementById('login_result').innerHTML='';
+        document.getElementById('login_result')[mobilAP.textField]='';
         document.getElementById('login_button').object.setText('Cancel');        
         
         //move it down, set variable and scroll to top
@@ -162,11 +164,11 @@ var mobilAP = {
     updateUserElements: function() {
         if (mobilAP.is_loggedIn()) {
             mobilAP.hide_login_form();
-            document.getElementById('login_status').innerHTML='<span id="mobilAP_userID">' + mobilAP.user.user.FirstName + ' '+ mobilAP.user.user.LastName + '</span> logged in';
+            document.getElementById('login_status')[mobilAP.textField]='<span id="mobilAP_userID">' + mobilAP.user.user.FirstName + ' '+ mobilAP.user.user.LastName + '</span> logged in';
             document.getElementById('login_button').object.setText('Logout');
             addClassName('browser', 'logged_in');
         } else {
-            document.getElementById('login_status').innerHTML='You are not logged in.';            
+            document.getElementById('login_status')[mobilAP.textField]='You are not logged in.';            
             document.getElementById('login_button').object.setText('Login');        
             removeClassName('browser', 'logged_in'); 
        }
@@ -237,7 +239,7 @@ var mobilAP = {
         var login_pass = document.getElementById('login_password').value;
 		
 		if (mobilAP.login(login_userID, login_pass)) {
-			document.getElementById('login_result').innerHTML='Logging in...';    
+			document.getElementById('login_result')[mobilAP.textField]='Logging in...';    
 		}
     },
     login: function(login_userID, login_pass)
@@ -261,7 +263,7 @@ var mobilAP = {
         try {
             var result = eval("(" + xhr.responseText + ")");
             if (result.error_message) {
-                document.getElementById('login_result').innerHTML=result.error_message;
+                document.getElementById('login_result')[mobilAP.textField]=result.error_message;
                 mobilAP.getLogin();
                 if (result.error_code==mobilAP.ERROR_USER_REQUIRES_PASSWORD) {
 					document.getElementById('login_password').style.display = 'block';
@@ -270,7 +272,7 @@ var mobilAP = {
                 
                 return;
             } else {
-                document.getElementById('login_result').innerHTML='';
+                document.getElementById('login_result')[mobilAP.textField]='';
             }
         } catch (e) {    
             mobilAP.log("Error with login: " + xhr.responseText);
@@ -388,7 +390,7 @@ var mobilAP = {
     setAttendeeSummary: function (attendee_summary)
     {
         this.attendee_summary = attendee_summary;
-        document.getElementById('demo_text').innerHTML="There are " + this.attendee_summary.total + ' attendees representing ' + this.attendee_summary.organizations_count + ' organizations from ' + this.attendee_summary.states_count + ' states attending this event';
+        document.getElementById('demo_text')[mobilAP.textField]="There are " + this.attendee_summary.total + ' attendees representing ' + this.attendee_summary.organizations_count + ' organizations from ' + this.attendee_summary.states_count + ' states attending this event';
 
         var img = document.getElementById('demo_img');
         if (!img) {
@@ -566,15 +568,15 @@ var directoryController = {
     },
     updateDetail: function()
     {
-        document.getElementById('directory_detail_name').innerHTML = this.detail_attendee.FirstName + ' ' + this.detail_attendee.LastName;
+        document.getElementById('directory_detail_name')[mobilAP.textField] = this.detail_attendee.FirstName + ' ' + this.detail_attendee.LastName;
         document.getElementById('directory_detail_image').src = baseUrl + this.detail_attendee.image_url;
-        document.getElementById('directory_detail_organization').innerHTML = this.detail_attendee.organization;
-        document.getElementById('directory_detail_email').innerHTML = this.detail_attendee.email;
+        document.getElementById('directory_detail_organization')[mobilAP.textField] = this.detail_attendee.organization;
+        document.getElementById('directory_detail_email')[mobilAP.textField] = this.detail_attendee.email;
         document.getElementById('directory_detail_email').onclick = function() {
             window.location='mailto:' + directoryController.detail_attendee.email;
         }
-        document.getElementById('directory_detail_title').innerHTML = this.detail_attendee.title;
-        document.getElementById('directory_detail_dept').innerHTML = this.detail_attendee.dept;
+        document.getElementById('directory_detail_title')[mobilAP.textField] = this.detail_attendee.title;
+        document.getElementById('directory_detail_dept')[mobilAP.textField] = this.detail_attendee.dept;
         document.getElementById('directory_bio').innerHTML = this.detail_attendee.bio;
         
     },
@@ -610,8 +612,8 @@ var directoryController = {
         this.rowElements[rowIndex] = rowElement;
         rowElement.attendee = this.attendees[rowIndex];
         //set list template
-        templateElements.name.innerHTML = rowElement.attendee.FirstName + ' ' + rowElement.attendee.LastName;
-        templateElements.organization.innerHTML = rowElement.attendee.organization;
+        templateElements.name[mobilAP.textField] = rowElement.attendee.FirstName + ' ' + rowElement.attendee.LastName;
+        templateElements.organization[mobilAP.textField] = rowElement.attendee.organization;
 
 		//set click handler
 		rowElement.onclick = function(event) {
@@ -695,7 +697,7 @@ var programSchedule = {
         this.day = day;
         this.date = daySchedule.date;
         this.setSchedule(daySchedule.schedule);
-        document.getElementById('session_day').innerHTML = this.date.formatDate('l F j');
+        document.getElementById('session_day')[mobilAP.textField] = this.date.formatDate('l F j');
         
         var schedule_data = mobilAP.getSchedule();
         
@@ -714,11 +716,11 @@ var programSchedule = {
     },
 	prepareRow: function(rowElement, rowIndex, templateElements) {
         var event_data = this.schedule[rowIndex];
-        templateElements.programList_time.innerHTML = event_data.start_date.formatDate('g:i');     
+        templateElements.programList_time[mobilAP.textField] = event_data.start_date.formatDate('g:i');     
 
 		//if it's a session it'll have a click handler, show the arrow etc		
         if (event_data.session_id) {
-			templateElements.programList_title.innerHTML = event_data.session_id + ' ' + event_data.title;
+			templateElements.programList_title[mobilAP.textField] = event_data.session_id + ' ' + event_data.title;
             templateElements.programList_arrow.style.display='block';
             
             rowElement.onclick = function() {
@@ -730,7 +732,7 @@ var programSchedule = {
                 mobilAP.showSessionDetail();
             }
         } else if (event_data.session_group_id) {
-            templateElements.programList_title.innerHTML = event_data.title;
+            templateElements.programList_title[mobilAP.textField] = event_data.title;
             templateElements.programList_arrow.style.display='block';            
             rowElement.onclick = function() {
             	//set the title before loading
@@ -740,19 +742,19 @@ var programSchedule = {
             }
 
         } else {
-            templateElements.programList_title.innerHTML = event_data.title;
+            templateElements.programList_title[mobilAP.textField] = event_data.title;
             templateElements.programList_arrow.style.display='none';            
         }
 
         if (event_data.detail) {
-            templateElements.programList_detail.innerHTML = event_data.detail;
+            templateElements.programList_detail[mobilAP.textField] = event_data.detail;
             templateElements.programList_detail.style.display='block';
         } else {
-            templateElements.programList_detail.innerHTML = '';
+            templateElements.programList_detail[mobilAP.textField] = '';
             templateElements.programList_detail.style.display=event_data.room ? 'block' : 'none';
         }
             
-        templateElements.programList_room.innerHTML = event_data.room ? event_data.room : '';
+        templateElements.programList_room[mobilAP.textField] = event_data.room ? event_data.room : '';
         
 	}
 };
@@ -768,7 +770,7 @@ var session_group = {
         }
         this._loading = true;
         if (session_group_id != session.session_group_id) {
-            document.getElementById('session_group_title').innerHTML='Loading...';
+            document.getElementById('session_group_title')[mobilAP.textField]='Loading...';
         }
         mobilAP.loadURL(js_script + '?get=session_group&session_group_id=' + session_group_id, session_group.processSessionGroupData);
    },
@@ -811,7 +813,7 @@ var session_group = {
         var event_data = this.schedule_items[rowIndex];
 		//if it's a session it'll have a click handler, show the arrow etc		
         if (event_data.session_id) {
-			templateElements.sessionGroupList_title.innerHTML = event_data.session_id + ' ' + event_data.title;
+			templateElements.sessionGroupList_title[mobilAP.textField] = event_data.session_id + ' ' + event_data.title;
             templateElements.sessionGroupList_arrow.style.display='block';
             
             rowElement.onclick = function() {
@@ -823,19 +825,19 @@ var session_group = {
                 mobilAP.showSessionDetail();
             }
         } else {
-            templateElements.sessionGroupList_title.innerHTML = event_data.title;
+            templateElements.sessionGroupList_title[mobilAP.textField] = event_data.title;
             templateElements.sessionGroupList_arrow.style.display='none';            
         }
 
         if (event_data.detail) {
-            templateElements.sessionGroupList_detail.innerHTML = event_data.detail;
+            templateElements.sessionGroupList_detail[mobilAP.textField] = event_data.detail;
             templateElements.sessionGroupList_detail.style.display='block';
         } else {
-            templateElements.sessionGroupList_detail.innerHTML = '';
+            templateElements.sessionGroupList_detail[mobilAP.textField] = '';
             templateElements.sessionGroupList_detail.style.display=event_data.room ? 'block' : 'none';
         }
 
-        templateElements.sessionGroupList_room.innerHTML = event_data.room ? event_data.room : '';
+        templateElements.sessionGroupList_room[mobilAP.textField] = event_data.room ? event_data.room : '';
 
 	}
 };
@@ -849,9 +851,9 @@ var current_sessions = {
 	
 	prepareRow: function(rowElement, rowIndex, templateElements) {
         var event_data = programSchedule.currentSessions[rowIndex];
-        templateElements.sessions_current_time.innerHTML = event_data.start_date.formatDate('h:i');     
+        templateElements.sessions_current_time[mobilAP.textField] = event_data.start_date.formatDate('h:i');     
 
-        templateElements.sessions_current_title.innerHTML = event_data.session_id + ' ' + event_data.title;
+        templateElements.sessions_current_title[mobilAP.textField] = event_data.session_id + ' ' + event_data.title;
             
         rowElement.onclick = function() {
             //set the title before loading
@@ -861,14 +863,14 @@ var current_sessions = {
         }
 
         if (event_data.detail) {
-            templateElements.sessions_current_detail.innerHTML = event_data.detail;
+            templateElements.sessions_current_detail[mobilAP.textField] = event_data.detail;
             templateElements.sessions_current_detail.style.display='block';
         } else {
-            templateElements.sessions_current_detail.innerHTML = '';
+            templateElements.sessions_current_detail[mobilAP.textField] = '';
             templateElements.sessions_current_detail.style.display=event_data.room ? 'block' : 'none';
         }
             
-        templateElements.sessions_current_room.innerHTML = event_data.room ? event_data.room : '';
+        templateElements.sessions_current_room[mobilAP.textField] = event_data.room ? event_data.room : '';
 	}
 };
 
@@ -977,8 +979,8 @@ var session = {
         this._loading = true;
         if (session_id != session.session_id) {
             session.session_question_index = null;
-            document.getElementById('session_title').innerHTML='Loading...';
-            document.getElementById('session_abstract').innerHTML='Loading...';
+            document.getElementById('session_title')[mobilAP.textField]='Loading...';
+            document.getElementById('session_abstract')[mobilAP.textField]='Loading...';
         }
         mobilAP.loadURL(js_script + '?get=session&session_id=' + session_id, session.processSessionData);
    },
@@ -1046,22 +1048,22 @@ var session = {
     },
     setTitle: function(title) {
         this.session_title = title;
-        document.getElementById('session_title').innerHTML=this.session_title;
+        document.getElementById('session_title')[mobilAP.textField]=this.session_title;
     },
 
 	setTime: function(start_time, end_time)
 	{
 		this.session_start_time = start_time;
 		this.session_end_time = end_time;		
-        document.getElementById('session_time').innerHTML= this.session_start_time.formatDate('g:i') + ' - ' + this.session_end_time.formatDate('g:i');
+        document.getElementById('session_time')[mobilAP.textField]= this.session_start_time.formatDate('g:i') + ' - ' + this.session_end_time.formatDate('g:i');
 	},
     setRoom: function(room) {
         this.session_room = room;
-        document.getElementById('session_room').innerHTML=this.session_room;
+        document.getElementById('session_room')[mobilAP.textField]=this.session_room;
     },
     setAbstract: function(abstract) {
         this.session_abstract = abstract;
-        document.getElementById('session_abstract').innerHTML=this.session_abstract;
+        document.getElementById('session_abstract')[mobilAP.textField]=this.session_abstract;
     },
     setLinks: function(links) {
         this.session_links = links;
@@ -1132,7 +1134,7 @@ var session = {
         
         document.getElementById('session_discussion_list').object.reloadData();
         document.getElementById('session_discussion_list').style.display = this.session_chat.length>0 ? 'block' : 'none';
-        document.getElementById('session_discussion_count').innerHTML = 'There have been ' + this.session_chat.length + ' posts to this session.';
+        document.getElementById('session_discussion_count')[mobilAP.textField] = 'There have been ' + this.session_chat.length + ' posts to this session.';
         session_chat.updatePage();
 
     },
@@ -1157,7 +1159,7 @@ var session = {
             if (_session_chat.error_message) {
                 if (_session_chat.error_code==mobilAP.ERROR_NO_USER) {
                     mobilAP.show_login_form();
-                    document.getElementById('login_result').innerHTML='You must login to post';
+                    document.getElementById('login_result')[mobilAP.textField]='You must login to post';
                     return;
                 } else {
                     alert(_session_chat.error_message);
@@ -1179,7 +1181,7 @@ var session = {
 	{
 		if (!mobilAP.is_loggedIn()) {
 			mobilAP.show_login_form();
-			document.getElementById('login_result').innerHTML='You must login to post';
+			document.getElementById('login_result')[mobilAP.textField]='You must login to post';
 			return;
 		}
 		document.getElementById('link_url_field').value='http://';
@@ -1189,7 +1191,7 @@ var session = {
 	start_evaluation: function() {
 		if (!mobilAP.is_loggedIn()) {
 			mobilAP.show_login_form();
-			document.getElementById('login_result').innerHTML='You must login to post';
+			document.getElementById('login_result')[mobilAP.textField]='You must login to post';
 			return;
 		}
 		if (session.session_userdata.evaluation) {
@@ -1211,7 +1213,7 @@ var session_links = {
             if (session_links.error_message) {
                 if (session_links.error_code==mobilAP.ERROR_NO_USER) {
                     mobilAP.show_login_form();
-                    document.getElementById('login_result').innerHTML='You must login to post';
+                    document.getElementById('login_result')[mobilAP.textField]='You must login to post';
                     return;
                 } else {
                     alert(session_links.error_message);
@@ -1246,7 +1248,7 @@ var session_links = {
     prepareRow: function(rowElement, rowIndex, templateElements) {
         addClassName(rowElement, "link_type_" + session.session_links[rowIndex].link_type);
         rowElement.url = session.session_links[rowIndex].link_url;
-        templateElements.session_links_label.innerHTML = session.session_links[rowIndex].link_text;
+        templateElements.session_links_label[mobilAP.textField] = session.session_links[rowIndex].link_text;
         rowElement.onclick = function(event) {
         	//youtube links should load in same window so it loads in youtube app
             if (rowElement.url.match('^http://www.youtube.com/watch')) {
@@ -1266,8 +1268,8 @@ var session_questions = {
     prepareRow: function(rowElement, rowIndex, templateElements) {
         rowElement.question_id = session.session_questions[rowIndex].question_id;
         var index = session.session_questions[rowIndex].index+1;
-        templateElements.session_question_num.innerHTML = index+'.';
-        templateElements.session_question_text.innerHTML = session.session_questions[rowIndex].question_list_text ? session.session_questions[rowIndex].question_list_text : session.session_questions[rowIndex].question_text;
+        templateElements.session_question_num[mobilAP.textField] = index+'.';
+        templateElements.session_question_text[mobilAP.textField] = session.session_questions[rowIndex].question_list_text ? session.session_questions[rowIndex].question_list_text : session.session_questions[rowIndex].question_text;
         // Assign a click event handler for the row.
         rowElement.onclick = function(event) {
             session.setQuestion(rowIndex);
@@ -1284,9 +1286,9 @@ var session_question_answers = {
 	},
 	
 	prepareRow: function(rowElement, rowIndex, templateElements) {
-        templateElements.question_response_index.innerHTML = (rowIndex+1)+'.';
-        templateElements.question_response_text_label.innerHTML = session_question.responses[rowIndex].response_text;
-        templateElements.question_response_count.innerHTML = session_question.answers[session_question.responses[rowIndex].response_value];
+        templateElements.question_response_index[mobilAP.textField] = (rowIndex+1)+'.';
+        templateElements.question_response_text_label[mobilAP.textField] = session_question.responses[rowIndex].response_text;
+        templateElements.question_response_count[mobilAP.textField] = session_question.answers[session_question.responses[rowIndex].response_value];
 
 	}
 };
@@ -1299,8 +1301,8 @@ var session_presenters = {
 
     prepareRow: function(rowElement, rowIndex, templateElements) {
         rowElement.presenter=session.session_presenters[rowIndex];
-        templateElements.presenter_name.innerHTML=rowElement.presenter.FirstName + ' ' + rowElement.presenter.LastName;
-        templateElements.presenter_organization.innerHTML=rowElement.presenter.organization;
+        templateElements.presenter_name[mobilAP.textField]=rowElement.presenter.FirstName + ' ' + rowElement.presenter.LastName;
+        templateElements.presenter_organization[mobilAP.textField]=rowElement.presenter.organization;
 		rowElement.onclick = function(event) {
             directoryController.setDirectoryDetail(rowElement.presenter);
             browserController.goForward('directory_detail', rowElement.presenter.FirstName + ' ' + rowElement.presenter.LastName);
@@ -1341,7 +1343,7 @@ var session_evaluation = {
 	{
 		this.evaluation_questions = questions;
 		var stack =document.getElementById('session_evaluation_stack');
-		stack.innerHTML = null;
+		stack[mobilAP.textField] = null;
 		stack.object = null;
 		var stack_ops = { 'subviewsTransitions' : [] }
 		var transition = { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" };
@@ -1352,7 +1354,7 @@ var session_evaluation = {
 			div.id = 'evaluation_question' + i;
 			var label = document.createElement('div');
 			label.className = 'evaluation_label';
-			label.innerHTML = evaluation_question.question_text;
+			label[mobilAP.textField] = evaluation_question.question_text;
 			div.appendChild(label);
 			
 			switch (evaluation_question.question_response_type)
@@ -1381,7 +1383,7 @@ var session_evaluation = {
 						this.rows[i].push(li);
 						var label = document.createElement('div');
 						label.className='label_template';
-						label.innerHTML = evaluation_question.responses[j].response_text;
+						label[mobilAP.textField] = evaluation_question.responses[j].response_text;
 						li.appendChild(label);
 						var arrow = document.createElement('div');
 						arrow.className='listCheck_template';
@@ -1456,7 +1458,7 @@ var session_evaluation = {
                 {
                     case mobilAP.ERROR_NO_USER:
                         mobilAP.show_login_form();
-                        document.getElementById('login_result').innerHTML='You must login to post';
+                        document.getElementById('login_result')[mobilAP.textField]='You must login to post';
                         return;
                     case mobilAP.ERROR_USER_ALREADY_SUBMITTED:
                         break;
@@ -1532,7 +1534,7 @@ var session_days = {
         
         // use long day when there's only a few days, use short day for longer mobilAPs so it all can fit on one line
         var dayFormat = mobilAP.schedule_data.length<4 ? 'l' : 'D';
-        templateElements.session_menu_label.innerHTML=data.date.formatDate(dayFormat);
+        templateElements.session_menu_label[mobilAP.textField]=data.date.formatDate(dayFormat);
 
 		rowElement.onclick = function(event) {
             programSchedule.setDay(rowElement.day);
@@ -1548,8 +1550,8 @@ var session_chat = {
         document.getElementById('session_discussion_prev').style.display = this.current_page>0 ? 'block' : 'none';
         document.getElementById('session_discussion_next').style.display = (this.current_page+1)<this.pages ? 'block' : 'none';
         document.getElementById('session_discussion_paging').style.display = this.pages>0 ? 'block' : 'none';
-        document.getElementById('session_discussion_page_count').innerHTML = this.pages;
-        document.getElementById('session_discussion_page').innerHTML = this.current_page+1;
+        document.getElementById('session_discussion_page_count')[mobilAP.textField] = this.pages;
+        document.getElementById('session_discussion_page')[mobilAP.textField] = this.current_page+1;
     },
     setPage:function(page) {
         var change = page != this.current_page;
@@ -1591,9 +1593,9 @@ var session_chat = {
 	},
 	prepareRow: function(rowElement, rowIndex, templateElements) {
         var chat_index = rowIndex + (session_chat.current_page * session_chat.max_rows);
-        templateElements.post_timestamp.innerHTML = session.session_chat[chat_index].date.formatDate("m/d h:i:s");
-        templateElements.post_user.innerHTML = session.session_chat[chat_index].post_name;
-        templateElements.post_text.innerHTML = session.session_chat[chat_index].post_text;
+        templateElements.post_timestamp[mobilAP.textField] = session.session_chat[chat_index].date.formatDate("m/d h:i:s");
+        templateElements.post_user[mobilAP.textField] = session.session_chat[chat_index].post_name;
+        templateElements.post_text[mobilAP.textField] = session.session_chat[chat_index].post_text;
         rowElement.onclick = function() {
             directoryController.getDirectoryDetail(session.session_chat[chat_index].post_user);
             browserController.goForward('directory_detail', session.session_chat[chat_index].post_name);
@@ -1637,7 +1639,7 @@ var session_question = {
 	prepareRow: function(rowElement, rowIndex, templateElements) {
         this.rowElements[rowIndex] = rowElement;
         rowElement.response_value = this.responses[rowIndex].response_value;
-        templateElements.question_response_label.innerHTML = this.responses[rowIndex].response_text;
+        templateElements.question_response_label[mobilAP.textField] = this.responses[rowIndex].response_text;
 		rowElement.onclick = function(event) {
             session_question.selectResponse(rowIndex);
 		};
@@ -1645,14 +1647,14 @@ var session_question = {
     setQuestionText: function(text)
     {
         this.question_text = text;
-        document.getElementById('question_text').innerHTML = this.question_text;
-        document.getElementById('question_response_text').innerHTML = this.question_text;
+        document.getElementById('question_text')[mobilAP.textField] = this.question_text;
+        document.getElementById('question_response_text')[mobilAP.textField] = this.question_text;
     },
     setAnswers: function(answers)
     {
         this.answers = answers;
         document.getElementById('question_answers').object.reloadData();
-        document.getElementById('question_response_total').innerHTML=this.answers.total+ " responses";
+        document.getElementById('question_response_total')[mobilAP.textField]=this.answers.total+ " responses";
     },
     setResponses: function(responses)
     {
@@ -1684,7 +1686,7 @@ var session_question = {
     submit: function() {
         if (!mobilAP.is_loggedIn()) {
             mobilAP.show_login_form();
-            document.getElementById('login_result').innerHTML='You must login to post';
+            document.getElementById('login_result')[mobilAP.textField]='You must login to post';
             return;
         }       
         
@@ -1716,7 +1718,7 @@ var session_question = {
                 {
                     case mobilAP.ERROR_NO_USER:
                         mobilAP.show_login_form();
-                        document.getElementById('login_result').innerHTML='You must login to post';
+                        document.getElementById('login_result')[mobilAP.textField]='You must login to post';
                         return;
                     case mobilAP.ERROR_USER_ALREADY_SUBMITTED:
                         alert(result.error_message);
@@ -1882,10 +1884,10 @@ var announcement_controller = {
 
     setAnnouncement: function(announcement) {
         this.announcement = announcement;
-        document.getElementById('announcement_title').innerHTML = announcement.announcement_title;
+        document.getElementById('announcement_title')[mobilAP.textField] = announcement.announcement_title;
         var date = new Date(announcement.announcement_timestamp*1000);
-        document.getElementById('announcement_timestamp').innerHTML = "Posted " + date.formatDate('m/d g:ia');
-        document.getElementById('announcement_text').innerHTML = announcement.announcement_text;
+        document.getElementById('announcement_timestamp')[mobilAP.textField] = "Posted " + date.formatDate('m/d g:ia');
+        document.getElementById('announcement_text')[mobilAP.textField] = announcement.announcement_text;
         mobilAP.loadURL(js_script + '?post=readAnnouncement&announcement_id=' + announcement.announcement_id, announcement_controller.getAnnouncements);
         return;
     },
@@ -2050,7 +2052,7 @@ var browserController = {
     
     prepareRow: function(rowElement, rowIndex, templateElements) {
         var sections = this.getSections();
-        templateElements.listTitle.innerHTML = sections[rowIndex].name;
+        templateElements.listTitle[mobilAP.textField] = sections[rowIndex].name;
         
         rowElement.onclick = function() {
             var section = sections[rowIndex];
@@ -2090,17 +2092,17 @@ var genericListController = {
     updateDetail: function()
     {
     	var item = this.detail;
-        document.getElementById('detail_name').innerHTML = item.label
+        document.getElementById('detail_name')[mobilAP.textField] = item.label
         if (item.text) {
 			document.getElementById('detail_text').style.display='block';
-            document.getElementById('detail_text').innerHTML = item.text;
+            document.getElementById('detail_text')[mobilAP.textField] = item.text;
         } else {
 			document.getElementById('detail_text').style.display='none';
         }
 
         if (item.url) {
 			document.getElementById('detail_link').style.display='block';
-			document.getElementById('detail_link').innerHTML = item.url;
+			document.getElementById('detail_link')[mobilAP.textField] = item.url;
 			if (item.new_window) {
 				document.getElementById('detail_link').onclick = function() { window.open(item.url) };
 			} else {
@@ -2112,7 +2114,7 @@ var genericListController = {
 
         if (item.phone) {
 			document.getElementById('detail_phone').style.display='block';
-			document.getElementById('detail_phone').innerHTML = item.phone;
+			document.getElementById('detail_phone')[mobilAP.textField] = item.phone;
 			if (mobilAP.isIPhone) {
 				document.getElementById('detail_phone').onclick = function() { window.location= "tel:" + item.phone; }
 			}
@@ -2122,7 +2124,7 @@ var genericListController = {
 
         if (item.address) {
 			document.getElementById('detail_address').style.display='block';
-			document.getElementById('detail_address').innerHTML = item.address;
+			document.getElementById('detail_address')[mobilAP.textField] = item.address;
 			document.getElementById('detail_address').onclick = function() { window.location="http://maps.google.com/maps?q=" + escape(item.address); }
 		} else {
 			document.getElementById('detail_address').style.display='none';
@@ -2130,7 +2132,7 @@ var genericListController = {
     },
 	
 	prepareRow: function(rowElement, rowIndex, templateElements) {
-        templateElements.genericList_label.innerHTML = this.list_items[rowIndex].label;
+        templateElements.genericList_label[mobilAP.textField] = this.list_items[rowIndex].label;
         rowElement.data = this.list_items[rowIndex];
         var list_type = this.type;
 		rowElement.onclick = function(event) {
