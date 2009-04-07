@@ -12,6 +12,15 @@ $App = new Application();
 $PAGE_TITLE = 'Attendee Directory';
 $PAGE = 'attendee_directory';
 
+if (getConfig('CONTENT_PRIVATE') && !$App->is_LoggedIn()) {
+
+	include("templates/header.tpl");
+	include("templates/nav.tpl");
+	include("templates/not_logged_in.tpl");
+	include("templates/footer.tpl");
+	exit();
+}
+
 if (!$attendees = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendees')) {
 	$attendees = mobilAP_attendee::getAttendees();
 }

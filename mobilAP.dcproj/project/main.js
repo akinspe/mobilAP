@@ -148,6 +148,10 @@ var mobilAP = {
             if (mobilAP.user.mobilAP_userID) {
                 document.cookie = 
                 mobilAP.SITE_PREFIX + '_mobilAP_userID=' + mobilAP.user.mobilAP_userID+ '; expires=' + d.toGMTString() + '; path=' + mobilAP.mobilAP_base_path;
+                if (mobilAP.CONTENT_PRIVATE) {
+                	mobilAP.getSchedule();
+				    announcement_controller.getAnnouncements();
+                }
             } else {
                 document.cookie = 
                 mobilAP.SITE_PREFIX + '_mobilAP_userID=; expires=Sun, 9 Jul 2006 00:00:00 UTC; path=' + mobilAP.mobilAP_base_path;
@@ -349,6 +353,11 @@ var mobilAP = {
     {
         try {
             var schedule_data = eval("(" + xhr.responseText + ")");
+            if (schedule_data.error_message) {
+				mobilAP.schedule_loading=false;
+				mobilAP.log("Error with schedule: " + schedule_data.error_message);
+				return;
+            }
             for (var i=0; i<schedule_data.length; i++) {                
                 schedule_data[i].date = new Date(schedule_data[i].date_str);
                 for (var j=0; j<schedule_data[i].schedule.length; j++) {
@@ -462,6 +471,7 @@ var mobilAP = {
             }
         } catch (e) {  }
         
+	    document.title = mobilAP.SITE_TITLE;
         browserController.reload();
 		mobilAP.getLogin();
 		mobilAP.getSchedule();
@@ -1939,16 +1949,16 @@ var browserController = {
 		document.getElementById('stackLayout').object.setCurrentView(toView);
 	},
     _sections: [ 
-        { tag:'home', name:'mobilAP', scroll:true, home:false, controller: homeController},
-        { tag:'welcome', name:'Welcome', scroll:true, home:true, controller: welcomeController},
-        { tag:'sessions', name:'Sessions', scroll:true, home:true, controller: session},
-        { tag:'session_group', name:'Session Group', scroll:true, home:false, controller: session_group},
-        { tag:'current_session', name:'Current Session', scroll: true, home:false, nextController: goCurrentSession},
-        { tag:'directory', name: 'Attendee Directory', scroll:false, home:true, controller: directoryController},
-        { tag:'announcements', name: 'Announcements', scroll:true, home:true, controller: announcement_controller},
-        { tag:'announcement_detail', name: 'Detail', scroll:true, home:false},
-        { tag:'generic_list', name: 'List', scroll:true, home:false},
-        { tag:'generic_detail', name: 'Detail', scroll:true, home:false}
+        { tag:'home', name:'mobilAP', scroll:true, home:false, content_private: false, controller: homeController},
+        { tag:'welcome', name:'Welcome', scroll:true, home:true, content_private: true, controller: welcomeController},
+        { tag:'sessions', name:'Sessions', scroll:true, home:true, content_private: true,controller: session},
+        { tag:'session_group', name:'Session Group', scroll:true, home:false, content_private: true,controller: session_group},
+        { tag:'current_session', name:'Current Session', scroll: true, home:false, content_private: true,nextController: goCurrentSession},
+        { tag:'directory', name: 'Attendee Directory', scroll:false, home:true, content_private: true,controller: directoryController},
+        { tag:'announcements', name: 'Announcements', scroll:true, home:true, content_private: true,controller: announcement_controller},
+        { tag:'announcement_detail', name: 'Detail', scroll:true, content_private: true,home:false},
+        { tag:'generic_list', name: 'List', scroll:true, content_private: true,home:false},
+        { tag:'generic_detail', name: 'Detail', scroll:true, content_private: true,home:false}
     ],
     reload: function() {        
         this._homeSections=[];
@@ -2056,6 +2066,12 @@ var browserController = {
         
         rowElement.onclick = function() {
             var section = sections[rowIndex];
+        	if (section.content_private && mobilAP.CONTENT_PRIVATE && !mobilAP.is_loggedIn()) {
+				mobilAP.show_login_form();
+				document.getElementById('login_result')[mobilAP.textField]='You must login to view this content';
+				return;        	
+        	}
+        
             if (section.nextController) {
                 section.nextController();
             } else {

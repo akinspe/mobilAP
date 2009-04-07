@@ -62,6 +62,15 @@
 <fieldset>
 <legend>Other Settings</legend>
 
+<label>Conference Title</label>
+<input type="text" name="setting[SITE_TITLE]" value="<?= htmlentities(getConfig('SITE_TITLE')) ?>" size="50">
+
+<label>Require Login to view content</label>
+<p class="explanation">You can make all the content on the site private and require users to login in order to view the site</p>
+<input type="radio" name="setting[CONTENT_PRIVATE]" value="-1"<?= getConfig('CONTENT_PRIVATE') ? " checked": ''?>> Yes
+<input type="radio" name="setting[CONTENT_PRIVATE]" value="0"<?= getConfig('CONTENT_PRIVATE') ? '' : " checked"?>> No
+<br class="end">
+
 <label>Use Passwords</label>
 <p class="explanation">You can require attendees to enter a password when logging in. You assign passwords either at import
 or by editing the user in the attendee administration. The default password is: &quot;<?= getConfig('default_password') ?>&quot;</p>

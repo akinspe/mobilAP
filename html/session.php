@@ -3,6 +3,19 @@
 require_once('inc/app_classes.php');
 
 $App = new Application();
+$PAGE = 'sessions';
+
+if (getConfig('CONTENT_PRIVATE') && !$App->is_LoggedIn()) {
+
+	$PAGE_TITLE = "Unauthorized";
+	include("templates/header.tpl");
+	include("templates/nav.tpl");
+	include("templates/not_logged_in.tpl");
+	include("templates/footer.tpl");
+	exit();
+}
+
+
 $session_id = isset($_REQUEST['session_id']) ? $_REQUEST['session_id'] : '';
 if (!$session = mobilAP_session::getSessionByID($session_id)) {
 	include('sessions.php');
@@ -104,7 +117,6 @@ switch ($view)
 }
 
 $PAGE_TITLE = $session->session_title;
-$PAGE = 'sessions';
 $view_template = isset($view_template) ? $view_template : $view;
 
 include('templates/header.tpl');

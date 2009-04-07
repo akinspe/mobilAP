@@ -12,9 +12,35 @@ ini_set('display_errors', 'off');
 require('inc/model_classes.php');
 
 $data = false;
+$private = getConfig('CONTENT_PRIVATE');
+$show_data = !$private;
+
+if ($private) {
+	$user = new mobilAP_webuser();
+	$show_data = $user->is_loggedin();
+}
+
+if (!$show_data) {
+	$data = mobilAP_Error::throwError('Unauthorized');
+	if (isset($_REQUEST['get'])) {
+		switch ($_REQUEST['get']) {
+			case 'configs':
+				$data = array_merge($_CONFIG, mobilAP::getConfigs());
+				break;
+			case 'user':
+				$data = new mobilAP_webuser();
+				break;
+		}
+	}
+	
+	echo json_encode($data);
+	exit();
+}
 
 //process some data
 if (isset($_REQUEST['get'])) {
+
+
 	switch ($_REQUEST['get'])
 	{
 		case 'configs':
