@@ -43,6 +43,22 @@
 	<br class="end"/>
 <?php } ?>
 
+<label>Phone</label>
+<input type="text" name="phone" value="<?= htmlentities(Utils::phone_format($attendee->phone,'-')) ?>" size="12" maxlength="15">
+<br class="end">
+
+<label>City</label>
+<input type="text" name="city" value="<?= htmlentities($attendee->city) ?>" size="40" maxlength="50">
+<br class="end">
+
+<label>State</label>
+<?= Utils::html_options(array('name'=>'state', 'options'=>array('United States'=>mobilAP::states('US'), 'Canada'=>mobilAP::states('CA')), 'selected'=>$attendee->state, 'first'=>'-- Choose --')) ?>
+<br class="end">
+
+<label>Country</label>
+<?= Utils::html_options(array('name'=>'country', 'options'=>mobilAP::countries(), 'selected'=>$attendee->country, 'first'=>'-- Choose --')) ?>
+<br class="end">
+
 <label>Administrator?</label>
 <input type="checkbox" name="admin" value="-1"<?php if ($attendee->admin) echo " CHECKED" ?>>
 <br class="end">
