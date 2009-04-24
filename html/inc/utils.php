@@ -24,7 +24,13 @@ class Utils
 		if (!is_string($url)) {
 			return false;
 		}
-		$pattern = "@^(http\:\/\/[a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*\.[a-zA-Z]{2,4}(?:\/[a-zA-Z0-9_]+)*(?:\/[a-zA-Z0-9_]+\.[a-zA-Z]{2,4}(?:\?[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)?)?(?:\&[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)*)$@";
+		$pattern = "@^(http\:\/\/[a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*\.[a-zA-Z]{2,4}(?:\/[a-zA-Z0-9_]+)*(?:\/[a-zA-Z0-9_]+\.[a-zA-Z]{2,4}(?:\?[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)?)?(?:\&[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)*)/?$@";
+		$scheme = "https?://";
+		$host = "[a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*\.[a-zA-Z]{2,4}";
+		$port = ":[1-9][0-9]*";
+		$resource = "[a-zA-Z0-9_.%-]+(?:/[a-zA-Z0-9_.%-]+)*";
+		$query_string="\?[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+(?:\&[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)*";
+		$pattern = sprintf('@^%s%s(%s)?(/%s)?(/|(%s))?$@i', $scheme, $host, $port, $resource, $query_string);
 		return preg_match($pattern, $url);
 	}
 
@@ -732,7 +738,7 @@ class Utils
 			
 			$_html_result .= '</option>' . "\n";
 		} else {
-			$_html_result = html_options_optgroup($key, $value, $selected, $label_limit, $output_field);
+			$_html_result = Utils::html_options_optgroup($key, $value, $selected, $label_limit, $output_field);
 		}
 	
 		return $_html_result;
@@ -745,7 +751,7 @@ class Utils
 			if ($output_field) {
 				$value = isset($value[$output_field]) ? $value[$output_field] : $v;
 			}
-			$optgroup_html .= html_options_optoutput($key, $value, $selected, $label_limit, $output_field);
+			$optgroup_html .= Utils::html_options_optoutput($key, $value, $selected, $label_limit, $output_field);
 		}
 		$optgroup_html .= "</optgroup>\n";
 		return $optgroup_html;
@@ -835,6 +841,27 @@ class Utils
 		}
 	}
 	
+	function truncate($string, $length = 80, $etc = '...',
+									  $break_words = false, $middle = false)
+	{
+		if ($length == 0)
+			return '';
+	
+		if (strlen($string) > $length) {
+			$length -= strlen($etc);
+			if (!$break_words && !$middle) {
+				$string = preg_replace('/\s+?(\S+)?$/', '', substr($string, 0, $length+1));
+			}
+			if(!$middle) {
+				return substr($string, 0, $length).$etc;
+			} else {
+				return substr($string, 0, $length/2) . $etc . substr($string, -$length/2);
+			}
+		} else {
+			return $string;
+		}
+	}
+
 }
 
 
