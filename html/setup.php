@@ -56,7 +56,7 @@ if (isset($_POST['submit_setup'])) {
 	$attendee = new mobilAP_attendee();
 	$ok = true;
 	
-	if (!$attendee->setName('', $FirstName, $LastName)) {
+	if (!$attendee->setName($FirstName, $LastName)) {
 		$ok = false;
 		$App->addErrorMessage("Please include your full name");
 	}
