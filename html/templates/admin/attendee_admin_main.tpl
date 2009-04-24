@@ -6,6 +6,7 @@
 <ul>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=add">Add new attendee</a></li>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=import">Import attendees</a></li>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=export">Export attendees</a></li>
 </ul>	
 
 <p>Attendees: <?= $attendee_total ?> (<?= $checked_in ?> in)</p>
@@ -30,6 +31,7 @@ foreach ($letters as $letter) {
 	<th></th>
 	<th><a href="<?= $App->SCRIPT_NAME ?>?sort=LastName">Name</th>
 	<th><a href="<?= $App->SCRIPT_NAME ?>?sort=organization">Organization</th>
+	<th>Admin</th>
 	<th>Dir</th>
 </tr>
 <?php
@@ -45,6 +47,7 @@ foreach ($attendees as $attendee) {
 	<td align="center"><?= $attendee->checked_in ? 'x' : '' ?></td>
 	<td><a href="<?= $App->SCRIPT_NAME ?>?action=edit&amp;attendee_id=<?= $attendee->attendee_id ?>"><?= $attendee->FirstName ?> <?= $attendee->LastName ?></a></td>
 	<td><?= htmlentities(substr($attendee->organization,0,35)) ?></td>
+	<td><?= $attendee->admin ? '<b>Y</b>' : 'N' ?></td>
 	<td><?= $attendee->directory_active ? 'Y' : 'N' ?></td>
 </tr>
 <?php 
