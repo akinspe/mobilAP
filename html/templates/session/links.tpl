@@ -16,6 +16,7 @@ if ($App->is_LoggedIn()) {
 <input type="hidden" name="view" value="<?= $view ?>">
 <fieldset>
 <legend>Add Link</legend>
+<p>Please make sure all links begin with http://</p>
 <label>URL</label>
 <input type="text" name="link_url" value="http://" id="link_url">
 <label>Title</label>

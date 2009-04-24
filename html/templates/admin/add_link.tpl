@@ -3,7 +3,7 @@
 
 <?= $App->getMessages() ?>
 <p>Links are useful to direct attendees to additional websites and resources available to complement your
-presentation.</p>
+presentation. Please make sure all links begin with http://</p>
 <form action="<?= $App->SCRIPT_NAME ?>" method="POST">
 <input type="hidden" name="action" value="add_link">
 <input type="hidden" name="session_id" value="<?= $session->session_id ?>">
