@@ -59,6 +59,13 @@ if (isset($_POST['cancel_evaluation_question'])) {
 switch ($action)
 {
 	case 'export_data':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$sql = mobilAP::export_data_sql();
 		header('Content-type: text/plain');
 		print $sql;
@@ -93,6 +100,12 @@ switch ($action)
 		}
 		
 	case 'edit_announcement':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
 		$announcement_id = isset($_REQUEST['announcement_id']) ? $_REQUEST['announcement_id'] : '';
 		if ($announcement = mobilAP_announcement::getAnnouncementById($announcement_id)) {
 			$template_file = 'announcement_edit.tpl';
@@ -127,6 +140,12 @@ switch ($action)
 		} 
 
 	case 'announcements':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
 		$announcements = mobilAP_announcement::getAnnouncements();
 		$template_file = 'announcements_admin.tpl';
 		
@@ -134,6 +153,13 @@ switch ($action)
 		break;
 
 	case 'add_schedule_item':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 	
 		$schedule_item = new mobilAP_schedule_item();
 		
@@ -172,6 +198,13 @@ switch ($action)
 		break;
 		
 	case 'edit_schedule_item':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$schedule_id = isset($_REQUEST['schedule_id']) ? $_REQUEST['schedule_id'] : '';
 		if (!$schedule_item = mobilAP_schedule_item::getScheduleItem($schedule_id)) {
 			$App->addErrorMessage("Error finding schedule item $schedule_id");
@@ -214,6 +247,13 @@ switch ($action)
 		}
 
 	case 'edit_schedule':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$date = isset($date) ? $date : (isset($_REQUEST['date']) ? $_REQUEST['date'] : '');
 		if (!$mobilAP_admin || !$day_schedule = mobilAP::getScheduleForDate($date)) {
 			$action='main';
@@ -224,6 +264,13 @@ switch ($action)
 		break;
 
 	case 'add_session_group':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$template_file = 'add_session_group.tpl';
 		$session_group = new mobilap_session_group();
 		if (isset($_POST['add_session_group'])) {
@@ -244,6 +291,13 @@ switch ($action)
 		}
 
 	case 'edit_session_group':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$session_group_id = isset($_REQUEST['session_group_id']) ? $_REQUEST['session_group_id'] : '';
 		if ($session_group = mobilAP_session_group::getSessionGroupByID($session_group_id)) {
 			if (isset($_POST['update_session_group'])) {
@@ -262,6 +316,13 @@ switch ($action)
 		}
 
 	case 'session_groups':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$action='session_groups';
 		$session_groups = mobilAP_session_group::getSessionGroups();
 		$template_file = 'session_groups.tpl';
@@ -275,6 +336,10 @@ switch ($action)
 				include("templates/not_authorized.tpl");
 				include("templates/footer.tpl");
 				exit();
+			}
+
+			if (isset($_REQUEST['clear_evaluations'])) {
+				$result = $session->clearEvaluations();
 			}
 
 			$template_file = 'view_evaluations.tpl';
@@ -543,6 +608,13 @@ switch ($action)
 	case 'delete_discussion':
 		$session_id = isset($_REQUEST['session_id']) ? $_REQUEST['session_id'] : '';
 		if ($session = mobilAP_session::getSessionByID($session_id)) {
+			if (!$session->isPresenter($App->getUserID()) && !$mobilAP_admin) {
+				include("templates/header.tpl");
+				include("templates/not_authorized.tpl");
+				include("templates/footer.tpl");
+				exit();
+			}
+
 			$post_id = isset($_REQUEST['post_id']) ? $_REQUEST['post_id'] : '';
 			$session->delete_chat($post_id);
 		} 
@@ -550,6 +622,13 @@ switch ($action)
 	case 'view_discussion':
 		$session_id = isset($_REQUEST['session_id']) ? $_REQUEST['session_id'] : '';
 		if ($session = mobilAP_session::getSessionByID($session_id)) {
+			if (!$session->isPresenter($App->getUserID()) && !$mobilAP_admin) {
+				include("templates/header.tpl");
+				include("templates/not_authorized.tpl");
+				include("templates/footer.tpl");
+				exit();
+			}
+
 			$template_file = 'view_discussion.tpl';
 		} 
 		break;
@@ -576,6 +655,13 @@ switch ($action)
 		break;
 		
 	case 'add_session':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$session = new mobilAP_session();
 		$template_file = 'add_session.tpl';
 
@@ -618,8 +704,28 @@ switch ($action)
 					$action = 'main';
 					break;
 				}
+
+				if (isset($_POST['add_presenter'])) {
+					$add_presenter_id = isset($_POST['add_presenter_id']) ? $_POST['add_presenter_id'] : '';
+					$result = $session->addPresenter($add_presenter_id);
+					if (mobilAP_Error::isError($result)) {
+						$App->addErrorMessage("Error adding presenter: " . $result->getMessage());
+					} else {
+						$App->addMessage("Presenter $add_presenter_id added to this session");
+					}
+				}
+	
+				if (isset($_POST['remove_presenter'])) {
+					$presenter_index = key($_POST['remove_presenter']);
+					$result = $session->removePresenter($presenter_index);
+					if (mobilAP_Error::isError($result)) {
+						$App->addErrorMessage("Error removing presenter: " . $result->getMessage());
+					} else {
+						$App->addMessage("Presenter removed from this session");
+					}
+				}
 			}
-		
+			
 			if (isset($_POST['update_session'])) {
 				$ok = true;
 				$session_title = isset($_POST['session_title'])? $_POST['session_title'] : '';
@@ -645,7 +751,7 @@ switch ($action)
 				}
 			}
 			
-			if (isset($_POST['clear_evaluations'])) {
+			if (isset($_REQUEST['clear_evaluations'])) {
 				$result = $session->clearEvaluations();
 			}
 
@@ -653,26 +759,9 @@ switch ($action)
 				$result = $session->clearChat();
 			}
 			
-			if (isset($_POST['add_presenter'])) {
-				$add_presenter_id = isset($_POST['add_presenter_id']) ? $_POST['add_presenter_id'] : '';
-				$result = $session->addPresenter($add_presenter_id);
-				if (mobilAP_Error::isError($result)) {
-					$App->addErrorMessage("Error adding presenter: " . $result->getMessage());
-				} else {
-					$App->addMessage("Presenter $add_presenter_id added to this session");
-				}
-			}
-
-			if (isset($_POST['remove_presenter'])) {
-				$presenter_index = key($_POST['remove_presenter']);
-				$result = $session->removePresenter($presenter_index);
-				if (mobilAP_Error::isError($result)) {
-					$App->addErrorMessage("Error removing presenter: " . $result->getMessage());
-				} else {
-					$App->addMessage("Presenter removed from this session");
-				}
-			}
 		
+		} else {
+			$action='main';
 		}
 		break;
 	case 'edit_evaluation_response':
@@ -709,6 +798,14 @@ switch ($action)
 			$template_file = 'evaluation_questions.tpl';
 		}
 	case 'add_evaluation_question':
+
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		if ($action=='add_evaluation_question') {
 			$template_file = 'evaluation_add_question.tpl';
 			$question = new mobilAP_evaluation_question();
@@ -748,11 +845,26 @@ switch ($action)
 		}
 		
 	case 'evaluation_questions':
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		$evaluation_questions = mobilAP::getEvaluationQuestions();
 		$template_file = 'evaluation_questions.tpl';
 		break;
 
 	case 'settings':
+
+		if (!$mobilAP_admin) {
+			include("templates/header.tpl");
+			include("templates/not_authorized.tpl");
+			include("templates/footer.tpl");
+			exit();
+		}
+
 		if (isset($_POST['reset_settings'])) {
 			mobilAP::resetConfigs();
 		}
