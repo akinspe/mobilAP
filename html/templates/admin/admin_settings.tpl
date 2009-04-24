@@ -16,9 +16,19 @@
 <input type="radio" name="setting[SHOW_ATTENDEE_DIRECTORY]" value="0"<?= getConfig('SHOW_ATTENDEE_DIRECTORY') ? '' : ' checked' ?>> Off
 <br class="end">
 
+<label>Display mode</label>
+<input type="radio" name="setting[SHOW_AD_LETTERS]" value="0"<?= getConfig('SHOW_AD_LETTERS') ? '' : ' checked' ?>> Don't Group
+<input type="radio" name="setting[SHOW_AD_LETTERS]" value="-1"<?= getConfig('SHOW_AD_LETTERS') ? ' checked' : '' ?>> Group by Last Name Letter
+<br class="end">
+
 <label>Show photos</label>
 <input type="radio" name="setting[SHOW_AD_PHOTOS]" value="-1"<?= getConfig('SHOW_AD_PHOTOS') ? ' checked' : ''?>> On
 <input type="radio" name="setting[SHOW_AD_PHOTOS]" value="0"<?= getConfig('SHOW_AD_PHOTOS') ? '' : ' checked' ?>> Off
+<br class="end">
+
+<label>Use placeholder photo</label>
+<input type="radio" name="setting[SHOW_AD_PLACEHOLDER]" value="-1"<?= getConfig('SHOW_AD_PLACEHOLDER') ? ' checked' : ''?>> On
+<input type="radio" name="setting[SHOW_AD_PLACEHOLDER]" value="0"<?= getConfig('SHOW_AD_PLACEHOLDER') ? '' : ' checked' ?>> Off
 <br class="end">
 
 <label>Show title</label>
@@ -85,7 +95,35 @@ login without a password, but prevent unauthorized administration without a pass
 <input type="radio" name="setting[USE_ADMIN_PASSWORDS]" value="-1"<?= getConfig('USE_ADMIN_PASSWORDS') ? " checked": ''?>> Yes
 <input type="radio" name="setting[USE_ADMIN_PASSWORDS]" value="0"<?= getConfig('USE_ADMIN_PASSWORDS') ? '' : " checked"?>> No
 <br class="end">
+
+<label>Require Password for presenters</label>
+<p class="explanation">You can require presenters to enter a password when logging in. This will allow attendees to
+login without a password, but prevent unauthorized administration without a password. The default password is: &quot;<?= getConfig('default_password') ?>&quot;</p>
+<input type="radio" name="setting[USE_PRESENTER_PASSWORDS]" value="-1"<?= getConfig('USE_PRESENTER_PASSWORDS') ? " checked": ''?>> Yes
+<input type="radio" name="setting[USE_PRESENTER_PASSWORDS]" value="0"<?= getConfig('USE_PRESENTER_PASSWORDS') ? '' : " checked"?>> No
+<br class="end">
 <?php } ?>
+
+</fieldset>
+
+<fieldset>
+<legend>Navigation Labels</legend>
+
+<label>Home</label>
+<input type="text" name="setting[NAV_HOME_LINK]" value="<?= htmlentities(getConfig('NAV_HOME_LINK')) ?>" size="20">
+<br class="end">
+
+<label>Sessions</label>
+<input type="text" name="setting[NAV_SESSIONS_LINK]" value="<?= htmlentities(getConfig('NAV_SESSIONS_LINK')) ?>" size="20">
+<br class="end">
+
+<label>Directory</label>
+<input type="text" name="setting[NAV_DIRECTORY_LINK]" value="<?= htmlentities(getConfig('NAV_DIRECTORY_LINK')) ?>" size="20">
+<br class="end">
+
+<label>Announcements</label>
+<input type="text" name="setting[NAV_ANNOUCEMENTS_LINK]" value="<?= htmlentities(getConfig('NAV_ANNOUCEMENTS_LINK')) ?>" size="20">
+<br class="end">
 
 </fieldset>
 

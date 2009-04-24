@@ -10,7 +10,7 @@ require('inc/app_classes.php');
 
 $App = new Application();
 
-$PAGE_TITLE = "mobilAP";
+$PAGE_TITLE = getConfig('SITE_TITLE') ;
 $PAGE = 'index';
 include('templates/header.tpl');
 include('templates/index.tpl');

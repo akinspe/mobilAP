@@ -46,7 +46,7 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 <input type="text" name="email" value="<?= htmlentities($attendee->email) ?>" size="50" maxlength="50">
 <br class="end">
 
-<?php if (getConfig('USE_PASSWORDS') || (getConfig('USE_ADMIN_PASSWORDS') && $attendee->admin)) { ?>
+<?php if (getConfig('USE_PASSWORDS') || (getConfig('USE_ADMIN_PASSWORDS') && $attendee->admin) || (getConfig('USE_PRESENTER_PASSWORDS') && $attendee->isPresenter())) { ?>
 	<label id="login_pword_label">Password</label>
 	<input type="text" size="17" maxlength="16" name="password" value="<?= isset($attendee->password) ? htmlentities($attendee->password) : '' ?>">
 	Note: If left blank, the password will not change.
@@ -62,7 +62,7 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 <br class="end">
 
 <label>State</label>
-<?= Utils::html_options(array('name'=>'state', 'options'=>mobilAP::states(), 'selected'=>$attendee->state, 'first'=>'-- Choose --')) ?>
+<?= Utils::html_options(array('name'=>'state', 'options'=>array('United States'=>mobilAP::states('US'), 'Canada'=>mobilAP::states('CA')), 'selected'=>$attendee->state, 'first'=>'-- Choose --')) ?>
 <br class="end">
 
 <label>Country</label>
@@ -85,7 +85,9 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 
 </fieldset>
 
-<?php if (getConfig('SHOW_AD_PHOTOS')) { ?>
+<?php if (getConfig('SHOW_AD_PHOTOS')) { 
+	$imageURL = $attendee->getImageURL();
+?>
 <fieldset id="directory_image_fieldset">
 <legend>Directory Image</legend>
 
@@ -96,13 +98,14 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 <input type="submit" name="update_attendee" value="Upload Photo">
 <br>
 <br class="end">
-
+<?php if ($imageURL) { ?>
 <div id="directory_image">
 <img src="<?= $attendee->getImageURL() ?>?unique=<?= time() ?>">
 <input type="submit" name="rotate[90]" value="CW"> 
 <input type="submit" name="rotate[-90]" value="CCW"> 
 <input type="submit" name="delete_photo" value="Delete Photo" class="confirm">
 </div>
+<?php } ?>
 
 </fieldset>
 <?php } ?>

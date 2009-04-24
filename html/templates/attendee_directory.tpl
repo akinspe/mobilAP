@@ -1,6 +1,6 @@
 <?php include('nav.tpl'); ?>
 <div class="content">
-<h1>Attendee Directory</h1>
+<h1><?= getConfig('NAV_DIRECTORY_LINK') ?></h1>
 
 <p>
 <?php

@@ -9,7 +9,7 @@ if (!getConfig('SHOW_ATTENDEE_DIRECTORY')) {
 
 $App = new Application();
 
-$PAGE_TITLE = 'Attendee Directory';
+$PAGE_TITLE = sprintf("%s: %s", getConfig('SITE_TITLE'), getConfig('NAV_DIRECTORY_LINK'));
 $PAGE = 'attendee_directory';
 
 if (getConfig('CONTENT_PRIVATE') && !$App->is_LoggedIn()) {

@@ -4,7 +4,7 @@ require('inc/app_classes.php');
 
 $App = new Application();
 
-$PAGE_TITLE = "mobilAP: Announcements";
+$PAGE_TITLE = sprintf("%s : %s", getConfig('SITE_TITLE'), getConfig('NAV_ANNOUCEMENTS_LINK'));
 $PAGE = 'announcements';
 
 if (getConfig('CONTENT_PRIVATE') && !$App->is_LoggedIn()) {

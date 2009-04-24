@@ -1,9 +1,9 @@
 <ul id="mainnav" class="nav">
-	<li<?php if ($PAGE=='index') echo ' class="active"'; ?>><a href="index.php">Welcome</a></li>
-	<li<?php if ($PAGE=='announcements') echo ' class="active"'; ?>><a href="announcements.php">Announcements</a></li>
-	<li<?php if ($PAGE=='sessions') echo ' class="active"'; ?>><a href="sessions.php">Sessions</a></li>
+	<li<?php if ($PAGE=='index') echo ' class="active"'; ?>><a href="index.php"><?= getConfig('NAV_HOME_LINK') ?></a></a></li>
+	<li<?php if ($PAGE=='announcements') echo ' class="active"'; ?>><a href="announcements.php"><?= getConfig('NAV_ANNOUCEMENTS_LINK') ?></a></a></li>
+	<li<?php if ($PAGE=='sessions') echo ' class="active"'; ?>><a href="sessions.php"><?= getConfig('NAV_SESSIONS_LINK') ?></a></li>
 	<?php if (getConfig('SHOW_ATTENDEE_DIRECTORY')) { ?>
-	<li<?php if ($PAGE=='attendee_directory') echo ' class="active"'; ?>><a href="attendee_directory.php">Attendee Directory</a></li>
+	<li<?php if ($PAGE=='attendee_directory') echo ' class="active"'; ?>><a href="attendee_directory.php"><?= getConfig('NAV_DIRECTORY_LINK') ?></a></li>
 	<?php } ?>
 <?php if ($App->is_LoggedIn()) { 
 	$user = $App->getUser();
