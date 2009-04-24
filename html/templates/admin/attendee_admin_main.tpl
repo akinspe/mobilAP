@@ -6,7 +6,6 @@
 <ul>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=add">Add new attendee</a></li>
 	<li><a href="<?= $App->SCRIPT_NAME ?>?action=import">Import attendees</a></li>
-	<li><a href="<?= $App->SCRIPT_NAME ?>?action=export">Export attendees</a></li>
 </ul>	
 
 <p>Attendees: <?= $attendee_total ?> (<?= $checked_in ?> in)</p>
