@@ -112,6 +112,7 @@ legend {
 
 .nav a {
 	color: white;
+	display: block;
 }
 
 .nav a:hover {
@@ -133,4 +134,5 @@ legend {
 
 .nav li#login_nav a {
 	color: #EE2C00;
+	display: inline;
 }
