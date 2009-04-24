@@ -50,6 +50,8 @@ function load()
 }
 
 var mobilAP = {
+	SHOW_ATTENDEE_DIRECTORY: true,
+	SHOW_AD_LETTERS: false,
 	LOGGING: false,
     ERROR_NO_USER:-1,
     ERROR_USER_ALREADY_SUBMITTED:-2,
@@ -400,14 +402,16 @@ var mobilAP = {
     {
         this.attendee_summary = attendee_summary;
         document.getElementById('demo_text')[mobilAP.textField]="There are " + this.attendee_summary.total + ' attendees representing ' + this.attendee_summary.organizations_count + ' organizations from ' + this.attendee_summary.states_count + ' states attending this event';
-
-        var img = document.getElementById('demo_img');
-        if (!img) {
-            img = document.createElement('img');
-            img.id = 'demo_img';
-            document.getElementById('demo_container').appendChild(img);
-        }
-        img.src = this.getChartDemoURL();
+        
+        if (mobilAP.SUMMARY_MAP) {
+			var img = document.getElementById('demo_img');
+			if (!img) {
+				img = document.createElement('img');
+				img.id = 'demo_img';
+				document.getElementById('demo_container').appendChild(img);
+			}
+			img.src = this.getChartDemoURL();
+		}
     },
     getChartDemoURL: function() {
         var src = 'http://chart.apis.google.com/chart?chtm=usa&chs=280x140&cht=t';
@@ -470,12 +474,58 @@ var mobilAP = {
 				}
             }
         } catch (e) {  }
-        
+
 	    document.title = mobilAP.SITE_TITLE;
         browserController.reload();
 		mobilAP.getLogin();
 		mobilAP.getSchedule();
     }
+}
+
+var directoryLetters = {
+    letters: [],
+    _loaded: false,
+    _loading: false,
+	numberOfRows: function() {
+		if (!this._loaded) {
+			directoryLetters.getLetters();
+		}
+		return this.letters.length;
+	},
+    getLetters: function()
+    {
+        if (this._loading) return;
+        this._loading = true;
+        var url = js_script + '?get=attendee_letters';
+        mobilAP.loadURL(url, directoryLetters._processLetters);
+    },
+    _processLetters: function(xhr)
+    {
+        try {
+            var letters = eval("(" + xhr.responseText + ")");
+        } catch (e) {
+            mobilAP.log(xhr.responseText);
+            return;
+        }
+        directoryLetters.setLetters(letters);
+    },
+	setLetters: function(letters) {
+        this.letters = letters;
+        document.getElementById('directory_letters_list').object.reloadData();
+    },
+	prepareRow: function(rowElement, rowIndex, templateElements) {
+		//set the row so we can possibly hide it when searching
+        //set list template
+        var letter = this.letters[rowIndex];
+        templateElements.letter[mobilAP.textField] = letter;
+
+		//set click handler
+		rowElement.onclick = function(event) {
+            directoryController.setLetter(letter);
+            browserController.goForward('directory', 'Attendee Directory');
+		};
+	}
+    
 }
 
 //controller for attendee diretory
@@ -487,6 +537,11 @@ var directoryController = {
     rowElements: [],
     detail_attendee: null,    
     reloadView: false,
+    letter: false,
+    setLetter: function(letter) {
+        this.letter = letter;
+        this.loadAttendees();
+    },
     browserHandler: function(view) {
         if (view=='directory') {
             if (!this._loaded) {
@@ -554,6 +609,9 @@ var directoryController = {
         if (this._loading) return;
         this._loading = true;
         var url = js_script + '?get=attendees';
+        if (this.letter) {
+            url += '&letter=' + this.letter;
+        }
         mobilAP.loadURL(url, directoryController._processAttendees, { synchronous: true} );
     },
     getDirectoryDetail: function(attendee_id)
@@ -579,7 +637,9 @@ var directoryController = {
     updateDetail: function()
     {
         document.getElementById('directory_detail_name')[mobilAP.textField] = this.detail_attendee.FirstName + ' ' + this.detail_attendee.LastName;
-        document.getElementById('directory_detail_image').src = baseUrl + this.detail_attendee.image_url;
+        if (mobilAP.SHOW_AD_PHOTOS) {
+			document.getElementById('directory_detail_image').src = baseUrl + this.detail_attendee.image_url;
+		}
         document.getElementById('directory_detail_organization')[mobilAP.textField] = this.detail_attendee.organization;
         document.getElementById('directory_detail_email')[mobilAP.textField] = this.detail_attendee.email;
         document.getElementById('directory_detail_email').onclick = function() {
@@ -812,7 +872,7 @@ var session_group = {
         this.updateElements();
     },
     updateElements: function() {
-        document.getElementById('session_group_title').innerText = this.session_group_title;
+        document.getElementById('session_group_title')[mobilAP.textField] = this.session_group_title;
         document.getElementById('session_group_list').object.reloadData();
     },
 	numberOfRows: function() {
@@ -1926,7 +1986,7 @@ var announcement_controller = {
 	
 	prepareRow: function(rowElement, rowIndex, templateElements) {
         var announcement = this.announcements[rowIndex];
-        templateElements.announcement_list_title.innerText = announcement.announcement_title;
+        templateElements.announcement_list_title[mobilAP.textField] = announcement.announcement_title;
         if (!announcement.read) {
             rowElement.className += " announcement_new";
         }
@@ -1954,7 +2014,8 @@ var browserController = {
         { tag:'sessions', name:'Sessions', scroll:true, home:true, content_private: true,controller: session},
         { tag:'session_group', name:'Session Group', scroll:true, home:false, content_private: true,controller: session_group},
         { tag:'current_session', name:'Current Session', scroll: true, home:false, content_private: true,nextController: goCurrentSession},
-        { tag:'directory', name: 'Attendee Directory', scroll:false, home:true, content_private: true,controller: directoryController},
+        { tag:'directory', name: 'Attendee Directory', scroll:false, home: !mobilAP.SHOW_AD_LETTERS, content_private: true, controller: directoryController},
+        { tag:'directory_letters', name: 'Attendee Directory', scroll:true, home: mobilAP.SHOW_AD_LETTERS, content_private: true, controller: directoryController},
         { tag:'announcements', name: 'Announcements', scroll:true, home:true, content_private: true,controller: announcement_controller},
         { tag:'announcement_detail', name: 'Detail', scroll:true, content_private: true,home:false},
         { tag:'generic_list', name: 'List', scroll:true, content_private: true,home:false},
@@ -1970,7 +2031,7 @@ var browserController = {
         if (this._homeSections.length) {
             return this._homeSections;
         }
-        
+
         var sections = [];
         for (var i=0; i<this._sections.length; i++) {
         	switch (this._sections[i].tag)
@@ -1978,8 +2039,11 @@ var browserController = {
         		case 'current_session':
 					this._sections[i].home = programSchedule.currentSessions.length>0;
 					break;
-        		case 'directory':
-					this._sections[i].home = mobilAP.SHOW_ATTENDEE_DIRECTORY;
+				case 'directory_letters':
+					this._sections[i].home = mobilAP.SHOW_ATTENDEE_DIRECTORY && mobilAP.SHOW_AD_LETTERS;
+					break;
+				case 'directory':
+					this._sections[i].home = mobilAP.SHOW_ATTENDEE_DIRECTORY && !mobilAP.SHOW_AD_LETTERS;
 					break;
 				case 'announcements':
 					var name = 'Announcements';
@@ -2175,3 +2239,32 @@ var genericListController = {
 	}
 };
 
+
+
+// This object implements the dataSource methods for the list.
+var directory_letters = {
+	
+	// Sample data for the content of the list. 
+	// Your application may also fetch this data remotely via XMLHttpRequest.
+	_rowData: ["Item 1", "Item 2", "Item 3"],
+	
+	// The List calls this method to find out how many rows should be in the list.
+	numberOfRows: function() {
+		return this._rowData.length;
+	},
+	
+	// The List calls this method once for every row.
+	prepareRow: function(rowElement, rowIndex, templateElements) {
+		// templateElements contains references to all elements that have an id in the template row.
+		// Ex: set the value of an element with id="label".
+		if (templateElements.label) {
+			templateElements.label.innerText = this._rowData[rowIndex];
+		}
+
+		// Assign a click event handler for the row.
+		rowElement.onclick = function(event) {
+			// Do something interesting
+			alert("Row "+rowIndex);
+		};
+	}
+};

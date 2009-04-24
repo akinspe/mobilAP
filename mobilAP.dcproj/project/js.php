@@ -12,9 +12,35 @@ ini_set('display_errors', 'off');
 require('inc/model_classes.php');
 
 $data = false;
+$private = getConfig('CONTENT_PRIVATE');
+$show_data = !$private;
+
+if ($private) {
+	$user = new mobilAP_webuser();
+	$show_data = $user->is_loggedin();
+}
+
+if (!$show_data) {
+	$data = mobilAP_Error::throwError('Unauthorized');
+	if (isset($_REQUEST['get'])) {
+		switch ($_REQUEST['get']) {
+			case 'configs':
+				$data = array_merge($_CONFIG, mobilAP::getConfigs());
+				break;
+			case 'user':
+				$data = new mobilAP_webuser();
+				break;
+		}
+	}
+	
+	echo json_encode($data);
+	exit();
+}
 
 //process some data
 if (isset($_REQUEST['get'])) {
+
+
 	switch ($_REQUEST['get'])
 	{
 		case 'configs':
@@ -94,12 +120,20 @@ if (isset($_REQUEST['get'])) {
 				$data = $attendee;
 			}
 			break;
+
+		case 'attendee_letters':
+			$data = mobilAP_attendee::getAttendeeLetters();
+			break;
 		case 'attendees':
-			if (!$data = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendees')) {
-				$data = mobilAP_attendee::getAttendees();
+			$quick = isset($_REQUEST['quick']) ? $_REQUEST['quick'] : false;
+			
+			if (isset($_REQUEST['letter'])) {
+				$data = mobilAP_attendee::getAttendees(array('letter'=>$_REQUEST['letter'], 'quick'=>$quick));
+			} elseif (!$data = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendees')) {
+				$data = mobilAP_attendee::getAttendees(array('quick'=>$quick));
 			}
 			break;
-			
+
 		default:
 			if (is_file('templates/' . $_REQUEST['get'] . '.tpl')) {
 				$data = file_get_contents('templates/' . $_REQUEST['get'] . '.tpl');

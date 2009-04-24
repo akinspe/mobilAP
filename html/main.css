@@ -1126,28 +1126,6 @@ a {
     height: auto;
 }
 
-#session_presenters_list {
-    overflow: hidden;
-    display: none;
-    padding: 0px;
-    -webkit-margin-bottom-collapse: separate;
-    border-style: solid;
-    border-width: 1px;
-    border-color: rgb(172, 172, 172);
-    -webkit-border-top-right-radius: 8px 8px;
-    -webkit-border-top-left-radius: 8px 8px;
-    -webkit-border-bottom-left-radius: 8px 8px;
-    -webkit-border-bottom-right-radius: 8px 8px;
-    position: relative;
-    margin-left: 9px;
-    -webkit-margin-top-collapse: separate;
-    margin-top: 9px;
-    margin-right: 9px;
-    margin-bottom: 9px;
-    width: auto;
-    background-color: white;
-}
-
 #sessions {
     width: 100%;
     min-height: 372px;
@@ -1438,6 +1416,21 @@ a {
     margin-top: 0px;
 }
 
+#directory_top_box.noimage {
+	min-height: 0;
+}
+
+#directory_top_box.noimage #directory_image_box {
+	display: none;
+}
+
+#directory_top_box.noimage #directory_detail_info_box {
+    position: static;
+    margin: 18px 18px 0 18px;
+    height: auto;
+}
+
+
 #directory_detail_name {
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
@@ -1511,7 +1504,7 @@ a {
 
 #directory_detail_image {
     width: 85px;
-    height: 129px;
+/*    height: 129px;*/
     margin-left: 6px;
     margin-top: 7px;
     margin-bottom: 7px;
@@ -2053,4 +2046,34 @@ a {
 
 #session_time {
 	text-align: center;
+}
+
+#directory_letters {
+    width: 100%;
+    min-height: 372px;
+    display: none;
+    position: relative;
+}
+
+#directory_letters_list {
+    overflow: hidden;
+    display: none;
+    padding: 0px;
+    margin: 0px;
+    position: relative;
+    width: auto;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+}
+
+#session_room {
+	text-align: center;
+}
+
+#session_time {
+	text-align: center;
+}
+
+input, textarea {
+    font-size: 14px;
 }

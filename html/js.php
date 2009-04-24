@@ -30,6 +30,15 @@ if (!$show_data) {
 			case 'user':
 				$data = new mobilAP_webuser();
 				break;
+			case 'content':
+				$content = isset($_GET['content']) ? $_GET['content'] : '';
+				if (preg_match("/^[a-z0-9_-]+$/", $content)) {
+					ob_start();
+					include(sprintf("templates/content/%s.tpl", $content));
+					$data = ob_get_contents();
+					ob_end_clean();
+				}
+				break;
 		}
 	}
 	
@@ -120,18 +129,36 @@ if (isset($_REQUEST['get'])) {
 				$data = $attendee;
 			}
 			break;
+
+		case 'attendee_letters':
+			$data = mobilAP_attendee::getAttendeeLetters();
+			break;
 		case 'attendees':
-			if (!$data = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendees')) {
-				$data = mobilAP_attendee::getAttendees();
+			$quick = isset($_REQUEST['quick']) ? $_REQUEST['quick'] : false;
+			
+			if (isset($_REQUEST['letter'])) {
+				$data = mobilAP_attendee::getAttendees(array('letter'=>$_REQUEST['letter'], 'quick'=>$quick));
+			} elseif (!$data = mobilAP::getCache(SITE_PREFIX . '_mobilAP_attendees')) {
+				$data = mobilAP_attendee::getAttendees(array('quick'=>$quick));
 			}
 			break;
-			
+
 		default:
 			if (is_file('templates/' . $_REQUEST['get'] . '.tpl')) {
 				$data = file_get_contents('templates/' . $_REQUEST['get'] . '.tpl');
 			}
 			break;
 
+		case 'content':
+			$content = isset($_GET['content']) ? $_GET['content'] : '';
+			if (preg_match("/^[a-z0-9_-]+$/", $content)) {
+				ob_start();
+				include(sprintf("templates/content/%s.tpl", $content));
+				$data = ob_get_contents();
+				ob_end_clean();
+			}
+			break;
+			
 	}
 } elseif (isset($_REQUEST['post'])) {
 	$user = new mobilAP_webuser();

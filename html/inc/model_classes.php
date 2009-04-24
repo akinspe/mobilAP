@@ -105,7 +105,8 @@ class mobilAP
         if (!$result) {
         	if (!$continue) {
         		$bt = debug_backtrace();
-				die(sprintf("Error with query (%s @ %d): %s", $bt[0]['file'], $bt[0]['line'], mysql_error()));
+				trigger_error(sprintf("Error with query: %s (%s @ %d): %s", $sql, $bt[0]['file'], $bt[0]['line'], mysql_error()), E_USER_WARNING);
+				die(sprintf("There was a database error (%d). Please inform the site administrators", $bt[0]['line']));
 			} 
 			
 			$errno = mysql_errno();
@@ -143,10 +144,17 @@ class mobilAP
     	
     	if (getConfig('USE_PASSWORDS')) {
     		$where[] = "md5='" . md5($password) . "'";
-    	} elseif (getConfig('USE_ADMIN_PASSWORDS')) {
-    		$where[] = "(!admin || md5='" . md5($password) . "')";
-    	}
-
+    	} else {
+    	
+			if (getConfig('USE_ADMIN_PASSWORDS')) {
+				$where[] = "(!admin || md5='" . md5($password) . "')";
+			}
+			
+			if (getConfig('USE_PRESENTER_PASSWORDS')) {
+				$where[] = "(attendee_id NOT IN (SELECT presenter_id FROM " . TABLE_PREFIX . mobilAP_session::SESSION_PRESENTER_TABLE . ") || md5='" . md5($password) . "')";
+			}
+		}
+    	
 		$sql = "SELECT attendee_id FROM " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " u 
 				WHERE " . implode(" AND ", $where);
 		
@@ -252,6 +260,7 @@ class mobilAP
 	{
 		$countries = array(
 			'US'=>'United States',
+			'CA' => 'Canada',
 			'AF' => 'Afghanistan',
 			'AL' => 'Albania',
 			'DZ' => 'Algeria',
@@ -289,7 +298,6 @@ class mobilAP
 			'BI' => 'Burundi',
 			'KH' => 'Cambodia',
 			'CM' => 'Cameroon',
-			'CA' => 'Canada',
 			'CV' => 'Cape Verde',
 			'KY' => 'Cayman Islands',
 			'CF' => 'Central African Republic',
@@ -495,69 +503,90 @@ class mobilAP
 		return $countries;
 	}        
 
-	function states()
+	function states($country='US')
 	{
-		$states = array(
-		'AL'=>'Alabama',
-		'AK'=>'Alaska',
-		'AZ'=>'Arizona',
-		'AR'=>'Arkansas',
-		'CA'=>'California',
-		'CO'=>'Colorado',
-		'CT'=>'Connecticut',
-		'DE'=>'Delaware',
-		'DC'=>'District Of Columbia',
-		'FL'=>'Florida',
-		'GA'=>'Georgia',
-		'HI'=>'Hawaii',
-		'ID'=>'Idaho',
-		'IL'=>'Illinois',
-		'IN'=>'Indiana',
-		'IA'=>'Iowa',
-		'KS'=>'Kansas',
-		'KY'=>'Kentucky',
-		'LA'=>'Louisiana',
-		'ME'=>'Maine',
-		'MD'=>'Maryland',
-		'MA'=>'Massachusetts',
-		'MI'=>'Michigan',
-		'MN'=>'Minnesota',
-		'MS'=>'Mississippi',
-		'MO'=>'Missouri',
-		'MT'=>'Montana',
-		'NE'=>'Nebraska',
-		'NV'=>'Nevada',
-		'NH'=>'New Hampshire',
-		'NJ'=>'New Jersey',
-		'NM'=>'New Mexico',
-		'NY'=>'New York',
-		'NC'=>'North Carolina',
-		'ND'=>'North Dakota',    
-		'OH'=>'Ohio',
-		'OK'=>'Oklahoma',
-		'OR'=>'Oregon',
-		'PA'=>'Pennsylvania',
-		'PR'=>'Puerto Rico',
-		'RI'=>'Rhode Island',
-		'SC'=>'South Carolina',
-		'SD'=>'South Dakota',
-		'TN'=>'Tennessee',
-		'TX'=>'Texas',
-		'UT'=>'Utah',
-		'VT'=>'Vermont',
-		'VI'=>'Virgin Islands',
-		'VA'=>'Virginia',
-		'WA'=>'Washington',
-		'WV'=>'West Virginia',
-		'WI'=>'Wisconsin',
-		'WY'=>'Wyoming');
-	
+		switch ($country) {
+			case 'US':
+				$states = array(
+				'AL'=>'Alabama',
+				'AK'=>'Alaska',
+				'AZ'=>'Arizona',
+				'AR'=>'Arkansas',
+				'CA'=>'California',
+				'CO'=>'Colorado',
+				'CT'=>'Connecticut',
+				'DE'=>'Delaware',
+				'DC'=>'District Of Columbia',
+				'FL'=>'Florida',
+				'GA'=>'Georgia',
+				'HI'=>'Hawaii',
+				'ID'=>'Idaho',
+				'IL'=>'Illinois',
+				'IN'=>'Indiana',
+				'IA'=>'Iowa',
+				'KS'=>'Kansas',
+				'KY'=>'Kentucky',
+				'LA'=>'Louisiana',
+				'ME'=>'Maine',
+				'MD'=>'Maryland',
+				'MA'=>'Massachusetts',
+				'MI'=>'Michigan',
+				'MN'=>'Minnesota',
+				'MS'=>'Mississippi',
+				'MO'=>'Missouri',
+				'MT'=>'Montana',
+				'NE'=>'Nebraska',
+				'NV'=>'Nevada',
+				'NH'=>'New Hampshire',
+				'NJ'=>'New Jersey',
+				'NM'=>'New Mexico',
+				'NY'=>'New York',
+				'NC'=>'North Carolina',
+				'ND'=>'North Dakota',    
+				'OH'=>'Ohio',
+				'OK'=>'Oklahoma',
+				'OR'=>'Oregon',
+				'PA'=>'Pennsylvania',
+				'PR'=>'Puerto Rico',
+				'RI'=>'Rhode Island',
+				'SC'=>'South Carolina',
+				'SD'=>'South Dakota',
+				'TN'=>'Tennessee',
+				'TX'=>'Texas',
+				'UT'=>'Utah',
+				'VT'=>'Vermont',
+				'VI'=>'Virgin Islands',
+				'VA'=>'Virginia',
+				'WA'=>'Washington',
+				'WV'=>'West Virginia',
+				'WI'=>'Wisconsin',
+				'WY'=>'Wyoming'
+				);
+				break;
+			case 'CA':
+				$states = array(
+					'AB'=>'Alberta',
+					'BC'=>'British Columbia',
+					'MB'=>'Manitoba',
+					'NB'=>'New Brunswick',
+					'NL'=>'Newfoundland and Labrador',
+					'NT'=>'Northwest Territories',
+					'NS'=>'Nova Scotia',
+					'NU'=>'Nunavut',
+					'ON'=>'Ontario',
+					'PE'=>'Prince Edward Island',
+					'QC'=>'Quebec',
+					'SK'=>'Saskatchewan',
+					'YT'=>'Yukon'
+				);
+				break;
+		}
 		return $states;
 	}
 
 	function is_validState($state)
 	{
-		$states = mobilAP::states();
+		$states = mobilAP::states($this->country);
 		return array_key_exists(strtoupper($state), $states);
 	}
 
@@ -782,7 +811,8 @@ class mobilAP_attendee
 		if ($row = mysql_fetch_assoc($result)) {
 			$attendee = new mobilAP_attendee();	
 
-			$attendee->setName($row['salutation'], $row['FirstName'], $row['LastName']);
+			$attendee->setSalutation($row['salutation']);
+			$attendee->setName($row['FirstName'], $row['LastName']);
 			$attendee->setOrganization($row['organization']);
 			$attendee->setTitle($row['title']);
 			$attendee->setDepartment($row['dept']);
@@ -827,7 +857,7 @@ class mobilAP_attendee
 		{
 			if (count($line)<=$field_count) {
 				foreach ($line as $i=>$val) {
-					$line[$i] = strtoupper($val)=='NULL' ? null : mobilAP::db_escape($val);
+					$line[$i] = strtoupper($val)=='NULL' ? null : mobilAP::db_escape(trim($val));
 				}
 
 				while (count($line)<$field_count) {
@@ -886,17 +916,22 @@ class mobilAP_attendee
 		return true;
 	}
 	
-	public function setName($salutation, $FirstName, $LastName)
+	public function setSalutation($salutation)
 	{
 		if (!array_key_exists($salutation, mobilAP_attendee::getSalutations()) && !empty($salutation)) {
 			return false;
 		}
 
+		$this->salutation = $salutation;
+		return true;
+	}
+	
+	public function setName($FirstName, $LastName)
+	{
 		if (empty($FirstName) || empty($LastName)) {
 			return false;
 		}
 		
-		$this->salutation = $salutation;
 		$this->FirstName = trim($FirstName);
 		$this->LastName = trim($LastName);
 		return true;
@@ -936,7 +971,12 @@ class mobilAP_attendee
 	
 	function setPassword($password) 
 	{
-		$password = $password != '' && (getConfig('USE_PASSWORDS') || (getConfig('USE_ADMIN_PASSWORDS') && $this->admin))  ? $password : getConfig('default_password');
+		$password = $password != '' && 
+				(getConfig('USE_PASSWORDS') || 
+				(getConfig('USE_ADMIN_PASSWORDS') && $this->admin)
+		|| (getConfig('USE_PRESENTER_PASSWORDS') && $this->isPresenter())
+			)  ? $password : getConfig('default_password');
+			
 		$sql = sprintf("UPDATE `%s%s` SET
 				md5='%s'
 				WHERE attendee_id='%s'",
@@ -960,14 +1000,14 @@ class mobilAP_attendee
 		if (!mobilAP::is_validCountry($country)) {
 			$ok = false;
 		} else {
-			$this->country = $country;
+			$this->country = strtoupper($country);
 		}
 		
-		if ($country=='US') {
+		if ($country=='US' || $country=='CA') {
 			if (!mobilAP::is_validState($state)) {
 				$ok = false;
 			} else {
-				$this->state = $state;
+				$this->state = strtoupper($state);
 			}			
 
 		}  else {
@@ -1001,8 +1041,10 @@ class mobilAP_attendee
 	{
 		if (is_file($this->getPhotoThumb())) {
 			return sprintf("directory_images/%s.jpg", $this->getUserID());
-		} else {
+		} elseif (getConfig('SHOW_AD_PLACEHOLDER')) {
 			return 'Images/directory_default.png';
+		} else {
+			return false;
 		}
 	}
 	
@@ -1292,7 +1334,7 @@ class mobilAP_attendee
 	function createAttendeeFromObj()
 	{
 		if (!Utils::is_validEmail($this->email)) {
-			return mobilAP_Error::throwError("Invalid email: $this->email");
+			return mobilAP_Error::throwError(empty($this->email) ? "Email cannot be blank" : "Invalid email: $this->email");
 		} elseif (strlen($this->FirstName)==0 || strlen($this->LastName)==0) {
 			return mobilAP_Error::throwError("Name cannot be blank");
 		}
@@ -1401,10 +1443,9 @@ class mobilAP_attendee
 		
 		return $attendee;
 	}
-	
-	static function getAttendees($args=null)
+
+	static function getAttendeeLetters($args=null)
 	{
-		$order = 'LastName,FirstName';
 		$args = is_array($args) ? $args : array();
 		$where = array();
 		$only_active = true;
@@ -1413,10 +1454,58 @@ class mobilAP_attendee
 		{
 			switch ($arg)
 			{
+				case 'only_active':
+					$$arg = $value ? true : false;
+					break;
+			}
+		}
+
+		if ($only_active) {
+			$where[] = 'directory_active';
+		}
+		
+		$sql = "SELECT DISTINCT UPPER(LEFT(LastName,1)) letter FROM  " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE;
+		
+		if (count($where)>0) {
+			$sql .= " WHERE " . implode(" AND ", $where);
+		}
+				
+		$sql .= " ORDER BY letter";
+		$result = mobilAP::query($sql);
+
+		$letters = array();
+		
+		while ($row = mysql_fetch_assoc($result)) {
+			$letters[] = $row['letter'];
+		}
+		
+		return $letters;
+	}
+	
+	static function getAttendees($args=null)
+	{
+		$order = 'LastName,FirstName';
+		$args = is_array($args) ? $args : array();
+		$where = array();
+		$quick = false;
+		$only_active = true;
+		
+		foreach ($args as $arg=>$value) 
+		{
+			switch ($arg)
+			{
+				case 'letter':
+					if (preg_match("/^[a-zA-Z]$/", $value)) {
+						$where[] = sprintf("UPPER(LEFT(LastName,1))='%s'", strtoupper($value));
+					} else {
+						return array();
+					}
+					break;
 				case 'order':
 					$$arg = $value;
 					break;
 				case 'only_active':
+				case 'quick':
 					$$arg = $value ? true : false;
 					break;
 			}
@@ -1443,9 +1532,18 @@ class mobilAP_attendee
 		$attendees=array();
 		
 		while ($row = mysql_fetch_assoc($result)) {
-			$attendee = new mobilAP_attendee();
-			$attendee->attendee_id = $row['attendee_id'];
-			$attendee->loadData($row);
+			if ($quick) {
+				$attendee = array(
+					'attendee_id'=>$row['attendee_id'],
+					'FirstName'=>$row['FirstName'],
+					'LastName'=>$row['LastName'],
+					'organization'=>$row['organization']
+				);
+			} else {
+				$attendee = new mobilAP_attendee();
+				$attendee->attendee_id = $row['attendee_id'];
+				$attendee->loadData($row);
+			}
 			$attendees[] = $attendee;
 		}
 		
@@ -1491,6 +1589,8 @@ class mobilAP_attendee
 		$data = array(
 			'total'=>0,
 			'states'=>array(),
+			'provinces'=>array(),
+			'countries'=>array(),
 			'states_count'=>0,
 			'organizations'=>array(),
 			'organizations_count'=>0
@@ -1499,10 +1599,28 @@ class mobilAP_attendee
 		
 			$data['total']++;
 			if ($row['state']) {
-				if (!isset($data['states'][$row['state']])) {
-					$data['states'][$row['state']] = 0;
+				switch ($row['country'])
+				{
+					case 'US':
+						if (!isset($data['states'][$row['state']])) {
+							$data['states'][$row['state']] = 0;
+						}
+						$data['states'][$row['state']]++;
+						break;
+					case 'CA':
+						if (!isset($data['provinces'][$row['state']])) {
+							$data['provinces'][$row['state']] = 0;
+						}
+						$data['provinces'][$row['state']]++;
+						break;
 				}
-				$data['states'][$row['state']]++;
+			}
+			
+			if ($row['country']) {
+				if (!isset($data['countries'][$row['country']])) {
+					$data['countries'][$row['country']] = 0;
+				}
+				$data['countries'][$row['country']]++;
 			}
 
 			if (!isset($data['organizations'][$row['organization']])) {
@@ -1515,6 +1633,8 @@ class mobilAP_attendee
 		ksort($data['organizations']);
 
 		$data['states_count'] = count($data['states']);
+		$data['provinces_count'] = count($data['provinces']);
+		$data['countries_count'] = count($data['countries']);
 		$data['organizations_count'] = count($data['organizations']);
 		unset($data['organizations']);
 
@@ -1649,7 +1769,7 @@ class mobilAP_session
 			return mobilAP_Error::throwError("Session $session_id already exists");
 		}
 		
-		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " (session_id, session_title) VALUES ($session_id, '" . mobilAP::db_escape($session_title) . "')";
+		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " (session_id, session_title) VALUES ('$session_id', '" . mobilAP::db_escape($session_title) . "')";
 		$result = mobilAP::query($sql);
 		return true;
 	}
@@ -1695,7 +1815,7 @@ class mobilAP_session
 			
 			
 			$sql = "SELECT s.* FROM " . TABLE_PREFIX . mobilAP_session::SESSION_TABLE . " s 
-					WHERE session_id IN (SELECT session_id FROM " . mobilAP_session::SESSION_PRESENTER_TABLE . " WHERE presenter_id='" . $user->getUserID() . "')
+					WHERE session_id IN (SELECT session_id FROM " . TABLE_PREFIX . mobilAP_session::SESSION_PRESENTER_TABLE . " WHERE presenter_id='" . $user->getUserID() . "')
 					ORDER BY session_id";
 			$result = mobilAP::query($sql);
 			
@@ -1712,6 +1832,7 @@ class mobilAP_session
 		$evaluation_questions = mobilAP::getEvaluationQuestions();
 		$avg_fields = array();
 		$text_fields = array();
+		$count_fields = array();
 		$data = array();
 		foreach ($evaluation_questions as $question) {
 			if ($question->question_response_type == mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES) {
@@ -1727,37 +1848,46 @@ class mobilAP_session
 				$text_fields[] = sprintf("q%d", $question->question_index);
 			}
 		}
+		
+		if (count($avg_fields)) {
 	
-		$sql = "SELECT " . implode(',', $avg_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
-				WHERE session_id='$this->session_id'";
-
-		$result = mobilAP::query($sql);
-		if ($row=mysql_fetch_assoc($result)) {
-			foreach ($row as $idx=>$avg) {
-				if ($avg) {
-					$data[$idx]['avg'] = $avg;
+			$sql = "SELECT " . implode(',', $avg_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
+					WHERE session_id='$this->session_id'";
+					
+			$result = mobilAP::query($sql);
+			if ($row=mysql_fetch_assoc($result)) {
+				foreach ($row as $idx=>$avg) {
+					if ($avg) {
+						$data[$idx]['avg'] = $avg;
+					}
 				}
 			}
 		}
+		
+		if (count($count_fields)) {
 
-		$sql = "SELECT " . implode(',', $count_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
-				WHERE session_id='$this->session_id'";
-
-		$result = mobilAP::query($sql);
-		if ($row=mysql_fetch_assoc($result)) {
-			foreach ($row as $idx=>$value) {
-				$data[$idx]['count'][$value]++;
+			$sql = "SELECT " . implode(',', $count_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
+					WHERE session_id='$this->session_id'";
+	
+			$result = mobilAP::query($sql);
+			if ($row=mysql_fetch_assoc($result)) {
+				foreach ($row as $idx=>$value) {
+					$data[$idx]['count'][$value]++;
+				}
 			}
 		}
+		
+		if (count($text_fields)) {
 
-		$sql = "SELECT " . implode(',', $text_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
-				WHERE session_id='$this->session_id'";
-
-		$result = mobilAP::query($sql);
-		while ($row=mysql_fetch_assoc($result)) {
-			foreach ($row as $idx=>$text) {
-				if ($text) {
-					$data[$idx][] = $text;
+			$sql = "SELECT " . implode(',', $text_fields) . " FROM " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
+					WHERE session_id='$this->session_id'";
+	
+			$result = mobilAP::query($sql);
+			while ($row=mysql_fetch_assoc($result)) {
+				foreach ($row as $idx=>$text) {
+					if ($text) {
+						$data[$idx][] = $text;
+					}
 				}
 			}
 		}
@@ -2029,7 +2159,6 @@ class mobilAP_session
 			}
 		}
 		
-		
 		$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::SESSION_EVALUATION_TABLE . "
 				(session_id, post_user, post_timestamp, q" . implode(", q", array_keys($evaluation_questions)) . ") 
 				VALUES
@@ -2206,7 +2335,7 @@ class mobilAP_session_group
 	function getScheduleItems()
 	{
 		$schedule_items = array();
-		$sql = sprintf("SELECT * FROM %s%s WHERE session_group_id=%d", TABLE_PREFIX, mobilAP::SCHEDULE_TABLE, $this->session_group_id);
+		$sql = sprintf("SELECT * FROM %s%s WHERE session_group_id=%d ORDER BY start_date asc,session_id", TABLE_PREFIX, mobilAP::SCHEDULE_TABLE, $this->session_group_id);
 		$result = mobilAP::query($sql);
 		while ($row = mysql_fetch_assoc($result)) {
 			$schedule_item = new mobilAP_schedule_item();
@@ -2491,8 +2620,8 @@ class mobilAP_poll_question
 		
 		foreach ($responses as $response_value) {
 			if ($this->is_response($response_value)) {
-				$sql = "INSERT INTO " . TABLE_PREFIX . mobilAP_session::POLL_ANSWERS_TABLE . " (question_id, response_value, response_timestamp, response_userID)
-				VALUES ($this->question_id, $response_value,$ts, $userIDStr)";
+				$sql = sprintf("INSERT INTO %s%s (question_id, response_value, response_timestamp, response_userID)
+				VALUES (%d, %d, %d, %s)", TABLE_PREFIX, mobilAP_session::POLL_ANSWERS_TABLE, $this->question_id, $response_value,$ts, $userIDStr);
 				mobilAP::query($sql);
 			}
 		}
@@ -2839,7 +2968,11 @@ class mobilAP_webuser
     
     function setmobilAP_userID($userID)
     {
-    	$this->mobilAP_userID = strtolower($userID);
+    	if (!$user = mobilAP_attendee::getAttendeeById($userID)) {
+    		return false;
+    	}
+    	    
+    	$this->mobilAP_userID = $user->email;
     	$user = $this->getUser();
     	return true;
     }
@@ -2911,7 +3044,11 @@ class mobilAP_webuser
                 
             } elseif (getConfig('USE_ADMIN_PASSWORDS') && $user->admin && $pword==getConfig('default_password')) {
 				return mobilAP_Error::throwError("This account requires a password", mobilAP_webuser::USER_REQUIRES_PASSWORD);
+            } elseif (getConfig('USE_PRESENTER_PASSWORDS') && $user->isPresenter() && $pword==getConfig('default_password')) {
+				return mobilAP_Error::throwError("This account requires a password", mobilAP_webuser::USER_REQUIRES_PASSWORD);
             } elseif (getConfig('USE_ADMIN_PASSWORDS') && $user->admin) {
+				return mobilAP_Error::throwError("Login Failure.", mobilAP_webuser::USER_ADMIN_LOGIN_FAILURE);
+            } elseif (getConfig('USE_PRESENTER_PASSWORDS') && $user->isPresenter()) {
 				return mobilAP_Error::throwError("Login Failure.", mobilAP_webuser::USER_ADMIN_LOGIN_FAILURE);
             } else {
 				return mobilAP_Error::throwError("Login Failure.", mobilAP_webuser::USER_LOGIN_FAILURE);
@@ -2937,7 +3074,7 @@ class mobilAP_webuser
 			$sql = "UPDATE " . TABLE_PREFIX . mobilAP_attendee::ATTENDEE_TABLE . " SET 
 					login_last=login_now, 
 					login_now=NULL 
-					WHERE attendee_id='" . $this->getUserID() ."'";
+					WHERE attendee_id='" . mobilAP::db_escape($this->getUserID()) ."'";
 			$result = mobilAP::query($sql);
     	}
     	

@@ -9,7 +9,8 @@
 */
 
 require_once('inc/app_classes.php');
-$PAGE_TITLE = 'Attendee Administration';
+$PAGE_TITLE = getConfig('SITE_TITLE') . ': Attendee Administration';
+$PAGE='attendee_admin';
 
 $App = new Application();
 
@@ -33,6 +34,10 @@ if (isset($_POST['cancel_attendee'])) {
 
 switch ($action)
 {
+	case 'iso_codes':
+		$countries = mobilAP::countries();
+		$template_file = 'iso_codes.tpl';
+		break;
 	case 'import':
 		$template_file = 'import_attendees.tpl';
 
@@ -83,7 +88,16 @@ switch ($action)
 			}
 		}
 	
+		$salutations = mobilAP_attendee::getSalutations();
 		$import_data = mobilAP_attendee::getImportData();
+		break;
+	case 'export':
+		$attendees = mobilAP_attendee::getAttendees(array('only_active'=>false));
+		$template_file = 'attendee_admin_export.tpl';
+		header('Content-type: text/plain');
+		include("templates/admin/$template_file");
+		exit();
+		
 		break;
 	case 'add':
 		$template_file = 'add_attendee.tpl';
@@ -110,7 +124,8 @@ switch ($action)
 
 			$admin = isset($_POST['admin']) ? $_POST['admin'] : 0;
 			
-			if (!$attendee->setName($salutation, $FirstName, $LastName)) {
+			$attendee->setSalutation($salutation);
+			if (!$attendee->setName($FirstName, $LastName)) {
 				$ok = false;
 				$App->addErrorMessage("Please include your full name");
 			}
@@ -140,6 +155,7 @@ switch ($action)
 					if (isset($_POST['import_id'])) {
 						mobilAP_attendee::deleteImport(intval($_POST['import_id']));
 						$import_data = mobilAP_attendee::getImportData();
+						$action = 'import';
 						$template_file = 'import_attendees.tpl';
 						break;
 					} else {
@@ -182,7 +198,8 @@ switch ($action)
 				$bio = isset($_POST['bio']) ? $_POST['bio'] : '';
 				$admin = isset($_POST['admin']) ? $_POST['admin'] : 0;
 				
-				if (!$attendee->setName($salutation, $FirstName, $LastName)) {
+				$attendee->setSalutation($salutation); 
+				if (!$attendee->setName($FirstName, $LastName)) {
 					$ok = false;
 					$App->addErrorMessage("Please include your full name");
 				}
@@ -199,7 +216,10 @@ switch ($action)
 					$App->addErrorMessage("Please include a valid email");
 				}
 
-				if ($password != '' && (getConfig('USE_PASSWORDS') || (getConfig('USE_ADMIN_PASSWORDS') && $attendee->admin))) {
+				if ($password != '' && (getConfig('USE_PASSWORDS') || 
+					(getConfig('USE_ADMIN_PASSWORDS') && $attendee->admin) || 
+					(getConfig('USE_PRESENTER_PASSWORDS') && $attendee->isPresenter())
+					)) {
 					$attendee->setPassword($password);
 				}
 				
@@ -258,7 +278,7 @@ switch ($action)
 			$action='main';
 		}
 		break;
-		
+
 	case 'main':
 	default:
 		$action='main';
@@ -269,6 +289,14 @@ if ($action=='main')
 {
 
 	$sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'LastName';
+	switch ($sort)
+	{
+		case 'LastName':
+		case 'organization':
+			break;
+		default:
+			$sort = 'LastName';
+	}
 	
 	$template_file = 'attendee_admin_main.tpl';
 	

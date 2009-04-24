@@ -1,5 +1,5 @@
 <div id="session_abstract">
-<?= $session->session_abstract ?>
+<?= nl2br($session->session_abstract) ?>
 </div>
 
 <?php 

@@ -12,14 +12,16 @@
 require_once('inc/app_classes.php');
 $App = new Application();
 
-$login_userID = isset($_POST['login_userID']) ? $_POST['login_userID'] : null;
+$login_userID = isset($_POST['login_userID']) ? filter_var($_POST['login_userID'], FILTER_SANITIZE_EMAIL) : null;
 $login_pword = isset($_POST['login_pword']) ? $_POST['login_pword'] : getConfig('default_password');
+
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $referrer = isset($_REQUEST['referrer']) ? urldecode($_REQUEST['referrer']) : '';
 $js = isset($_REQUEST['js']) ? true : false;
+$show_password_box = getConfig('USE_PASSWORDS');
 
 
-$PAGE_TITLE ='mobilAP Login';
+$PAGE_TITLE = getConfig('SITE_TITLE') . ': Login';
 $PAGE = 'login';
 
 $login_file='login.tpl';
@@ -37,11 +39,19 @@ if ( (isset($_POST['login_submit_x']) || isset($_POST['login_submit'])) && !empt
 				$message = 'You are already logged in.';
 				break;
 	
+			case mobilAP_webuser::USER_ADMIN_LOGIN_FAILURE:
+				$show_password_box = true;
 			case mobilAP_webuser::USER_LOGIN_FAILURE:
 				$message = 'Login Failed. Please ensure your email address and password are correct.';
 				break;
+
+			case mobilAP_webuser::USER_REQUIRES_PASSWORD:
+				$message = 'This account requires a password';
+				$show_password_box = true;
+				break;
 	
 			case mobilAP_webuser::USER_NOT_FOUND:
+				$login_userID = '';
 				$message = 'Login Failed. An account for this email address could not be found.';
 				break;
 	
@@ -79,8 +89,8 @@ if ( (isset($_POST['login_submit_x']) || isset($_POST['login_submit'])) && !empt
     }
 } else {
     if ($user->is_loggedIn()) {
-    	$login_result = mobilAP_Error::throwError('You are already logged in.');
-        $App->addErrorMessage($login_result->getMessage());
+    	header("Location: " . getConfig('DEFAULT_LOGIN_URL'));
+    	exit();
     } else {
         $login_file = 'login.tpl';
     }
@@ -89,7 +99,6 @@ if ( (isset($_POST['login_submit_x']) || isset($_POST['login_submit'])) && !empt
 if ($js) {
 	echo json_encode($login_result);
 } else {
-
 	include('templates/header.tpl');
 	include("templates/login/$login_file");
 	include('templates/footer.tpl');
