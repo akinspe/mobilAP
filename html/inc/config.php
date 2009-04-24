@@ -62,6 +62,7 @@ $_CONFIG = array(
     'USE_PASSWORDS'=>false,
     'USE_ADMIN_PASSWORDS'=>false,
     'SHOW_ATTENDEE_DIRECTORY'=>true, 
+    'SHOW_AD_LETTERS'=>false,
     'SHOW_AD_PHOTOS'=>true,
     'SHOW_AD_TITLE'=>true,
     'SHOW_AD_ORG'=>true,
@@ -70,6 +71,10 @@ $_CONFIG = array(
     'SHOW_AD_PHONE'=>false,
     'SHOW_AD_LOCATION'=>false,
     'SHOW_AD_BIO'=>true,
+	'NAV_HOME_LINK'=>'Home',    
+	'NAV_SESSIONS_LINK'=>'Sessions',    
+	'NAV_DIRECTORY_LINK'=>'Directory',    
+	'NAV_ANNOUCEMENTS_LINK'=>'Announcements'
 );
 
 function getDBConfig($var)
