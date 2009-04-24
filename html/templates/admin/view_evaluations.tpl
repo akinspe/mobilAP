@@ -2,6 +2,9 @@
 <h1>Evaluation Summary</h1>
 
 <p><?= count($evaluations) ?> evaluations submitted</p>
+<ul>
+	<li><a href="<?= $App->SCRIPT_NAME ?>?action=<?= $action ?>&amp;session_id=<?= $session->session_id ?>&amp;clear_evaluations=1" class="confirm">clear evaluation data</a></li>
+</ul>	
 
 <?php
 
