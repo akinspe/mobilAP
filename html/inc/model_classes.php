@@ -1870,7 +1870,7 @@ class mobilAP_session
 					WHERE session_id='$this->session_id'";
 	
 			$result = mobilAP::query($sql);
-			if ($row=mysql_fetch_assoc($result)) {
+			while ($row=mysql_fetch_assoc($result)) {
 				foreach ($row as $idx=>$value) {
 					$data[$idx]['count'][$value]++;
 				}
