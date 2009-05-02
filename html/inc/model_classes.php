@@ -247,7 +247,7 @@ class mobilAP
 	function export_data_sql()
 	{
 		$exec = sprintf("%s/mysqldump -h%s -u%s -p%s %s", 
-			getConfig('MYSQL_BIN_FOLDER'), getConfig('db_host'), getConfig('db_user'), getConfig('db_password'), getConfig('db_database'));
+			getConfig('MYSQL_BIN_FOLDER'), getDBConfig('db_host'), getDBConfig('db_user'), getDBConfig('db_password'), getDBConfig('db_database'));
 		exec($exec, $output, $retVal);
 		if ($retVal !=0) {
 			return mobilAP_Error::throwError("Error getting output: " . implode(PHP_EOL, $output));
