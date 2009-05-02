@@ -47,6 +47,10 @@ foreach ($create_tables as $sql) {
 $App = new Application();
 $template_file = 'setup.tpl';
 
+if (!is_writable(mobilAP_attendee::getPhotoDir())) {
+	$App->addErrorMessage(sprintf("WARNING: %s is not writable by the web server. Attendee photos will not be able to be saved", mobilAP_attendee::getPhotoDir()));
+}
+
 $email = isset($_POST['email']) ? $_POST['email'] : '';
 $FirstName = isset($_POST['FirstName']) ? $_POST['FirstName'] : '';
 $LastName = isset($_POST['LastName']) ? $_POST['LastName'] : '';

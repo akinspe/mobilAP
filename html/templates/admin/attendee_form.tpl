@@ -101,8 +101,9 @@ Attendee <b>NOT</b> checked in <input type="submit" name="check_in" value="Check
 <?php if ($imageURL) { ?>
 <div id="directory_image">
 <img src="<?= $attendee->getImageURL() ?>?unique=<?= time() ?>">
-<input type="submit" name="rotate[90]" value="CW"> 
-<input type="submit" name="rotate[-90]" value="CCW"> 
+<br>
+<input type="submit" name="rotate[90]" value="Rotate 90 CW"> 
+<input type="submit" name="rotate[-90]" value="Rotate 90 CCW"> 
 <input type="submit" name="delete_photo" value="Delete Photo" class="confirm">
 </div>
 <?php } ?>

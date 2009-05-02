@@ -26,6 +26,10 @@ if (!$user->isAdmin()) {
 	exit();
 }
 
+if (!is_writable(mobilAP_attendee::getPhotoDir())) {
+	$App->addErrorMessage(sprintf("WARNING: %s is not writable by the web server. Attendee photos will not be able to be saved", mobilAP_attendee::getPhotoDir()));
+}
+
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'main';
 
 if (isset($_POST['cancel_attendee'])) {
