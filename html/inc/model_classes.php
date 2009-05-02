@@ -3332,6 +3332,8 @@ class mobilAP_evaluation_question
 			$result = mobilAP::query($sql);
 			$sql = sprintf("UPDATE %s%s SET question_index=%d WHERE question_index=%d", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_TABLE, $i-1, $i);
 			$result = mobilAP::query($sql);
+			$sql = sprintf("UPDATE %s%s SET question_index=%d WHERE question_index=%d", TABLE_PREFIX, mobilAP::EVALUATION_QUESTION_RESPONSE_TABLE, $i-1, $i);
+			$result = mobilAP::query($sql);
 		}
 	}
 	
