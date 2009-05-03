@@ -757,8 +757,9 @@ var programSchedule = {
         var currentSessions = [];
         var day, daySchedule;
         var now = new Date();
+        day = mobilAP.getDay(now);
 
-        if (day = mobilAP.getDay(now)) {
+        if (day!==null) {
             daySchedule = mobilAP.getDaySchedule(day);
             for (var i=0; i<daySchedule.schedule.length; i++) {
 				if ( (daySchedule.schedule[i].session_id || daySchedule.schedule[i].session_group_id) && daySchedule.schedule[i].start_date.getTime()<=now.getTime() && daySchedule.schedule[i].end_date.getTime()>=now.getTime() ) {
@@ -768,11 +769,6 @@ var programSchedule = {
         }
       
         mobilAP.log("It is " + now + ". There are " + currentSessions.length + " session(s) currently running");
-        if (currentSessions.length>0) {
-            for (var i=0; i< currentSessions.length; i++) {
-                mobilAP.log(currentSessions[i].title);
-            }
-        }
         
         if (currentSessions.length != programSchedule.currentSessions.length) {
             changed = true;
@@ -965,13 +961,28 @@ var current_sessions = {
         templateElements.sessions_current_time[mobilAP.textField] = event_data.start_date.formatDate('h:i');     
 
         templateElements.sessions_current_title[mobilAP.textField] = event_data.session_id + ' ' + event_data.title;
-            
-        rowElement.onclick = function() {
-            //set the title before loading
-            session.setTitle(event_data.title);
-            session.loadSessionData(event_data.session_id);
-            mobilAP.showSessionDetail();
-        }
+        
+        if (event_data.session_id) {
+			templateElements.sessions_current_arrow.style.display = 'block';
+
+			rowElement.onclick = function() {
+				//set the title before loading
+				session.setTitle(event_data.title);
+				session.setTime(event_data.start_date, event_data.end_date);
+				session.setRoom(event_data.room);
+				session.loadSessionData(event_data.session_id);
+				mobilAP.showSessionDetail();
+			}
+		} else if (event_data.session_group_id) {
+			templateElements.sessions_current_arrow.style.display = 'block';
+			rowElement.onclick = function() {
+				session_group.setTitle(event_data.title);
+				session_group.loadSessionGroupData(event_data.session_group_id);
+				browserController.goForward('session_group', event_data.title);
+			}
+		} else {
+			templateElements.sessions_current_arrow.style.display = 'none';
+		}
 
         if (event_data.detail) {
             templateElements.sessions_current_detail[mobilAP.textField] = event_data.detail;
@@ -1957,6 +1968,8 @@ function goCurrentSession()
 {
     if (programSchedule.currentSessions.length==1) {
     	if (programSchedule.currentSessions[0].session_id) {
+			session.setTime(programSchedule.currentSessions[0].start_date, programSchedule.currentSessions[0].end_date);
+			session.setRoom(programSchedule.currentSessions[0].room);
 			session.loadSessionData(programSchedule.currentSessions[0].session_id);
 			mobilAP.showSessionDetail();        
  		} else if (programSchedule.currentSessions[0].session_group_id) {
