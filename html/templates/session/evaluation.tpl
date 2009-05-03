@@ -6,7 +6,6 @@
 <input type="hidden" name="view" value="<?= $view ?>">
 
 <?php 
-	$evaluation_questions = mobilAP::getEvaluationQuestions();
 
 foreach ($evaluation_questions as $index=>$evaluation_question)
 { ?>

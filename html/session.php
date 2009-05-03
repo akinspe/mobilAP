@@ -25,7 +25,7 @@ if (!$session = mobilAP_session::getSessionByID($session_id)) {
 $view = isset($_REQUEST['view']) ? $_REQUEST['view'] : 'info';
 $session->session_questions = $session->getQuestions();
 $session->session_userdata = $session->getUserSubmissions($App->getUserToken());
-
+$evaluation_questions = mobilAP::getEvaluationQuestions();
 
 switch ($view)
 {
@@ -94,7 +94,7 @@ switch ($view)
 		}
 		break;
 	case 'evaluation':
-		if ($session->session_flags & mobilAP_session::SESSION_FLAGS_EVALUATION) {
+		if ( ($session->session_flags & mobilAP_session::SESSION_FLAGS_EVALUATION) && count($evaluation_questions)) {
 			if (isset($_POST['submit_evaluation'])) {
 				$responses = isset($_REQUEST['responses']) ? $_REQUEST['responses'] : array();
 				$result = $session->addEvaluation($App->getUserToken(), $responses);

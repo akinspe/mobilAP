@@ -3,7 +3,7 @@
 	$views = array('info'=>'Info', 'links'=>'Links', 'questions'=>'Questions', 'discussion'=>'Discussion', 'evaluation'=>'Evaluation');
 	if (!($session->session_flags & mobilAP_session::SESSION_FLAGS_LINKS)) unset($views['links']);
 	if (!($session->session_flags & mobilAP_session::SESSION_FLAGS_DISCUSSION)) unset($views['discussion']);
-	if (!($session->session_flags & mobilAP_session::SESSION_FLAGS_EVALUATION)) unset($views['evaluation']);
+	if (!($session->session_flags & mobilAP_session::SESSION_FLAGS_EVALUATION) || count($evaluation_questions)==0) unset($views['evaluation']);
 	
 	foreach ($views as $_view=>$_view_title) { ?>
 	<?php if ($view==$_view) { ?>

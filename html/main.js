@@ -57,7 +57,6 @@ var mobilAP = {
 	NAV_ANNOUCEMENTS_LINK:'Announcements',    
 	NAV_LINKS_LINK:'Links',    
 	NAV_DISCUSSION_LINK:'Discussion',    
-	NAV_EVALUATION_LINK:'Conference Evaluation',
 	SHOW_ATTENDEE_DIRECTORY: true,
 	SHOW_AD_LETTERS: false,
 	LOGGING: false,
@@ -1202,7 +1201,7 @@ var session = {
             addClassName('session_discussion_button', 'button_disabled');
         }
 
-    	if (this.session_flags & session.SESSION_FLAGS_EVALUATION) {
+    	if ( (this.session_flags & session.SESSION_FLAGS_EVALUATION) && session_evaluation.evaluation_questions.length>0) {
             document.getElementById('session_rate_button').style.display = 'block';
         } else {
             document.getElementById('session_rate_button').style.display = 'none';
@@ -1515,6 +1514,7 @@ var session_evaluation = {
 		}
 	
 		CreateStackLayout('session_evaluation_stack', stack_ops);
+		session.refresh();
 		
 	},
                                	
