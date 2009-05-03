@@ -30,6 +30,15 @@ if (!$show_data) {
 			case 'user':
 				$data = new mobilAP_webuser();
 				break;
+			case 'content':
+				$content = isset($_GET['content']) ? $_GET['content'] : '';
+				if (preg_match("/^[a-z0-9_-]+$/", $content)) {
+					ob_start();
+					include(sprintf("templates/content/%s.tpl", $content));
+					$data = ob_get_contents();
+					ob_end_clean();
+				}
+				break;
 		}
 	}
 	
@@ -140,6 +149,16 @@ if (isset($_REQUEST['get'])) {
 			}
 			break;
 
+		case 'content':
+			$content = isset($_GET['content']) ? $_GET['content'] : '';
+			if (preg_match("/^[a-z0-9_-]+$/", $content)) {
+				ob_start();
+				include(sprintf("templates/content/%s.tpl", $content));
+				$data = ob_get_contents();
+				ob_end_clean();
+			}
+			break;
+			
 	}
 } elseif (isset($_REQUEST['post'])) {
 	$user = new mobilAP_webuser();

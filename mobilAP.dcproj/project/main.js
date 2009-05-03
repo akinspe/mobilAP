@@ -1,6 +1,7 @@
 var baseUrl = '';
 var js_script = baseUrl + 'js.php';
 var login_script = baseUrl + 'login.php';
+var isIE = navigator.userAgent.indexOf('MSIE') > -1;
 
 //init handler
 function load()
@@ -50,6 +51,12 @@ function load()
 }
 
 var mobilAP = {
+	NAV_HOME_LINK:'Welcome',
+	NAV_SESSIONS_LINK:'Sessions',    
+	NAV_DIRECTORY_LINK:'Directory',    
+	NAV_ANNOUCEMENTS_LINK:'Announcements',    
+	NAV_LINKS_LINK:'Links',    
+	NAV_DISCUSSION_LINK:'Discussion',    
 	SHOW_ATTENDEE_DIRECTORY: true,
 	SHOW_AD_LETTERS: false,
 	LOGGING: false,
@@ -441,7 +448,7 @@ var mobilAP = {
         if (!document.getElementById(element)) {
             return;
         }
-        mobilAP.loadURL(js_script + '?get=' + template, function(xhr) { mobilAP.processContent(xhr, element)});
+        mobilAP.loadURL(js_script + '?get=content&content=' + template, function(xhr) { mobilAP.processContent(xhr, element)});
     },
     processContent: function(xhr, element) {
         try {
@@ -637,18 +644,52 @@ var directoryController = {
     updateDetail: function()
     {
         document.getElementById('directory_detail_name')[mobilAP.textField] = this.detail_attendee.FirstName + ' ' + this.detail_attendee.LastName;
-        if (mobilAP.SHOW_AD_PHOTOS) {
+        if (mobilAP.SHOW_AD_PHOTOS && this.detail_attendee.image_url) {
 			document.getElementById('directory_detail_image').src = baseUrl + this.detail_attendee.image_url;
+			document.getElementById('directory_top_box').className = '';
+		} else {
+			document.getElementById('directory_top_box').className = 'noimage';
 		}
-        document.getElementById('directory_detail_organization')[mobilAP.textField] = this.detail_attendee.organization;
-        document.getElementById('directory_detail_email')[mobilAP.textField] = this.detail_attendee.email;
-        document.getElementById('directory_detail_email').onclick = function() {
-            window.location='mailto:' + directoryController.detail_attendee.email;
-        }
-        document.getElementById('directory_detail_title')[mobilAP.textField] = this.detail_attendee.title;
-        document.getElementById('directory_detail_dept')[mobilAP.textField] = this.detail_attendee.dept;
-        document.getElementById('directory_bio').innerHTML = this.detail_attendee.bio;
-        
+		
+		if (mobilAP.SHOW_AD_ORG) {
+	        document.getElementById('directory_detail_organization').style.display = 'block';
+	        document.getElementById('directory_detail_organization')[mobilAP.textField] = this.detail_attendee.organization;
+	    } else {
+	        document.getElementById('directory_detail_organization').style.display = 'none';
+		}
+		
+		if (mobilAP.SHOW_AD_EMAIL) {
+			document.getElementById('directory_detail_email')[mobilAP.textField] = this.detail_attendee.email;
+			document.getElementById('directory_detail_email').onclick = function() {
+				window.location='mailto:' + directoryController.detail_attendee.email;
+			}
+	        document.getElementById('directory_email_box').style.display = 'block';
+	    } else {
+	        document.getElementById('directory_email_box').style.display = 'none';
+	    }
+		
+		if (mobilAP.SHOW_AD_TITLE) {
+	        document.getElementById('directory_detail_title')[mobilAP.textField] = this.detail_attendee.title;
+	        document.getElementById('directory_detail_title').style.display = 'block';
+	    } else {
+	        document.getElementById('directory_detail_title').style.display = 'none';
+	    }
+	    
+	    
+		if (mobilAP.SHOW_AD_DEPT) {
+			document.getElementById('directory_detail_dept')[mobilAP.textField] = this.detail_attendee.dept;
+	        document.getElementById('directory_detail_dept').style.display = 'block';
+	    } else {
+	        document.getElementById('directory_detail_dept').style.display = 'none';
+	    }
+		
+		if (mobilAP.SHOW_AD_BIO) {
+			document.getElementById('directory_bio')[mobilAP.textField] = this.detail_attendee.bio;
+	        document.getElementById('directory_bio').style.display = 'block';
+	    } else {
+	        document.getElementById('directory_bio').style.display = 'none';
+	    }
+
     },
     
     search: function() {
@@ -716,8 +757,9 @@ var programSchedule = {
         var currentSessions = [];
         var day, daySchedule;
         var now = new Date();
+        day = mobilAP.getDay(now);
 
-        if (day = mobilAP.getDay(now)) {
+        if (day!==null) {
             daySchedule = mobilAP.getDaySchedule(day);
             for (var i=0; i<daySchedule.schedule.length; i++) {
 				if ( (daySchedule.schedule[i].session_id || daySchedule.schedule[i].session_group_id) && daySchedule.schedule[i].start_date.getTime()<=now.getTime() && daySchedule.schedule[i].end_date.getTime()>=now.getTime() ) {
@@ -727,11 +769,6 @@ var programSchedule = {
         }
       
         mobilAP.log("It is " + now + ". There are " + currentSessions.length + " session(s) currently running");
-        if (currentSessions.length>0) {
-            for (var i=0; i< currentSessions.length; i++) {
-                mobilAP.log(currentSessions[i].title);
-            }
-        }
         
         if (currentSessions.length != programSchedule.currentSessions.length) {
             changed = true;
@@ -924,13 +961,28 @@ var current_sessions = {
         templateElements.sessions_current_time[mobilAP.textField] = event_data.start_date.formatDate('h:i');     
 
         templateElements.sessions_current_title[mobilAP.textField] = event_data.session_id + ' ' + event_data.title;
-            
-        rowElement.onclick = function() {
-            //set the title before loading
-            session.setTitle(event_data.title);
-            session.loadSessionData(event_data.session_id);
-            mobilAP.showSessionDetail();
-        }
+        
+        if (event_data.session_id) {
+			templateElements.sessions_current_arrow.style.display = 'block';
+
+			rowElement.onclick = function() {
+				//set the title before loading
+				session.setTitle(event_data.title);
+				session.setTime(event_data.start_date, event_data.end_date);
+				session.setRoom(event_data.room);
+				session.loadSessionData(event_data.session_id);
+				mobilAP.showSessionDetail();
+			}
+		} else if (event_data.session_group_id) {
+			templateElements.sessions_current_arrow.style.display = 'block';
+			rowElement.onclick = function() {
+				session_group.setTitle(event_data.title);
+				session_group.loadSessionGroupData(event_data.session_group_id);
+				browserController.goForward('session_group', event_data.title);
+			}
+		} else {
+			templateElements.sessions_current_arrow.style.display = 'none';
+		}
 
         if (event_data.detail) {
             templateElements.sessions_current_detail[mobilAP.textField] = event_data.detail;
@@ -1160,7 +1212,7 @@ var session = {
             addClassName('session_discussion_button', 'button_disabled');
         }
 
-    	if (this.session_flags & session.SESSION_FLAGS_EVALUATION) {
+    	if ( (this.session_flags & session.SESSION_FLAGS_EVALUATION) && session_evaluation.evaluation_questions.length>0) {
             document.getElementById('session_rate_button').style.display = 'block';
         } else {
             document.getElementById('session_rate_button').style.display = 'none';
@@ -1473,6 +1525,7 @@ var session_evaluation = {
 		}
 	
 		CreateStackLayout('session_evaluation_stack', stack_ops);
+		session.refresh();
 		
 	},
                                	
@@ -1915,6 +1968,8 @@ function goCurrentSession()
 {
     if (programSchedule.currentSessions.length==1) {
     	if (programSchedule.currentSessions[0].session_id) {
+			session.setTime(programSchedule.currentSessions[0].start_date, programSchedule.currentSessions[0].end_date);
+			session.setRoom(programSchedule.currentSessions[0].room);
 			session.loadSessionData(programSchedule.currentSessions[0].session_id);
 			mobilAP.showSessionDetail();        
  		} else if (programSchedule.currentSessions[0].session_group_id) {
@@ -2036,17 +2091,26 @@ var browserController = {
         for (var i=0; i<this._sections.length; i++) {
         	switch (this._sections[i].tag)
         	{
+        		case 'welcome':
+        			this._sections[i].name = mobilAP.NAV_HOME_LINK;
+        			break;
+        		case 'sessions':
+        			this._sections[i].name = mobilAP.NAV_SESSIONS_LINK;
+        			break;
         		case 'current_session':
 					this._sections[i].home = programSchedule.currentSessions.length>0;
 					break;
 				case 'directory_letters':
+        			this._sections[i].name = mobilAP.NAV_DIRECTORY_LINK;
 					this._sections[i].home = mobilAP.SHOW_ATTENDEE_DIRECTORY && mobilAP.SHOW_AD_LETTERS;
 					break;
 				case 'directory':
+        			this._sections[i].name = mobilAP.NAV_DIRECTORY_LINK;
 					this._sections[i].home = mobilAP.SHOW_ATTENDEE_DIRECTORY && !mobilAP.SHOW_AD_LETTERS;
 					break;
 				case 'announcements':
-					var name = 'Announcements';
+        			document.getElementById('announcements_title')[mobilAP.textField] = mobilAP.NAV_ANNOUCEMENTS_LINK;
+					var name = mobilAP.NAV_ANNOUCEMENTS_LINK;
 					if (announcement_controller.new_announcements>0) {
 						name += ' (' + announcement_controller.new_announcements + ' new)';
 					}
@@ -2239,32 +2303,3 @@ var genericListController = {
 	}
 };
 
-
-
-// This object implements the dataSource methods for the list.
-var directory_letters = {
-	
-	// Sample data for the content of the list. 
-	// Your application may also fetch this data remotely via XMLHttpRequest.
-	_rowData: ["Item 1", "Item 2", "Item 3"],
-	
-	// The List calls this method to find out how many rows should be in the list.
-	numberOfRows: function() {
-		return this._rowData.length;
-	},
-	
-	// The List calls this method once for every row.
-	prepareRow: function(rowElement, rowIndex, templateElements) {
-		// templateElements contains references to all elements that have an id in the template row.
-		// Ex: set the value of an element with id="label".
-		if (templateElements.label) {
-			templateElements.label.innerText = this._rowData[rowIndex];
-		}
-
-		// Assign a click event handler for the row.
-		rowElement.onclick = function(event) {
-			// Do something interesting
-			alert("Row "+rowIndex);
-		};
-	}
-};
