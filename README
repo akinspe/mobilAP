@@ -1,4 +1,4 @@
-mobilAP Version 0.9.7
+mobilAP Version 0.9.8
 
 This version of the mobilAP conference edition includes two 
 components, a PHP based back-end and a HTML/Javascript based front end.
@@ -17,8 +17,19 @@ There are some configurations that have to be made:
 
 Session configuration and schedule is accomplished using the admin.php script. 
 
-RELEASE NOTES
+RELEASE NOTES FOR 0.9.8
 
+1. To combat against XSS attacks, most fields now will not permit any HTML styling. There are certain fields that may warrant simple styling. In future releases, certain HTML tags will be permitted.
+2. You can now make the site private. This will require attendees to login in order to view any content.
+3. You can require passwords for only admins and presenters. This makes it eaiser for your attendees, but protects sensitive content.
+4. Link labels can be customized. this includes labels on the main screen on the iPhone version.
+5. Many minor enhancements and fixes
+
+MIGRATION FROM PREVIOUS VERSIONS
+There are no new tables or changed tables since 0.9.7. You should be able to drop the code into an existing setup without issue. You will need to make apporpriate config.php changes.
+
+
+GENERAL NOTES
 1. Some basic style has been added. There is plenty of room for CSS customization
 2. the js.php script is the main controller for AJAX communication between the DB and the front end.
 3. The use of the APC cache is strongly encouraged. There is now some simple code for caching often used data.
