@@ -172,7 +172,9 @@ if (isset($_REQUEST['get'])) {
 				if (!mobilAP_Error::isError($data)) {
 					$data = $session->get_chat();
 				}
-			} 
+			} else {
+				$data = mobilAP_Error::throwError("Invalid session_id $session_id");
+			}
 			break;
 			
 		case 'question':
@@ -184,7 +186,9 @@ if (isset($_REQUEST['get'])) {
 				if (!mobilAP_Error::isError($data)) {
 					$data = $question;
 				}
-			} 
+			} else {
+				$data = mobilAP_Error::throwError("Invalid question $question_id");
+			}
 			
 			break;
 		case 'link':
@@ -192,9 +196,13 @@ if (isset($_REQUEST['get'])) {
 			if ($session = mobilAP_session::getSessionByID($session_id)) {
 				$link_url = isset($_REQUEST['link_url']) ? $_REQUEST['link_url'] : '';
 				$link_text = isset($_REQUEST['link_text']) ? $_REQUEST['link_text'] : '';
-				$result = $session->addLink($link_url, $link_text, $user->getUserToken());
-				$data = $session->getLinks();
-			} 
+				$data = $session->addLink($link_url, $link_text, $user->getUserToken());
+				if (!mobilAP_Error::isError($result)) { 
+					$data = $session->getLinks();
+				}
+			} else {
+				$data = mobilAP_Error::throwError("Invalid session_id $session_id");
+			}
 			
 			break;
 
@@ -203,7 +211,9 @@ if (isset($_REQUEST['get'])) {
 			if ($session = mobilAP_session::getSessionByID($session_id)) {
 				$responses = isset($_REQUEST['responses']) ? $_REQUEST['responses'] : array();
 				$data = $session->addEvaluation($user->getUserToken(), $responses);
-			} 
+			} else {
+				$data = mobilAP_Error::throwError("Invalid session_id $session_id");
+			}
 			
 			break;
 		
