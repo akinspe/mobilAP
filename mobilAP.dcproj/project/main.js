@@ -993,6 +993,24 @@ var current_sessions = {
         }
             
         templateElements.sessions_current_room[mobilAP.textField] = event_data.room ? event_data.room : '';
+	},
+
+	goCurrentSession: function()
+	{
+		if (programSchedule.currentSessions.length==1) {
+			if (programSchedule.currentSessions[0].session_id) {
+				session.setTime(programSchedule.currentSessions[0].start_date, programSchedule.currentSessions[0].end_date);
+				session.setRoom(programSchedule.currentSessions[0].room);
+				session.loadSessionData(programSchedule.currentSessions[0].session_id);
+				mobilAP.showSessionDetail();        
+			} else if (programSchedule.currentSessions[0].session_group_id) {
+				session_group.setTitle(programSchedule.currentSessions[0].title);
+				session_group.loadSessionGroupData(programSchedule.currentSessions[0].session_group_id);
+				browserController.goForward('session_group', programSchedule.currentSessions[0].title);
+			}
+	   } else {
+			browserController.goForward('sessions_current', 'Current Sessions');
+		}
 	}
 };
 
@@ -1412,6 +1430,10 @@ var session_question_answers = {
         templateElements.question_response_text_label[mobilAP.textField] = session_question.responses[rowIndex].response_text;
         templateElements.question_response_count[mobilAP.textField] = session_question.answers[session_question.responses[rowIndex].response_value];
 
+	},
+
+	back_to_questions:function() {
+		document.getElementById('browser').object.goBack();
 	}
 };
 
@@ -1964,24 +1986,6 @@ var welcomeController = {
     }
 }
 
-function goCurrentSession()
-{
-    if (programSchedule.currentSessions.length==1) {
-    	if (programSchedule.currentSessions[0].session_id) {
-			session.setTime(programSchedule.currentSessions[0].start_date, programSchedule.currentSessions[0].end_date);
-			session.setRoom(programSchedule.currentSessions[0].room);
-			session.loadSessionData(programSchedule.currentSessions[0].session_id);
-			mobilAP.showSessionDetail();        
- 		} else if (programSchedule.currentSessions[0].session_group_id) {
-			session_group.setTitle(programSchedule.currentSessions[0].title);
-			session_group.loadSessionGroupData(programSchedule.currentSessions[0].session_group_id);
-			browserController.goForward('session_group', programSchedule.currentSessions[0].title);
-		}
-   } else {
-        browserController.goForward('sessions_current', 'Current Sessions');
-    }
-}
-
 var homeController =
 {
     browserHandler: function() {
@@ -2068,7 +2072,7 @@ var browserController = {
         { tag:'welcome', name:'Welcome', scroll:true, home:true, content_private: true, controller: welcomeController},
         { tag:'sessions', name:'Sessions', scroll:true, home:true, content_private: true,controller: session},
         { tag:'session_group', name:'Session Group', scroll:true, home:false, content_private: true,controller: session_group},
-        { tag:'current_session', name:'Current Session', scroll: true, home:false, content_private: true,nextController: goCurrentSession},
+        { tag:'current_session', name:'Current Session', scroll: true, home:false, content_private: true,nextController: current_sessions.goCurrentSession},
         { tag:'directory', name: 'Attendee Directory', scroll:false, home: !mobilAP.SHOW_AD_LETTERS, content_private: true, controller: directoryController},
         { tag:'directory_letters', name: 'Attendee Directory', scroll:true, home: mobilAP.SHOW_AD_LETTERS, content_private: true, controller: directoryController},
         { tag:'announcements', name: 'Announcements', scroll:true, home:true, content_private: true,controller: announcement_controller},
@@ -2209,12 +2213,6 @@ var browserController = {
     }
 };
 
-
-function back_to_questions(event)
-{
-    document.getElementById('browser').object.goBack();
-}
-    
 var genericListController = {
     type: 'url',
     list_items: [],

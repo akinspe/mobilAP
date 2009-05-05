@@ -12,7 +12,7 @@ var dashcodePartSpecs = {
     "announcements_list": { "creationFunction": "CreateList", "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "announcement_controller", "labelElementId": "announcement_list_title", "listStyle": "List.EDGE_TO_EDGE", "sampleRows": 3, "useDataSource": true },
     "announcements_title": { "creationFunction": "CreateText", "text": "Announcements" },
     "back_button": { "creationFunction": "CreatePushButton", "initialHeight": 30, "initialWidth": 60, "leftImageWidth": 16, "rightImageWidth": 5, "text": "Back" },
-    "back_to_questions": { "creationFunction": "CreatePushButton", "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 15, "onclick": "back_to_questions", "rightImageWidth": 15, "text": "Back to Questions" },
+    "back_to_questions": { "creationFunction": "CreatePushButton", "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 15, "onclick": "session_question_answers.back_to_questions", "rightImageWidth": 15, "text": "Back to Questions" },
     "browser": { "creationFunction": "CreateBrowser" },
     "demo_text": { "creationFunction": "CreateText" },
     "detail_name": { "creationFunction": "CreateText", "text": "Detail Name" },
