@@ -501,7 +501,7 @@ switch ($action)
 				$question_list_text = isset($_POST['question_list_text']) ? $_POST['question_list_text'] : '';
 				$question_minchoices = isset($_POST['question_minchoices']) ? $_POST['question_minchoices'] : 0;
 				$question_maxchoices = isset($_POST['question_maxchoices']) ? $_POST['question_maxchoices'] : 0;
-				$question_active = isset($_POST['question_active']) ? $_POST['question_active'] : DB_FALSE;
+				$question_active = isset($_POST['question_active']) ? $_POST['question_active'] : 0;
 				$chart_type = isset($_POST['chart_type']) ? $_POST['chart_type'] : $question->chart_type;
 				$result = $session->addQuestion($question_text);
 				if (mobilAP_Error::isError($result)) {
@@ -547,7 +547,7 @@ switch ($action)
 					$question_list_text = isset($_POST['question_list_text']) ? $_POST['question_list_text'] : '';
 					$question_minchoices = isset($_POST['question_minchoices']) ? $_POST['question_minchoices'] : 0;
 					$question_maxchoices = isset($_POST['question_maxchoices']) ? $_POST['question_maxchoices'] : 0;
-					$question_active = isset($_POST['question_active']) ? $_POST['question_active'] : DB_FALSE;
+					$question_active = isset($_POST['question_active']) ? $_POST['question_active'] : 0;
 					$chart_type = isset($_POST['chart_type']) ? $_POST['chart_type'] : $question->chart_type;
 					
 					$question->setQuestion($question_text);
