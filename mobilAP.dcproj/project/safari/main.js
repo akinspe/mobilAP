@@ -33,7 +33,7 @@ function load()
     
     mobilAP.welcomeController = {
         viewDidLoad: function() {
-            MobilAP.loadContent('welcome', base_url + 'welcome.php');
+            MobilAP.loadContent('welcome', base_url + 'data/welcome.php');
         }
     }
     mobilAP.addViewController('welcome', mobilAP.welcomeController);
