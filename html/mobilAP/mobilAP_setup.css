@@ -1,0 +1,30 @@
+#db_host_info {
+    display: none;
+}
+
+.mobilAP_setupbutton {
+    width: 85px;
+    height: 25px;
+    background-image: url(../safari/Images/button.png);
+    background-repeat: no-repeat;
+    text-align: center;
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0) 0px -1px 0px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    line-height: 25px;
+    float: left;
+    margin-left: 9px;
+}
+
+#setupButtons {
+    position: relative;
+    margin-top: 9px;
+    height: 25px;
+}

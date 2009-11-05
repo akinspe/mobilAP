@@ -1,0 +1,569 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>mobilAP</title>
+    <!--[if IE]><script>document.write('<base href="' + location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]*$/, '/safari/') + '"/>')</script><![endif]-->
+    <base href="safari/">
+    <script id="DC_baseScript">if(navigator.userAgent.indexOf('AppleWebKit/') == -1) document.write('<base href="' + location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]*$/, '/safari/') + '"/>')</script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" type="text/css" href="../Parts/Transitions.css">
+    <script type="text/javascript" src="../Parts/redirector.js"></script>
+    <script type="text/javascript" src="Parts/parts.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../mobilAP/objectPrototypes.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../mobilAP/mobilAP.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../mobilaP/md5.js" charset="utf-8"></script>
+    <script type="text/javascript" src="main.js" charset="utf-8"></script>
+</head>
+<body onload="load();">
+    <div apple-part="com.apple.Dashcode.part.splitlayout" id="splitLayout">
+        <div id="masterView" apple-part-locked="true">
+            <div id="mobilAP_header">
+                <div id="mobilAP_heading" class="homeTitle_template">mobilAP</div>
+            </div>
+            <ul apple-part="com.apple.Dashcode.part.widgetList" id="homeList" class="">
+                <li id="homeRow" apple-template="true" class="homeRow_template first" style="" onclick="mobilAP.homeSelected(event)">
+                    <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children homeTitle_template" apple-text-overflow="ellipsis" id="homeTitle"></div>
+                </li>
+            </ul>
+        </div>
+        <div id="splitter"></div>
+        <div id="detailView" apple-part-locked="true">
+            <div id="detailStack" apple-part="com.apple.Dashcode.part.StackLayout"><div id="mobilAP" apple-part-locked="true"></div><div id="welcome" apple-part-locked="true"><div id="wecomeHeader" class="mobilAP_header">Welcome</div>
+                    <div id="welcomeText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                </div><div id="directory" apple-part-locked="true">
+                    <div id="directoryHeader" class="mobilAP_header">Directory</div>
+                    <div id="directoryAdminButtons" class="mobilAP_admin">
+                        <div id="directoryAdminAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    </div>
+                    <div id="directoryProfilePanel">
+                        <div id="directoryProfileImageContainer" apple-part="com.apple.Dashcode.part.imageLayout" apple-group="image">
+                            <img id="directoryProfileImage" class="apple-hidden" apple-group="image" src="Images/profile_placeholder.png">
+                        </div>
+                        <div id="directoryProfileFirstNameEdit" class="profileEditField">first
+                            <input id="directoryProfileFirstNameField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                        </div>
+                        <div id="directoryProfileFirstName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children profileEditLabel" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        <div id="directoryProfileLastNameEdit" class="profileEditField">last
+                            <input id="directoryProfileLastNameField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                        </div>
+                        <div id="directoryProfileLastName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children profileEditLabel" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        <div id="directoryProfileOrganizationEdit" class="profileEditField">org
+                            <input id="directoryProfileOrganizationField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                        </div>
+                        <div id="directoryProfileOrganization" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children profileEditLabel" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;"></div>
+                        <div id="directoryProfileEmailEdit" class="profileEditField">email
+                            <input id="directoryProfileEmailField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                        </div>
+                        <div id="directoryProfileEmail" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children profileEditLabel" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;" onclick="mailto(event)"></div>
+                        <div id="directoryProfileAdminSwitchEdit" class="profileEditField">admin
+                            <div id="directoryProfileAdminSwitch"></div></div>
+                        <div id="directoryProfileResetPasswordButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children profileEditField profileUpdateField" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="directoryProfileAdminPanelButtons" class="mobilAP_admin">
+                            <div id="directoryProfileAdminEditButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            <div id="directoryProfileAdminCancelButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            <div id="directoryProfileAdminDeleteButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children profileUpdateField" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div>
+                    </div>
+                    <div id="directoryListPanel">
+                        <ul id="directoryList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
+                            <li id="directoryRow" apple-template="true" class="directoryRow_template first" style="">
+                                <div id="directoryName" class="directoryName_template">
+                                    <div id="directoryFirstName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children directoryFirstName_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                    <div id="directoryLastName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children directoryLastName_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                </div>
+                                <div id="directoryOrganization" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children directoryOrganization_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div><div id="schedule" apple-part-locked="true">
+                    <div id="scheduleHeader" class="mobilAP_header">Schedule</div>
+                    <ul id="scheduleTypeList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
+                        <li id="scheduleTypeListTemplate" apple-template="true" class="scheduleTypeListTemplate_template first" style="">
+                            <div id="scheduleTypeListLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children scheduleTypeListLabel_template" apple-text-overflow="ellipsis"></div>
+                        </li>
+                    </ul>
+                    <div id="scheduleButtons" class="mobilAP_admin">
+                        <div id="scheduleEditButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="scheduleAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    </div>
+                    <table id="scheduleCalendar">
+                        <thead>
+                            <tr>
+                                <td colspan="7"><div id="schedule_calendar_header"><div id="schedule_calendar_prev"></div><div id="schedule_calendar_month">Month</div><div id="schedule_calendar_next"></div></div></td>
+                            </tr>
+                            <tr id="schedule_calendar_days">
+                                <td>Sun</td>
+                                <td>Mon</td>
+                                <td>Tue</td>
+                                <td>Wed</td>
+                                <td>Thu</td>
+                                <td>Fri</td>
+                                <td>Sat</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="schedule_calendar_week_1">
+                                <td id="schedule_calendar_0">0</td>
+                                <td id="schedule_calendar_1">1</td>
+                                <td id="schedule_calendar_2">2</td>
+                                <td id="schedule_calendar_3">3</td>
+                                <td id="schedule_calendar_4">4</td>
+                                <td id="schedule_calendar_5">5</td>
+                                <td id="schedule_calendar_6">6</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_2">
+                                <td id="schedule_calendar_7">7</td>
+                                <td id="schedule_calendar_8">8</td>
+                                <td id="schedule_calendar_9">9</td>
+                                <td id="schedule_calendar_10">10</td>
+                                <td id="schedule_calendar_11">11</td>
+                                <td id="schedule_calendar_12">12</td>
+                                <td id="schedule_calendar_13">13</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_3">
+                                <td id="schedule_calendar_14">14</td>
+                                <td id="schedule_calendar_15">15</td>
+                                <td id="schedule_calendar_16">16</td>
+                                <td id="schedule_calendar_17">17</td>
+                                <td id="schedule_calendar_18">18</td>
+                                <td id="schedule_calendar_19">19</td>
+                                <td id="schedule_calendar_20">20</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_4">
+                                <td id="schedule_calendar_21">21</td>
+                                <td id="schedule_calendar_22">22</td>
+                                <td id="schedule_calendar_23">23</td>
+                                <td id="schedule_calendar_24">24</td>
+                                <td id="schedule_calendar_25">25</td>
+                                <td id="schedule_calendar_26">26</td>
+                                <td id="schedule_calendar_27">27</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_5">
+                                <td id="schedule_calendar_28">28</td>
+                                <td id="schedule_calendar_29">29</td>
+                                <td id="schedule_calendar_30">30</td>
+                                <td id="schedule_calendar_31">31</td>
+                                <td id="schedule_calendar_32">32</td>
+                                <td id="schedule_calendar_33">33</td>
+                                <td id="schedule_calendar_34">34</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_6">
+                                <td id="schedule_calendar_35">35</td>
+                                <td id="schedule_calendar_36">36</td>
+                                <td id="schedule_calendar_37">37</td>
+                                <td id="schedule_calendar_38">38</td>
+                                <td id="schedule_calendar_39">39</td>
+                                <td id="schedule_calendar_40">40</td>
+                                <td id="schedule_calendar_41">41</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="scheduleListDate" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <ul id="scheduleList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
+                        <li id="scheduleListRow" apple-template="true" class="scheduleListRow_template first" style="">
+                            <div id="scheduleListEditButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children scheduleListEditButton_template edit_button mobilAP_admin" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            <div id="scheduleListStart" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children scheduleListStart_template scheduleStart" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-width-dependent: true;"></div>
+                            <div id="scheduleListTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children scheduleListTitle_template scheduleTitle" apple-text-overflow="ellipsis"></div>
+                            <div id="scheduleListDetail" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children scheduleListDetail_template scheduleDetail" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        </li>
+                    </ul>
+                </div><div id="scheduleAdmin" apple-part-locked="true" class="mobilAP_admin">
+                    <div id="scheduleAdminHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_header" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="scheduleAdminDateLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="scheduleAdminDateContainer" class="mobilAP_field"></div>
+                    <div id="scheduleAdminStartTimeLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="scheduleAdminStartTimeContainer" class="mobilAP_field"></div>
+                    <div id="scheduleAdminEndTimeLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="scheduleAdminEndTimeContainer" class="mobilAP_field"></div>
+                    <div id="sessionsAdminSessionsLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <ul id="scheduleAdminSessions" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
+                        <li id="scheduleAdminSessionsRow" apple-template="true" class="scheduleAdminSessionsRow_template first" style="">
+                            <div id="scheduleAdminSessionsTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children scheduleAdminSessionsTitle_template" apple-text-overflow="ellipsis"></div>
+                        </li>
+                    </ul>
+                    <div id="scheduleAdminAddSessionButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    <div id="scheduleAdminDetailLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="scheduleAdminDetailField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="scheduleAdminRoomLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="scheduleAdminRoomField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="scheduleAdminButtons" class="mobilAP_button_container">
+                        <div id="scheduleAdminSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="scheduleAdminDeleteButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="scheduleAdminCancelButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    </div>
+                </div><div id="newSessionAdmin" apple-part-locked="true" class="mobilAP_admin">
+                    <div id="newSessionAdminHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_header" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="newSessionAdminTitleLabel" class="mobilAP_label">Title</div>
+                    <input id="newSessionAdminTitleField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="newSessionAdminDescriptionLabel" class="mobilAP_label">Description</div>
+                    <textarea id="newSessionAdminDescriptionField" apple-part="com.apple.Dashcode.part.textarea" class="mobilAP_adminfield"></textarea>
+                    <fieldset id="newSessionAdminOptions">
+                        <legend id="newSessionAdminOptionsLegend">Options</legend>
+                        <div id="newSessionAdminOptionsLinksCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_links_checkbox1" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="newSessionAdminOptionsLinks" value="1" apple-group="session_admin_options_links_checkbox1">
+                            <div id="newSessionAdminOptionsLinksLabel">Show Links</div>
+                        </div>
+                        <div id="newSessionAdminOptionsUserLinksCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_user_links_checkbox1" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="newSessionAdminOptionsUserLinks" apple-group="session_admin_options_user_links_checkbox1" value="2">
+                            <div id="newSessionAdminOptionsUserLinksLabel">Allow non-presenters to post links</div>
+                        </div>
+                        <div id="newSessionAdminOptionsDiscussionCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_discussion_checkbox1" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="newSessionAdminOptionsDiscussion" apple-group="session_admin_options_discussion_checkbox1" value="4">
+                            <div id="newSessionAdminOptionsDiscussionLabel">Enable Discussion</div>
+                        </div>
+                        <div id="newSessionAdminOptionsEvaluationCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_evaluation_checkbox1" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="newSessionAdminOptionsEvaluation" apple-group="session_admin_options_evaluation_checkbox1" value="8">
+                            <div id="newSessionAdminOptionsEvaluationLabel">Enable Evaluation</div>
+                        </div>
+                    </fieldset>
+                    <div id="newSessionAdminButtons">
+                        <div id="newSessionAdminSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="newSessionAdminCancelButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    </div>
+                </div><div id="sessionQuestionAdmin" apple-part-locked="true">
+                    <div id="sessionQuestionAdminHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_header" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="sessionQuestionAdminQuestionTextLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="sessionQuestionAdminQuestionTextField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="sessionQuestionAdminQuestionMinChoicesLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <select id="sessionQuestionAdminQuestionMinChoices" apple-part="com.apple.Dashcode.part.backpopupbutton" apple-group="popup" class="mobilAP_adminselect">
+                        <option class="apple-hidden">0</option>
+                        <option class="apple-hidden">1</option>
+                        <option class="apple-hidden">2</option>
+                        <option class="apple-hidden">3</option>
+                        <option class="apple-hidden">4</option>
+                        <option class="apple-hidden">5</option>
+                        <option class="apple-hidden">6</option>
+                        <option class="apple-hidden">7</option>
+                        <option class="apple-hidden">8</option>
+                        <option class="apple-hidden">9</option>
+                        <option class="apple-hidden">10</option>
+                    </select>
+                    <div id="sessionQuestionAdminQuestionMaxChoicesLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <select id="sessionQuestionAdminQuestionMaxChoices" apple-part="com.apple.Dashcode.part.backpopupbutton" apple-group="popup1" class="mobilAP_adminselect" name="">
+                        <option class="apple-hidden" selected="selected">1</option>
+                        <option class="apple-hidden">2</option>
+                        <option class="apple-hidden">3</option>
+                        <option class="apple-hidden">4</option>
+                        <option class="apple-hidden">5</option>
+                        <option class="apple-hidden">6</option>
+                        <option class="apple-hidden">7</option>
+                        <option class="apple-hidden">8</option>
+                        <option class="apple-hidden">9</option>
+                        <option class="apple-hidden">10</option>
+                    </select>
+                    <fieldset id="sessionQuestionAdminResponses">
+                        <legend id="sessionQuestionAdminResponsesLegend">Responses</legend>
+                        <ul id="sessionQuestionAdminResponsesList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                            <li id="sessionQuestionAdminResponsesRow" apple-template="true" class="sessionQuestionAdminResponsesRow_template first" style="">
+                                <div id="sessionQuestionAdminResponsesRemoveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children sessionQuestionAdminResponsesRemoveButton_template button1_template" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                <div id="sessionQuestionAdminResponseTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionQuestionAdminResponseTitle_template" apple-text-overflow="ellipsis"></div>
+                            </li>
+                        </ul>
+                        <div id="sessionQuestionAdminResponsesAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <input id="sessionQuestionAdminResponsesAddField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                    </fieldset>
+                    <div id="sessionQuestionAdminButtons">
+                        <div id="sessionQuestionAdminSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="sessionQuestionAdminCancelButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="sessionQuestionAdminDeleteButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    </div>
+                </div><div id="session" apple-part-locked="true">
+                    <div id="sessionHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_header" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <ul id="sessionTabbar" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                        <li id="sessionTabbarRow" apple-template="true" class="sessionTabbarRow_template first" style="">
+                            <div id="sessionTabbarTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionTabbarTitle_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        </li>
+                    </ul>
+                    <div id="sessionStack" apple-part="com.apple.Dashcode.part.StackLayout"><div id="session_info" apple-part-locked="true">
+                            <div id="sessionInfoSchedule">
+                                <div id="sessionInfoDate" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div id="sessionInfoStart" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div id="sessionInfoTimeDash" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div id="sessionInfoEnd" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div id="sessionInfoRoom" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            </div>
+                            <div id="sessionInfoDescription" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <div id="sessionInfoPresenters">
+                                <div id="sessionInfoPresentersLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <ul id="sessionInfoPresentersList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                    <li id="sessionInfoPresentersRow" apple-template="true" class="sessionInfoPresentersRow_template first" style="">
+                                        <div id="sessionInfoPresentersName" class="sessionInfoPresentersName_template">
+                                            <div id="sessionInfoPresentersFirstName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionInfoPresentersFirstName_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                            <div id="sessionInfoPresentersLastName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionInfoPresentersLastName_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div><div id="session_evaluation" apple-part-locked="true">
+                            <div id="sessionEvaluationQuestionText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <ul id="sessionEvaluationQuestionResponses" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                <li id="evaluationQuestionResponsesRow" apple-template="true" class="evaluationQuestionResponsesRow_template first" style="">
+                                    <div id="evaluationQuestionResponsesText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children evaluationQuestionResponsesText_template" apple-text-overflow="ellipsis"></div>
+                                </li>
+                            </ul>
+                            <textarea id="sessionEvaluationQuestionTextResponse" apple-part="com.apple.Dashcode.part.textarea"></textarea>
+                            <div id="sessionEvaluationQuestionButtons">
+                                <div id="sessionEvaluationQuestionPreviousButton" apple-part="com.apple.Dashcode.part.lozengeleftpushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 7; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 15,0,15,0; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                <div id="sessionEvaluationQuestionNextButton" apple-part="com.apple.Dashcode.part.lozengepushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 8; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 0,15,0,15; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                <div id="sessionEvaluationQuestionFinishButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            </div>
+                        </div><div id="session_evaluation_thanks" apple-part-locked="true">
+                            <div id="sessionEvaluationThanksText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        </div><div id="session_links" apple-part-locked="true">
+                            <div id="sessionLinksAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            <ul id="sessionLinksList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
+                                <li id="sessionLinksListRow" apple-template="true" class="sessionLinksListRow_template first" style="">
+                                    <div id="sessionLinksListDeleteButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children sessionLinksListDeleteButton_template" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                    <div id="sessionLinksListTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionLinksListTitle_template" apple-text-overflow="ellipsis"></div>
+                                    <div id="sessionLinksListURL" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionLinksListURL_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                </li>
+                            </ul>
+                            <div id="sessionLinksNotice" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        </div><div id="session_links_add" apple-part-locked="true">
+                            <div id="sessionLinksAddURLLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <input id="sessionLinksAddURL" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                            <div id="sessionLinksAddTitleLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <input id="sessionLinksAddTitle" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                            <div id="sessionLinksAddSubmitButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div><div id="session_questions" apple-part-locked="true">
+                            <div id="sessionQuestionsAdminButtons" class="mobilAP_admin">
+                                <div id="sessionQuestionsEditButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                <div id="sessionQuestionsAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            </div>
+                            <ul id="sessionQuestionsList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                <li id="sessionQuestionsListRow" apple-template="true" class="sessionQuestionsListRow_template first" style="">
+                                    <div id="sessionQuestionsListEditButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children sessionQuestionsListEditButton_template edit_button" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                    <div id="sessionQuestionsListQuestionText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionQuestionsListQuestionText_template" apple-text-overflow="ellipsis"></div>
+                                </li>
+                            </ul>
+                            <div id="sessionQuestionsNotice" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        </div><div id="session_question" apple-part-locked="true">
+                            <div id="sessionQuestionQuestionText" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <div id="sessionQuestionStack" apple-part="com.apple.Dashcode.part.StackLayout"><div id="question_ask" apple-part-locked="true">
+                                    <div id="sessionQuestionAskSelectMessage" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                    <ul id="sessionQuestionAskResponsesList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                        <li id="sessionQuestionAskQuestionResponsesRow" apple-template="true" class="sessionQuestionAskQuestionResponsesRow_template first" style="">
+                                            <div id="sessionQuestionAskQuestionResponseText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionQuestionAskQuestionResponseText_template" apple-text-overflow="ellipsis"></div>
+                                        </li>
+                                    </ul>
+                                    <div id="sessionQuestionAskButtons">
+                                        <div id="sessionQuestionAskSubmitButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                        <div id="sessionQuestionAskViewResultsButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                    </div>
+                                </div><div id="question_results" apple-part-locked="true">
+                                    <div id="sessionQuestionResultsChart"></div>
+                                    <ul id="sessionQuestionResultsList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                        <li id="sessionQuestionResultsListRow" apple-template="true" class="sessionQuestionResultsListRow_template first" style="">
+                                            <div id="sessionQuestionResultsAnswerText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionQuestionResultsAnswerText_template" apple-text-overflow="ellipsis"></div>
+                                            <div id="sessionQuestionResultsAnswerCount" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionQuestionResultsAnswerCount_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="sessionQuestionAnswersClearButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children mobilAP_sessionadmin" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div><div id="session_discussion" apple-part-locked="true">
+                            <ul id="sessionDiscussionList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                <li id="sessionDiscussionListRow" apple-template="true" class="sessionDiscussionListRow_template first" style="">
+                                    <div id="sessionDiscussionListTime" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionDiscussionListTime_template discussion_time1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                                    <div id="sessionDiscussionListUser" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionDiscussionListUser_template discussion_user1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                                    <div id="sessionDiscussionListText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionDiscussionListText_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                </li>
+                            </ul>
+                            <textarea id="sessionDiscussionTextField" apple-part="com.apple.Dashcode.part.textarea"></textarea>
+                            <div id="sessionDiscussionPostButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            <div id="sessionDiscussionClearButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children mobilAP_sessionadmin" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div><div id="session_admin" apple-part-locked="true"><div id="sessionAdminTitleLabel" class="mobilAP_label">Title</div>
+                            <input id="sessionAdminTitle" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                            <div id="sessionAdminDescriptionLabel" class="mobilAP_label">Description</div>
+                            <textarea id="sessionAdminDescription" apple-part="com.apple.Dashcode.part.textarea" class="mobilAP_adminfield" name=""></textarea>
+                            <fieldset id="sessionAdminOptions">
+                                <legend id="sessionAdminOptionsLegend">Options</legend>
+                                <div id="sessionAdminOptionsLinksCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_links_checkbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="sessionAdminOptionsLinks" value="1" apple-group="session_admin_options_links_checkbox">
+                                    <div id="sessionAdminOptionsLinksCheckboxLabel">Show Links</div>
+                                </div>
+                                <div id="sessionAdminOptionsUserLinksCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_user_links_checkbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="sessionAdminOptionsUserLinks" apple-group="session_admin_options_user_links_checkbox" value="2">
+                                    <div id="sessionAdminOptionsUserLinksLabel">Allow non-presenters to post links</div>
+                                </div>
+                                <div id="sessionAdminOptionsDiscussionCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_discussion_checkbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="sessionAdminOptionsDiscussion" apple-group="session_admin_options_discussion_checkbox" value="4">
+                                    <div id="sessionAdminOptionsDiscussionLabel">Enable Discussion</div>
+                                </div>
+                                <div id="sessionAdminOptionsEvaluationCheckbox" apple-part="com.apple.Dashcode.part.checkboxbutton" apple-group="session_admin_options_evaluation_checkbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" apple-part="com.apple.Dashcode.part.input" id="sessionAdminOptionsEvaluation" apple-group="session_admin_options_evaluation_checkbox" value="8">
+                                    <div id="sessionAdminOptionsEvaluationLabel">Enable Evaluation</div>
+                                </div>
+                            </fieldset>
+                            <div id="sessionAdminPresenters" class="mobilAP_admin">
+                                <div id="sessionAdminPresentersLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <fieldset id="sessionAdminPresentersAdd">
+                                    <legend id="sessionAdminPresentersAddLegend" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;">Add presenter (user must already exist)</legend>
+                                    <input id="sessionAdminPresentersAddField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                                    <ul id="sessionAdminPresentersAddList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                        <li id="sessionAdminPresentersAddRow" apple-template="true" class="sessionAdminPresentersAddRow_template first" style="">
+                                            <div id="sessionAdminPresentersAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children sessionAdminPresentersAddButton_template button1_template" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                            <div id="sessionAdminPresentersAddName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionAdminPresentersAddName_template" apple-text-overflow="ellipsis"></div>
+                                        </li>
+                                    </ul>
+                                </fieldset>
+                                <ul id="sessionAdminPresentersList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                                    <li id="sessionAdminPresentersRow" apple-template="true" class="sessionAdminPresentersRow_template first" style="">
+                                        <div id="sessionAdminPresentersRemoveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children sessionAdminPresentersRemoveButton_template button1_template" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                        <div id="sessionAdminPresentersName" class="sessionAdminPresentersName_template">
+                                            <div id="sessionAdminPresentersFirstName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionAdminPresentersFirstName_template sessionAdminPresentersFirstName1_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                            <div id="sessionAdminPresentersLastName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionAdminPresentersLastName_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                            <div id="sessionAdminPresentersEmail" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children sessionAdminPresentersEmail_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="sessionAdminSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div></div>
+                </div><div id="admin" apple-part-locked="true">
+                    <div id="adminHeader" class="mobilAP_header">Site Administration</div>
+                    <ul id="adminTabbar" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                        <li id="adminTabbarRow" apple-template="true" class="adminTabbarRow_template first" style="">
+                            <div id="adminTabTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children adminTabTitle_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        </li>
+                    </ul>
+                    <div id="adminTabs" apple-part="com.apple.Dashcode.part.StackLayout"><div id="adminSettings" apple-part-locked="true">
+                            <div id="adminSettingsHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_subheader" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <div id="configSITE_TITLE_Label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <input id="configSITE_TITLE" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                            <fieldset id="adminSettingsUsers">
+                                <legend id="adminSettingsUsersLegend">Users and Passwords</legend>
+                                <div id="configCONTENT_PRIVATE_Label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div class="mobilAP_explanation" id="configCONTENT_PRIVATE_Explanation">You can make all the content on the site private and require users to login in order to view the site</div>
+                                <div id="configCONTENT_PRIVATE" class="mobilAP_switch"></div>
+                                <div id="configUSE_PASSWORDS_Label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div class="mobilAP_explanation" id="configUSE_PASSWORDS_Explanation">You can require attendees to enter a password when logging in. You assign passwords either at import or by editing the user in the attendee administration.</div>
+                                <div id="configUSE_PASSWORDS" class="mobilAP_switch"></div>
+                                <div id="configUSE_ADMIN_PASSWORDS_Label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div class="mobilAP_explanation" id="configUSE_ADMIN_PASSWORDS_Explanation">You can require admins to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</div>
+                                <div id="configUSE_ADMIN_PASSWORDS" class="mobilAP_switch"></div>
+                                <div id="configUSE_PRESENTER_PASSWORDS_Label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div class="mobilAP_explanation" id="configUSE_PRESENTER_PASSWORDS_Explanation">You can require presenters to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</div>
+                                <div id="configUSE_PRESENTER_PASSWORDS" class="mobilAP_switch"></div>
+                                <div id="configALLOW_SELF_CREATED_USERS_Label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div class="mobilAP_explanation" id="configALLOW_SELF_CREATED_USERS_Explanation">You can allow anyone to create an account in the system by supplying their email address. If off, you must administer all users before they can login</div>
+                                <div id="configALLOW_SELF_CREATED_USERS" class="mobilAP_switch"></div>
+                            </fieldset>
+                            <fieldset id="adminSettingsSchedule">
+                                <legend id="adminSettingsScheduleLegend">Schedule and Sessions</legend>
+                                <div id="configSINGLE_SESSION_MODE_Label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div class="mobilAP_explanation" id="configSINGLE_SESSION_MODE_Explanation">For simpler events where there is only 1 session, you can turn off the schedule</div>
+                                <div id="configSINGLE_SESSION_MODE" class="mobilAP_switch"></div>
+                            </fieldset>
+                            <div id="adminSettingsSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div><div id="adminEvaluationQuestions" apple-part-locked="true">
+                            <div id="adminEvaluationQuestionsHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_subheader" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <div id="adminEvaluationQuestionsAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            <ul id="adminEvaluationQuestionsList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
+                                <li id="adminEvaluationQuestionsListRow" apple-template="true" class="adminEvaluationQuestionsListRow_template first" style="">
+                                    <div id="adminEvaluationQuestionsListQuestionText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children adminEvaluationQuestionsListQuestionText_template" apple-text-overflow="ellipsis"></div>
+                                </li>
+                            </ul>
+                            <div id="adminEvaluationQuestionsQuestion">
+                                <div id="adminEvaluationQuestionsQuestionTextLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <input id="adminEvaluationQuestionsQuestionText" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                                <select id="adminEvaluationQuestionsQuestionResponseType" apple-part="com.apple.Dashcode.part.backpopupbutton" apple-group="popup" class="mobilAP_adminselect" name="">
+                                    <option class="apple-hidden" id="option3" value="M">Multiple Choice</option>
+                                    <option class="apple-hidden" id="option6" value="T">Free response</option>
+                                </select>
+                                <fieldset id="adminEvaluationQuestionsQuestionResponses">
+                                    <legend id="adminEvaluationQuestionsQuestionResponsesLegend">Responses</legend>
+                                    <ul id="adminEvaluationQuestionsQuestionResponsesList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
+                                        <li id="adminEvaluationQuestionsQuestionResponsesRow" apple-template="true" class="adminEvaluationQuestionsQuestionResponsesRow_template first" style="">
+                                            <div id="adminEvaluationQuestionsQuestionResponsesRemoveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children adminEvaluationQuestionsQuestionResponsesRemoveButton_template evaluation_question_response_remove_button1_template" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                            <div id="adminEvaluationQuestionsQuestionResponseText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children adminEvaluationQuestionsQuestionResponseText_template" apple-text-overflow="ellipsis"></div>
+                                        </li>
+                                    </ul>
+                                    <div id="adminEvaluationQuestionsQuestionResponsesAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                    <input id="adminEvaluationQuestionsQuestionResponseAddField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                                </fieldset>
+                                <div id="adminEvaluationQuestionsButtons">
+                                    <div id="adminEvaluationQuestionsSave" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                    <div id="adminEvaluationQuestionsDelete" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                                </div>
+                            </div>
+                        </div></div>
+                </div><div id="announcements" apple-part-locked="true">
+                    <div id="annoucementsHeader" class="mobilAP_header">Announcements</div>
+                    <div id="announcementsAdminButtons" class="mobilAP_admin">
+                        <div id="announcementsAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    </div>
+                    <div id="announcementsPanel">
+                        <div id="announcementTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        <div id="announcementPosted" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        <div id="announcementText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                        <div id="announcementPanelAdminButtons" class="mobilAP_admin">
+                            <div id="announcementEditButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                            <div id="announcementDeleteButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div>
+                    </div>
+                    <ul id="announcementsList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                        <li id="announcementsListRow" apple-template="true" class="announcementsListRow_template first" style="">
+                            <div id="announcementsListTitle" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children announcementsListTitle_template" apple-text-overflow="ellipsis"></div>
+                        </li>
+                    </ul>
+                    <div id="announcementsNotice" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                </div><div id="announcementAdmin" apple-part-locked="true">
+                    <div id="annoucementAdminHeader" class="mobilAP_header">Announcement Administration</div>
+                    <div id="announcementAdminTitleLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="announcementAdminTitle" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="announcementAdminTextLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <textarea id="announcementAdminText" apple-part="com.apple.Dashcode.part.textarea" class="mobilAP_adminfield"></textarea>
+                    <div id="announcementAdminButtons">
+                        <div id="announcementAdminSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="announcementAdminCancelButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    </div>
+                </div><div id="login" apple-part-locked="true">
+                    <div id="loginHeader" class="mobilAP_header">Login</div>
+                    <div id="loginText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="login_userID_label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="login_userID" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="login_pword_label" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="login_pword" type="password" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="login_result"></div>
+                    <div id="loginCreateNewUserButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                    <div id="loginSubmit" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                </div><div id="logout" apple-part-locked="true">
+                    <div id="logoutHeader" class="mobilAP_header">Logout</div>
+                    <div id="logoutUserText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="logoutText" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="logoutSubmit" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                </div><div id="profile" apple-part-locked="true">
+                    <div id="profileHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_header" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="profilePasswordLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profilePasswordField" type="password" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profilePasswordVerifyLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profilePasswordVerifyField" type="password" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profilePasswordChangeButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                </div><div id="profileCreate" apple-part-locked="true">
+                    <div id="profileCreateHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_header" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="profileCreateDescription" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="profileCreateFirstNameLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profileCreateFirstName" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profileCreateLastNameLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profileCreateLastName" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profileCreateOrganizationLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profileCreateOrganization" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profileCreateEmailLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profileCreateEmail" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profileCreatePasswordLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profileCreatePassword" type="password" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profileCreateVerifyPasswordLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <input id="profileCreateVerifyPassword" type="password" name="" value="" class="apple-textfield apple-no-children mobilAP_field" apple-part="com.apple.Dashcode.part.textfield">
+                    <div id="profileCreateSubmitButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                </div><div id="setup" apple-part-locked="true">
+                    <div id="setupHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_header" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <div id="setupContainer">
+                        <div id="setupLoading" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    </div>
+                </div></div>
+        </div>
+    </div>
+</body>
+</html>

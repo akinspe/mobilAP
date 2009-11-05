@@ -1,0 +1,569 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>mobilAP</title>
+    <!--[if IE]><script>document.write('<base href="' + location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]*$/, '/safari/') + '"/>')</script><![endif]-->
+    <base href="safari/">
+    <script id="DC_baseScript">if(navigator.userAgent.indexOf('AppleWebKit/') == -1) document.write('<base href="' + location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]*$/, '/safari/') + '"/>')</script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" type="text/css" href="../Parts/Transitions.css">
+    <script type="text/javascript" src="../Parts/redirector.js"></script>
+    <script type="text/javascript" src="Parts/parts.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../mobilAP/objectPrototypes.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../mobilAP/mobilAP.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../mobilaP/md5.js" charset="utf-8"></script>
+    <script type="text/javascript" src="main.js" charset="utf-8"></script>
+</head>
+<body onload="load();">
+    <div id="splitLayout">
+        <div id="masterView">
+            <div id="mobilAP_header">
+                <div id="mobilAP_heading" class="homeTitle_template">mobilAP</div>
+            </div>
+            <ul id="homeList">
+                <li id="homeRow" class="homeRow_template first" style="" onclick="mobilAP.homeSelected(event)">
+                    <div class="homeTitle_template" id="homeTitle"></div>
+                </li>
+            </ul>
+        </div>
+        <div id="splitter"></div>
+        <div id="detailView">
+            <div id="detailStack"><div id="mobilAP"></div><div id="welcome"><div id="wecomeHeader" class="mobilAP_header">Welcome</div>
+                    <div id="welcomeText"></div>
+                </div><div id="directory">
+                    <div id="directoryHeader" class="mobilAP_header">Directory</div>
+                    <div id="directoryAdminButtons" class="mobilAP_admin">
+                        <div id="directoryAdminAddButton"></div>
+                    </div>
+                    <div id="directoryProfilePanel">
+                        <div id="directoryProfileImageContainer">
+                            <img id="directoryProfileImage" src="Images/profile_placeholder.png">
+                        </div>
+                        <div id="directoryProfileFirstNameEdit" class="profileEditField">first
+                            <input id="directoryProfileFirstNameField" type="text" name="" value="" class="mobilAP_adminfield">
+                        </div>
+                        <div id="directoryProfileFirstName" class="profileEditLabel"></div>
+                        <div id="directoryProfileLastNameEdit" class="profileEditField">last
+                            <input id="directoryProfileLastNameField" type="text" name="" value="" class="mobilAP_adminfield">
+                        </div>
+                        <div id="directoryProfileLastName" class="profileEditLabel"></div>
+                        <div id="directoryProfileOrganizationEdit" class="profileEditField">org
+                            <input id="directoryProfileOrganizationField" type="text" name="" value="" class="mobilAP_adminfield">
+                        </div>
+                        <div id="directoryProfileOrganization" class="profileEditLabel"></div>
+                        <div id="directoryProfileEmailEdit" class="profileEditField">email
+                            <input id="directoryProfileEmailField" type="text" name="" value="" class="mobilAP_adminfield">
+                        </div>
+                        <div id="directoryProfileEmail" class="profileEditLabel" onclick="mailto(event)"></div>
+                        <div id="directoryProfileAdminSwitchEdit" class="profileEditField">admin
+                            <div id="directoryProfileAdminSwitch"></div></div>
+                        <div id="directoryProfileResetPasswordButton" class="profileEditField profileUpdateField"></div>
+                        <div id="directoryProfileAdminPanelButtons" class="mobilAP_admin">
+                            <div id="directoryProfileAdminEditButton"></div>
+                            <div id="directoryProfileAdminCancelButton"></div>
+                            <div id="directoryProfileAdminDeleteButton" class="profileUpdateField"></div>
+                        </div>
+                    </div>
+                    <div id="directoryListPanel">
+                        <ul id="directoryList" class="mobilAP_list">
+                            <li id="directoryRow" class="directoryRow_template first" style="">
+                                <div id="directoryName" class="directoryName_template">
+                                    <div id="directoryFirstName" class="directoryFirstName_template"></div>
+                                    <div id="directoryLastName" class="directoryLastName_template"></div>
+                                </div>
+                                <div id="directoryOrganization" class="directoryOrganization_template"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div><div id="schedule">
+                    <div id="scheduleHeader" class="mobilAP_header">Schedule</div>
+                    <ul id="scheduleTypeList" class="mobilAP_list">
+                        <li id="scheduleTypeListTemplate" class="scheduleTypeListTemplate_template first" style="">
+                            <div id="scheduleTypeListLabel" class="scheduleTypeListLabel_template"></div>
+                        </li>
+                    </ul>
+                    <div id="scheduleButtons" class="mobilAP_admin">
+                        <div id="scheduleEditButton"></div>
+                        <div id="scheduleAddButton"></div>
+                    </div>
+                    <table id="scheduleCalendar">
+                        <thead>
+                            <tr>
+                                <td colspan="7"><div id="schedule_calendar_header"><div id="schedule_calendar_prev"></div><div id="schedule_calendar_month">Month</div><div id="schedule_calendar_next"></div></div></td>
+                            </tr>
+                            <tr id="schedule_calendar_days">
+                                <td>Sun</td>
+                                <td>Mon</td>
+                                <td>Tue</td>
+                                <td>Wed</td>
+                                <td>Thu</td>
+                                <td>Fri</td>
+                                <td>Sat</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="schedule_calendar_week_1">
+                                <td id="schedule_calendar_0">0</td>
+                                <td id="schedule_calendar_1">1</td>
+                                <td id="schedule_calendar_2">2</td>
+                                <td id="schedule_calendar_3">3</td>
+                                <td id="schedule_calendar_4">4</td>
+                                <td id="schedule_calendar_5">5</td>
+                                <td id="schedule_calendar_6">6</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_2">
+                                <td id="schedule_calendar_7">7</td>
+                                <td id="schedule_calendar_8">8</td>
+                                <td id="schedule_calendar_9">9</td>
+                                <td id="schedule_calendar_10">10</td>
+                                <td id="schedule_calendar_11">11</td>
+                                <td id="schedule_calendar_12">12</td>
+                                <td id="schedule_calendar_13">13</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_3">
+                                <td id="schedule_calendar_14">14</td>
+                                <td id="schedule_calendar_15">15</td>
+                                <td id="schedule_calendar_16">16</td>
+                                <td id="schedule_calendar_17">17</td>
+                                <td id="schedule_calendar_18">18</td>
+                                <td id="schedule_calendar_19">19</td>
+                                <td id="schedule_calendar_20">20</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_4">
+                                <td id="schedule_calendar_21">21</td>
+                                <td id="schedule_calendar_22">22</td>
+                                <td id="schedule_calendar_23">23</td>
+                                <td id="schedule_calendar_24">24</td>
+                                <td id="schedule_calendar_25">25</td>
+                                <td id="schedule_calendar_26">26</td>
+                                <td id="schedule_calendar_27">27</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_5">
+                                <td id="schedule_calendar_28">28</td>
+                                <td id="schedule_calendar_29">29</td>
+                                <td id="schedule_calendar_30">30</td>
+                                <td id="schedule_calendar_31">31</td>
+                                <td id="schedule_calendar_32">32</td>
+                                <td id="schedule_calendar_33">33</td>
+                                <td id="schedule_calendar_34">34</td>
+                            </tr>
+                            <tr id="schedule_calendar_week_6">
+                                <td id="schedule_calendar_35">35</td>
+                                <td id="schedule_calendar_36">36</td>
+                                <td id="schedule_calendar_37">37</td>
+                                <td id="schedule_calendar_38">38</td>
+                                <td id="schedule_calendar_39">39</td>
+                                <td id="schedule_calendar_40">40</td>
+                                <td id="schedule_calendar_41">41</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="scheduleListDate"></div>
+                    <ul id="scheduleList" class="mobilAP_list">
+                        <li id="scheduleListRow" class="scheduleListRow_template first" style="">
+                            <div id="scheduleListEditButton" class="scheduleListEditButton_template edit_button mobilAP_admin"></div>
+                            <div id="scheduleListStart" class="scheduleListStart_template scheduleStart"></div>
+                            <div id="scheduleListTitle" class="scheduleListTitle_template scheduleTitle"></div>
+                            <div id="scheduleListDetail" class="scheduleListDetail_template scheduleDetail"></div>
+                        </li>
+                    </ul>
+                </div><div id="scheduleAdmin" class="mobilAP_admin">
+                    <div id="scheduleAdminHeader" class="mobilAP_header"></div>
+                    <div id="scheduleAdminDateLabel" class="mobilAP_label"></div>
+                    <div id="scheduleAdminDateContainer" class="mobilAP_field"></div>
+                    <div id="scheduleAdminStartTimeLabel" class="mobilAP_label"></div>
+                    <div id="scheduleAdminStartTimeContainer" class="mobilAP_field"></div>
+                    <div id="scheduleAdminEndTimeLabel" class="mobilAP_label"></div>
+                    <div id="scheduleAdminEndTimeContainer" class="mobilAP_field"></div>
+                    <div id="sessionsAdminSessionsLabel" class="mobilAP_label"></div>
+                    <ul id="scheduleAdminSessions" class="mobilAP_list">
+                        <li id="scheduleAdminSessionsRow" class="scheduleAdminSessionsRow_template first" style="">
+                            <div id="scheduleAdminSessionsTitle" class="scheduleAdminSessionsTitle_template"></div>
+                        </li>
+                    </ul>
+                    <div id="scheduleAdminAddSessionButton"></div>
+                    <div id="scheduleAdminDetailLabel" class="mobilAP_label"></div>
+                    <input id="scheduleAdminDetailField" type="text" name="" value="" class="mobilAP_adminfield">
+                    <div id="scheduleAdminRoomLabel" class="mobilAP_label"></div>
+                    <input id="scheduleAdminRoomField" type="text" name="" value="" class="mobilAP_adminfield">
+                    <div id="scheduleAdminButtons" class="mobilAP_button_container">
+                        <div id="scheduleAdminSaveButton"></div>
+                        <div id="scheduleAdminDeleteButton"></div>
+                        <div id="scheduleAdminCancelButton"></div>
+                    </div>
+                </div><div id="newSessionAdmin" class="mobilAP_admin">
+                    <div id="newSessionAdminHeader" class="mobilAP_header"></div>
+                    <div id="newSessionAdminTitleLabel" class="mobilAP_label">Title</div>
+                    <input id="newSessionAdminTitleField" type="text" name="" value="" class="mobilAP_adminfield">
+                    <div id="newSessionAdminDescriptionLabel" class="mobilAP_label">Description</div>
+                    <textarea id="newSessionAdminDescriptionField" class="mobilAP_adminfield"></textarea>
+                    <fieldset id="newSessionAdminOptions">
+                        <legend id="newSessionAdminOptionsLegend">Options</legend>
+                        <div id="newSessionAdminOptionsLinksCheckbox" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" id="newSessionAdminOptionsLinks" value="1">
+                            <div id="newSessionAdminOptionsLinksLabel">Show Links</div>
+                        </div>
+                        <div id="newSessionAdminOptionsUserLinksCheckbox" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" id="newSessionAdminOptionsUserLinks" value="2">
+                            <div id="newSessionAdminOptionsUserLinksLabel">Allow non-presenters to post links</div>
+                        </div>
+                        <div id="newSessionAdminOptionsDiscussionCheckbox" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" id="newSessionAdminOptionsDiscussion" value="4">
+                            <div id="newSessionAdminOptionsDiscussionLabel">Enable Discussion</div>
+                        </div>
+                        <div id="newSessionAdminOptionsEvaluationCheckbox" class="mobilAP_checkbox">
+                            <input type="checkbox" checked="checked" id="newSessionAdminOptionsEvaluation" value="8">
+                            <div id="newSessionAdminOptionsEvaluationLabel">Enable Evaluation</div>
+                        </div>
+                    </fieldset>
+                    <div id="newSessionAdminButtons">
+                        <div id="newSessionAdminSaveButton"></div>
+                        <div id="newSessionAdminCancelButton"></div>
+                    </div>
+                </div><div id="sessionQuestionAdmin">
+                    <div id="sessionQuestionAdminHeader" class="mobilAP_header"></div>
+                    <div id="sessionQuestionAdminQuestionTextLabel" class="mobilAP_label"></div>
+                    <input id="sessionQuestionAdminQuestionTextField" type="text" name="" value="" class="mobilAP_adminfield">
+                    <div id="sessionQuestionAdminQuestionMinChoicesLabel" class="mobilAP_label"></div>
+                    <select id="sessionQuestionAdminQuestionMinChoices" class="mobilAP_adminselect">
+                        <option>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                    </select>
+                    <div id="sessionQuestionAdminQuestionMaxChoicesLabel" class="mobilAP_label"></div>
+                    <select id="sessionQuestionAdminQuestionMaxChoices" class="mobilAP_adminselect" name="">
+                        <option selected="selected">1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                    </select>
+                    <fieldset id="sessionQuestionAdminResponses">
+                        <legend id="sessionQuestionAdminResponsesLegend">Responses</legend>
+                        <ul id="sessionQuestionAdminResponsesList">
+                            <li id="sessionQuestionAdminResponsesRow" class="sessionQuestionAdminResponsesRow_template first" style="">
+                                <div id="sessionQuestionAdminResponsesRemoveButton" class="sessionQuestionAdminResponsesRemoveButton_template button1_template"></div>
+                                <div id="sessionQuestionAdminResponseTitle" class="sessionQuestionAdminResponseTitle_template"></div>
+                            </li>
+                        </ul>
+                        <div id="sessionQuestionAdminResponsesAddButton"></div>
+                        <input id="sessionQuestionAdminResponsesAddField" type="text" name="" value="" class="mobilAP_adminfield">
+                    </fieldset>
+                    <div id="sessionQuestionAdminButtons">
+                        <div id="sessionQuestionAdminSaveButton"></div>
+                        <div id="sessionQuestionAdminCancelButton"></div>
+                        <div id="sessionQuestionAdminDeleteButton"></div>
+                    </div>
+                </div><div id="session">
+                    <div id="sessionHeader" class="mobilAP_header"></div>
+                    <ul id="sessionTabbar">
+                        <li id="sessionTabbarRow" class="sessionTabbarRow_template first" style="">
+                            <div id="sessionTabbarTitle" class="sessionTabbarTitle_template"></div>
+                        </li>
+                    </ul>
+                    <div id="sessionStack"><div id="session_info">
+                            <div id="sessionInfoSchedule">
+                                <div id="sessionInfoDate"></div>
+                                <div id="sessionInfoStart"></div>
+                                <div id="sessionInfoTimeDash"></div>
+                                <div id="sessionInfoEnd"></div>
+                                <div id="sessionInfoRoom"></div>
+                            </div>
+                            <div id="sessionInfoDescription"></div>
+                            <div id="sessionInfoPresenters">
+                                <div id="sessionInfoPresentersLabel" class="mobilAP_label"></div>
+                                <ul id="sessionInfoPresentersList">
+                                    <li id="sessionInfoPresentersRow" class="sessionInfoPresentersRow_template first" style="">
+                                        <div id="sessionInfoPresentersName" class="sessionInfoPresentersName_template">
+                                            <div id="sessionInfoPresentersFirstName" class="sessionInfoPresentersFirstName_template"></div>
+                                            <div id="sessionInfoPresentersLastName" class="sessionInfoPresentersLastName_template"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div><div id="session_evaluation">
+                            <div id="sessionEvaluationQuestionText"></div>
+                            <ul id="sessionEvaluationQuestionResponses">
+                                <li id="evaluationQuestionResponsesRow" class="evaluationQuestionResponsesRow_template first" style="">
+                                    <div id="evaluationQuestionResponsesText" class="evaluationQuestionResponsesText_template"></div>
+                                </li>
+                            </ul>
+                            <textarea id="sessionEvaluationQuestionTextResponse"></textarea>
+                            <div id="sessionEvaluationQuestionButtons">
+                                <div id="sessionEvaluationQuestionPreviousButton"></div>
+                                <div id="sessionEvaluationQuestionNextButton"></div>
+                                <div id="sessionEvaluationQuestionFinishButton"></div>
+                            </div>
+                        </div><div id="session_evaluation_thanks">
+                            <div id="sessionEvaluationThanksText"></div>
+                        </div><div id="session_links">
+                            <div id="sessionLinksAddButton"></div>
+                            <ul id="sessionLinksList" class="mobilAP_list">
+                                <li id="sessionLinksListRow" class="sessionLinksListRow_template first" style="">
+                                    <div id="sessionLinksListDeleteButton" class="sessionLinksListDeleteButton_template"></div>
+                                    <div id="sessionLinksListTitle" class="sessionLinksListTitle_template"></div>
+                                    <div id="sessionLinksListURL" class="sessionLinksListURL_template"></div>
+                                </li>
+                            </ul>
+                            <div id="sessionLinksNotice"></div>
+                        </div><div id="session_links_add">
+                            <div id="sessionLinksAddURLLabel" class="mobilAP_label"></div>
+                            <input id="sessionLinksAddURL" type="text" name="" value="" class="mobilAP_field">
+                            <div id="sessionLinksAddTitleLabel" class="mobilAP_label"></div>
+                            <input id="sessionLinksAddTitle" type="text" name="" value="" class="mobilAP_field">
+                            <div id="sessionLinksAddSubmitButton"></div>
+                        </div><div id="session_questions">
+                            <div id="sessionQuestionsAdminButtons" class="mobilAP_admin">
+                                <div id="sessionQuestionsEditButton"></div>
+                                <div id="sessionQuestionsAddButton"></div>
+                            </div>
+                            <ul id="sessionQuestionsList">
+                                <li id="sessionQuestionsListRow" class="sessionQuestionsListRow_template first" style="">
+                                    <div id="sessionQuestionsListEditButton" class="sessionQuestionsListEditButton_template edit_button"></div>
+                                    <div id="sessionQuestionsListQuestionText" class="sessionQuestionsListQuestionText_template"></div>
+                                </li>
+                            </ul>
+                            <div id="sessionQuestionsNotice"></div>
+                        </div><div id="session_question">
+                            <div id="sessionQuestionQuestionText"></div>
+                            <div id="sessionQuestionStack"><div id="question_ask">
+                                    <div id="sessionQuestionAskSelectMessage"></div>
+                                    <ul id="sessionQuestionAskResponsesList">
+                                        <li id="sessionQuestionAskQuestionResponsesRow" class="sessionQuestionAskQuestionResponsesRow_template first" style="">
+                                            <div id="sessionQuestionAskQuestionResponseText" class="sessionQuestionAskQuestionResponseText_template"></div>
+                                        </li>
+                                    </ul>
+                                    <div id="sessionQuestionAskButtons">
+                                        <div id="sessionQuestionAskSubmitButton"></div>
+                                        <div id="sessionQuestionAskViewResultsButton"></div>
+                                    </div>
+                                </div><div id="question_results">
+                                    <div id="sessionQuestionResultsChart"></div>
+                                    <ul id="sessionQuestionResultsList">
+                                        <li id="sessionQuestionResultsListRow" class="sessionQuestionResultsListRow_template first" style="">
+                                            <div id="sessionQuestionResultsAnswerText" class="sessionQuestionResultsAnswerText_template"></div>
+                                            <div id="sessionQuestionResultsAnswerCount" class="sessionQuestionResultsAnswerCount_template"></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="sessionQuestionAnswersClearButton" class="mobilAP_sessionadmin"></div>
+                        </div><div id="session_discussion">
+                            <ul id="sessionDiscussionList">
+                                <li id="sessionDiscussionListRow" class="sessionDiscussionListRow_template first" style="">
+                                    <div id="sessionDiscussionListTime" class="sessionDiscussionListTime_template discussion_time1_template"></div>
+                                    <div id="sessionDiscussionListUser" class="sessionDiscussionListUser_template discussion_user1_template"></div>
+                                    <div id="sessionDiscussionListText" class="sessionDiscussionListText_template"></div>
+                                </li>
+                            </ul>
+                            <textarea id="sessionDiscussionTextField"></textarea>
+                            <div id="sessionDiscussionPostButton"></div>
+                            <div id="sessionDiscussionClearButton" class="mobilAP_sessionadmin"></div>
+                        </div><div id="session_admin"><div id="sessionAdminTitleLabel" class="mobilAP_label">Title</div>
+                            <input id="sessionAdminTitle" type="text" name="" value="" class="mobilAP_adminfield">
+                            <div id="sessionAdminDescriptionLabel" class="mobilAP_label">Description</div>
+                            <textarea id="sessionAdminDescription" class="mobilAP_adminfield" name=""></textarea>
+                            <fieldset id="sessionAdminOptions">
+                                <legend id="sessionAdminOptionsLegend">Options</legend>
+                                <div id="sessionAdminOptionsLinksCheckbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" id="sessionAdminOptionsLinks" value="1">
+                                    <div id="sessionAdminOptionsLinksCheckboxLabel">Show Links</div>
+                                </div>
+                                <div id="sessionAdminOptionsUserLinksCheckbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" id="sessionAdminOptionsUserLinks" value="2">
+                                    <div id="sessionAdminOptionsUserLinksLabel">Allow non-presenters to post links</div>
+                                </div>
+                                <div id="sessionAdminOptionsDiscussionCheckbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" id="sessionAdminOptionsDiscussion" value="4">
+                                    <div id="sessionAdminOptionsDiscussionLabel">Enable Discussion</div>
+                                </div>
+                                <div id="sessionAdminOptionsEvaluationCheckbox" class="mobilAP_checkbox">
+                                    <input type="checkbox" name="Checkbox" checked="checked" id="sessionAdminOptionsEvaluation" value="8">
+                                    <div id="sessionAdminOptionsEvaluationLabel">Enable Evaluation</div>
+                                </div>
+                            </fieldset>
+                            <div id="sessionAdminPresenters" class="mobilAP_admin">
+                                <div id="sessionAdminPresentersLabel" class="mobilAP_label"></div>
+                                <fieldset id="sessionAdminPresentersAdd">
+                                    <legend id="sessionAdminPresentersAddLegend">Add presenter (user must already exist)</legend>
+                                    <input id="sessionAdminPresentersAddField" type="text" name="" value="" class="mobilAP_adminfield">
+                                    <ul id="sessionAdminPresentersAddList">
+                                        <li id="sessionAdminPresentersAddRow" class="sessionAdminPresentersAddRow_template first" style="">
+                                            <div id="sessionAdminPresentersAddButton" class="sessionAdminPresentersAddButton_template button1_template"></div>
+                                            <div id="sessionAdminPresentersAddName" class="sessionAdminPresentersAddName_template"></div>
+                                        </li>
+                                    </ul>
+                                </fieldset>
+                                <ul id="sessionAdminPresentersList">
+                                    <li id="sessionAdminPresentersRow" class="sessionAdminPresentersRow_template first" style="">
+                                        <div id="sessionAdminPresentersRemoveButton" class="sessionAdminPresentersRemoveButton_template button1_template"></div>
+                                        <div id="sessionAdminPresentersName" class="sessionAdminPresentersName_template">
+                                            <div id="sessionAdminPresentersFirstName" class="sessionAdminPresentersFirstName_template sessionAdminPresentersFirstName1_template"></div>
+                                            <div id="sessionAdminPresentersLastName" class="sessionAdminPresentersLastName_template"></div>
+                                            <div id="sessionAdminPresentersEmail" class="sessionAdminPresentersEmail_template"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="sessionAdminSaveButton"></div>
+                        </div></div>
+                </div><div id="admin">
+                    <div id="adminHeader" class="mobilAP_header">Site Administration</div>
+                    <ul id="adminTabbar">
+                        <li id="adminTabbarRow" class="adminTabbarRow_template first" style="">
+                            <div id="adminTabTitle" class="adminTabTitle_template"></div>
+                        </li>
+                    </ul>
+                    <div id="adminTabs"><div id="adminSettings">
+                            <div id="adminSettingsHeader" class="mobilAP_subheader"></div>
+                            <div id="configSITE_TITLE_Label" class="mobilAP_label"></div>
+                            <input id="configSITE_TITLE" type="text" name="" value="" class="mobilAP_adminfield">
+                            <fieldset id="adminSettingsUsers">
+                                <legend id="adminSettingsUsersLegend">Users and Passwords</legend>
+                                <div id="configCONTENT_PRIVATE_Label" class="mobilAP_label"></div>
+                                <div class="mobilAP_explanation" id="configCONTENT_PRIVATE_Explanation">You can make all the content on the site private and require users to login in order to view the site</div>
+                                <div id="configCONTENT_PRIVATE" class="mobilAP_switch"></div>
+                                <div id="configUSE_PASSWORDS_Label" class="mobilAP_label"></div>
+                                <div class="mobilAP_explanation" id="configUSE_PASSWORDS_Explanation">You can require attendees to enter a password when logging in. You assign passwords either at import or by editing the user in the attendee administration.</div>
+                                <div id="configUSE_PASSWORDS" class="mobilAP_switch"></div>
+                                <div id="configUSE_ADMIN_PASSWORDS_Label" class="mobilAP_label"></div>
+                                <div class="mobilAP_explanation" id="configUSE_ADMIN_PASSWORDS_Explanation">You can require admins to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</div>
+                                <div id="configUSE_ADMIN_PASSWORDS" class="mobilAP_switch"></div>
+                                <div id="configUSE_PRESENTER_PASSWORDS_Label" class="mobilAP_label"></div>
+                                <div class="mobilAP_explanation" id="configUSE_PRESENTER_PASSWORDS_Explanation">You can require presenters to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</div>
+                                <div id="configUSE_PRESENTER_PASSWORDS" class="mobilAP_switch"></div>
+                                <div id="configALLOW_SELF_CREATED_USERS_Label" class="mobilAP_label"></div>
+                                <div class="mobilAP_explanation" id="configALLOW_SELF_CREATED_USERS_Explanation">You can allow anyone to create an account in the system by supplying their email address. If off, you must administer all users before they can login</div>
+                                <div id="configALLOW_SELF_CREATED_USERS" class="mobilAP_switch"></div>
+                            </fieldset>
+                            <fieldset id="adminSettingsSchedule">
+                                <legend id="adminSettingsScheduleLegend">Schedule and Sessions</legend>
+                                <div id="configSINGLE_SESSION_MODE_Label" class="mobilAP_label"></div>
+                                <div class="mobilAP_explanation" id="configSINGLE_SESSION_MODE_Explanation">For simpler events where there is only 1 session, you can turn off the schedule</div>
+                                <div id="configSINGLE_SESSION_MODE" class="mobilAP_switch"></div>
+                            </fieldset>
+                            <div id="adminSettingsSaveButton"></div>
+                        </div><div id="adminEvaluationQuestions">
+                            <div id="adminEvaluationQuestionsHeader" class="mobilAP_subheader"></div>
+                            <div id="adminEvaluationQuestionsAddButton"></div>
+                            <ul id="adminEvaluationQuestionsList" class="mobilAP_list">
+                                <li id="adminEvaluationQuestionsListRow" class="adminEvaluationQuestionsListRow_template first" style="">
+                                    <div id="adminEvaluationQuestionsListQuestionText" class="adminEvaluationQuestionsListQuestionText_template"></div>
+                                </li>
+                            </ul>
+                            <div id="adminEvaluationQuestionsQuestion">
+                                <div id="adminEvaluationQuestionsQuestionTextLabel" class="mobilAP_label"></div>
+                                <input id="adminEvaluationQuestionsQuestionText" type="text" name="" value="" class="mobilAP_adminfield">
+                                <select id="adminEvaluationQuestionsQuestionResponseType" class="mobilAP_adminselect" name="">
+                                    <option id="option3" value="M">Multiple Choice</option>
+                                    <option id="option6" value="T">Free response</option>
+                                </select>
+                                <fieldset id="adminEvaluationQuestionsQuestionResponses">
+                                    <legend id="adminEvaluationQuestionsQuestionResponsesLegend">Responses</legend>
+                                    <ul id="adminEvaluationQuestionsQuestionResponsesList" class="mobilAP_list">
+                                        <li id="adminEvaluationQuestionsQuestionResponsesRow" class="adminEvaluationQuestionsQuestionResponsesRow_template first" style="">
+                                            <div id="adminEvaluationQuestionsQuestionResponsesRemoveButton" class="adminEvaluationQuestionsQuestionResponsesRemoveButton_template evaluation_question_response_remove_button1_template"></div>
+                                            <div id="adminEvaluationQuestionsQuestionResponseText" class="adminEvaluationQuestionsQuestionResponseText_template"></div>
+                                        </li>
+                                    </ul>
+                                    <div id="adminEvaluationQuestionsQuestionResponsesAddButton"></div>
+                                    <input id="adminEvaluationQuestionsQuestionResponseAddField" type="text" name="" value="" class="mobilAP_adminfield">
+                                </fieldset>
+                                <div id="adminEvaluationQuestionsButtons">
+                                    <div id="adminEvaluationQuestionsSave"></div>
+                                    <div id="adminEvaluationQuestionsDelete"></div>
+                                </div>
+                            </div>
+                        </div></div>
+                </div><div id="announcements">
+                    <div id="annoucementsHeader" class="mobilAP_header">Announcements</div>
+                    <div id="announcementsAdminButtons" class="mobilAP_admin">
+                        <div id="announcementsAddButton"></div>
+                    </div>
+                    <div id="announcementsPanel">
+                        <div id="announcementTitle"></div>
+                        <div id="announcementPosted"></div>
+                        <div id="announcementText"></div>
+                        <div id="announcementPanelAdminButtons" class="mobilAP_admin">
+                            <div id="announcementEditButton"></div>
+                            <div id="announcementDeleteButton"></div>
+                        </div>
+                    </div>
+                    <ul id="announcementsList">
+                        <li id="announcementsListRow" class="announcementsListRow_template first" style="">
+                            <div id="announcementsListTitle" class="announcementsListTitle_template"></div>
+                        </li>
+                    </ul>
+                    <div id="announcementsNotice"></div>
+                </div><div id="announcementAdmin">
+                    <div id="annoucementAdminHeader" class="mobilAP_header">Announcement Administration</div>
+                    <div id="announcementAdminTitleLabel" class="mobilAP_label"></div>
+                    <input id="announcementAdminTitle" type="text" name="" value="" class="mobilAP_adminfield">
+                    <div id="announcementAdminTextLabel" class="mobilAP_label"></div>
+                    <textarea id="announcementAdminText" class="mobilAP_adminfield"></textarea>
+                    <div id="announcementAdminButtons">
+                        <div id="announcementAdminSaveButton"></div>
+                        <div id="announcementAdminCancelButton"></div>
+                    </div>
+                </div><div id="login">
+                    <div id="loginHeader" class="mobilAP_header">Login</div>
+                    <div id="loginText"></div>
+                    <div id="login_userID_label" class="mobilAP_label"></div>
+                    <input id="login_userID" type="text" name="" value="" class="mobilAP_field">
+                    <div id="login_pword_label" class="mobilAP_label"></div>
+                    <input id="login_pword" type="password" name="" value="" class="mobilAP_field">
+                    <div id="login_result"></div>
+                    <div id="loginCreateNewUserButton"></div>
+                    <div id="loginSubmit"></div>
+                </div><div id="logout">
+                    <div id="logoutHeader" class="mobilAP_header">Logout</div>
+                    <div id="logoutUserText"></div>
+                    <div id="logoutText"></div>
+                    <div id="logoutSubmit"></div>
+                </div><div id="profile">
+                    <div id="profileHeader" class="mobilAP_header"></div>
+                    <div id="profilePasswordLabel" class="mobilAP_label"></div>
+                    <input id="profilePasswordField" type="password" name="" value="" class="mobilAP_field">
+                    <div id="profilePasswordVerifyLabel" class="mobilAP_label"></div>
+                    <input id="profilePasswordVerifyField" type="password" name="" value="" class="mobilAP_field">
+                    <div id="profilePasswordChangeButton"></div>
+                </div><div id="profileCreate">
+                    <div id="profileCreateHeader" class="mobilAP_header"></div>
+                    <div id="profileCreateDescription"></div>
+                    <div id="profileCreateFirstNameLabel" class="mobilAP_label"></div>
+                    <input id="profileCreateFirstName" type="text" name="" value="" class="mobilAP_field">
+                    <div id="profileCreateLastNameLabel" class="mobilAP_label"></div>
+                    <input id="profileCreateLastName" type="text" name="" value="" class="mobilAP_field">
+                    <div id="profileCreateOrganizationLabel" class="mobilAP_label"></div>
+                    <input id="profileCreateOrganization" type="text" name="" value="" class="mobilAP_field">
+                    <div id="profileCreateEmailLabel" class="mobilAP_label"></div>
+                    <input id="profileCreateEmail" type="text" name="" value="" class="mobilAP_field">
+                    <div id="profileCreatePasswordLabel" class="mobilAP_label"></div>
+                    <input id="profileCreatePassword" type="password" name="" value="" class="mobilAP_field">
+                    <div id="profileCreateVerifyPasswordLabel" class="mobilAP_label"></div>
+                    <input id="profileCreateVerifyPassword" type="password" name="" value="" class="mobilAP_field">
+                    <div id="profileCreateSubmitButton"></div>
+                </div><div id="setup">
+                    <div id="setupHeader" class="mobilAP_header"></div>
+                    <div id="setupContainer">
+                        <div id="setupLoading"></div>
+                    </div>
+                </div></div>
+        </div>
+    </div>
+</body>
+</html>

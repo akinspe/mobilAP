@@ -1,111 +1,65 @@
-mobilAP Version 0.9.8
+mobilAP Version 2.0b
+November 4, 2009
 
-This version of the mobilAP conference edition includes two 
-components, a PHP based back-end and a HTML/Javascript based front end.
+RELEASE NOTES
 
-The backend has the following requirements:
+This version of mobilAP is not intended for production use. Most of the important features are functional, however, there are still unresolved issues, as well as a high probability of unknown bugs that need to be discovered and resolved.
 
-- PHP 5.x
-- Access to a MySQL 5 database server (the code could be rewritten to use other DBs if necessary)
+We would appreciate you using this in a non-critical setting and providing feedback to mobilAP@daap.uc.edu
 
-There are some configurations that have to be made:
+REQUIREMENTS AND SETUP
 
-1. Copy the contents of the html folder to a folder on your web server (i.e. /mobilAP). It can be the root, but it doesn't have to be.
-2. Set the db_host, db_user, db_password parameters in "inc/config.php" as necessary
-3. Set the mobilAP_base_path parameter in "inc/config.php" to be the name of the folder you created (i.e. '/' or '/mobilAP'). This is vital to ensure logins work properly
-4. Run setup.php which will create an admin user, and create the appropriate tables
+- mobilAP requires a web server running PHP 5.2. It _may_ run under 5.1 with the included JSON emulation functions, however it is likely that performance will suffer. It also requires the PDO (PHP data objects) extension for database abstraction. 
 
-Session configuration and schedule is accomplished using the admin.php script. 
+- In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/config folder
 
-RELEASE NOTES FOR 0.9.8
+- In order to use SQLite, the webserver must be able to write to the html/mobilAP/data folder. 
 
-1. To combat against XSS attacks, most fields now will not permit any HTML styling. There are certain fields that may warrant simple styling. In future releases, certain HTML tags will be permitted.
-2. You can now make the site private. This will require attendees to login in order to view any content.
-3. You can require passwords for only admins and presenters. This makes it eaiser for your attendees, but protects sensitive content.
-4. Link labels can be customized. this includes labels on the main screen on the iPhone version.
-5. Many minor enhancements and fixes
-
-MIGRATION FROM PREVIOUS VERSIONS
-There are no new tables or changed tables since 0.9.7. You should be able to drop the code into an existing setup without issue. You will need to make apporpriate config.php changes.
+- Copy the HTML folder to your website. You can either copy the contents of the folder to the root of your website, or into a subfolder. Using a desktop browser, go to the URL of the folder you placed mobilAP in, it will begin the setup process of configuring the database, creating and initial user, and setting some initial options.
 
 
-GENERAL NOTES
-1. Some basic style has been added. There is plenty of room for CSS customization
-2. the js.php script is the main controller for AJAX communication between the DB and the front end.
-3. The use of the APC cache is strongly encouraged. There is now some simple code for caching often used data.
-4. Sorry about the sparse documentation. This should get improved in the future once further developement occurs.
-5. A Dashcode project file has been included to aid in customization. (See notes below with important information about using dashcode to customize)
+KNOWN ISSUES/PLANNED UPDATES BEFORE 2.0 final
 
-If you were previously using 0.9.6 you will need add a table and change 2 others. See the setup.php file for schema information.
+- Documentation should be better and nicer looking
 
-New tables since 0.9.6 
-- config
+- Making the site private in the settings has no effect
 
-Changed tables since 0.9.6
-- attendee_import (add the password varchar(32) column)
-- sessions (add the session_flags int (10) unsigned default 15 column)
+- The handling of optional passwords is not complete
 
-If you were previously using 0.9 you will need to drop a few tables since the schema has changed. If you don't know what this means, then just remove ALL the tables from your database and then create a new blank database and run setup.php to recreate the tables. If you're advanced enough and know your way around MySQL you can look at setup.php for the table definitions
+- The setup routine will not succeed if the webserver cannot write to the database file, even if you update it manually as directed.
 
-New Tables since 0.9
-- announcements
-- announcements read
-- evaluation_questions
-- evaluation_question_responses
-Dropped Tables since 0.9
-- session_group_sessions
-Changed Tables since 0.9
-- session_evaluations (drop the qX columns since the columns are now generated on the fly as the questions are added, removed)
-- session_groups (add the session_group_detail varchar(100) column)
+- You will eventually be able to specify an alternate location of the SQLite database file
 
-New Features since 0.9.6
-- Basic CSS styling on the non-MobileSafari version
-- Certain settings can be administered via the admin interface. This will allow for some customization of certain features without editing the source code. This includes:
-	- Requiring or not requiring passwords for attendees
-	- Showing or hiding fields/photos in the attendee directory
-- Links, Evaluations and Discussion can be turned on or off per session
-- Room and time information show up on session screens.
-- Added support for APC cache (where available)
+- You must specify the server timezone using the date.timezone php.ini setting. IF you do not have access to this file, you can add a date_default_timezone_set() call to html/mobilAP.php.
 
+- It is hoped that timezone selection will eventually be part of the setup process
 
-Selected Bugs addressed since 0.9.6
-(there has been much work therefore not everything may be listed here)
-- Fixes issues that arose when the root path was Changed
-- Fixed many issues with session groups
-- Use GD for image thumbnails and rotations if necessary (still uses SIPS on Mac OS X servers)
-- The question "results" page works and uses jquery
-- Fixed various bugs with evaluation questions
+- Mass import of users is currently non-functional
 
+- Evaluation questions are currently non-functional
 
-Bugs addressed since 0.9.5
-- Changed the default "baseURL" property in main.js to work better from a default configuration. In most cases, it would have required changing the value to work. Now the ajax calls are all done in the base script's current folder. This will work in nearly all cases.
+- Uploading of directory images is non-functional/non-existent.
 
-Issues / Features addressed since 0.9
-==============================================================================
-- Added "Announcements" section to post conference wide announcements (not tied to a session)
-- Added an admin option to export the MySQL database (this feature makes some assumptions that may or may not be true. You may need to alter the path to the mysql binary)
-- Added the concept of "Schedule Groups" that allow you to have multiple items appear as one in the day view and then break out into multiple items. This is handy for simultanous sessions to keep the schedule as short and clean as possible
-- Added an admin ability to view and clear session discussions
-- Fixed several bad links that wouldn't work if you didn't have Apache MultiViews enabled (no extension was used)
-- Session IDs no longer have to be 3 digits, HOWEVER they must still be 3 characters. But those characters can be digits or letters
-- Fixed issue where session ids that started with one or more zeros (0) had various problems
-- You can alter a session ID after it's been created
-- Fixed a typo that prevented editing existing links
-- The Desktop version now shows the presenters in the info section
-- Evaluation questions are now editable. You can create any number of session evaluation questions with any combination of multiple choice or free response questions that will apply to ALL sessions (PLEASE TEST THIS PART THOROUGHLY!)
-- Desktop navigation now includes login link and admin link (if applicable)
-- Fixed issue where you couldn't create a schedule for a future year
+- Due to a coding flaw in Apple's Dashcode framework code, if you edit the project file and then re-publish the site, the desktop version will not work in Firefox. The template used to program the Stack Layout part calls a method that does not exist in Firefox. In the code that comes with mobilAP, that method is properly handled. If you republish the project it will overwrite that file (html/safari/Parts/parts.js).
+
+- Bar charts have not been programmed
+
+- The mobile site will always say "mobilAP" at the home screen. It is hoped that the final version will use the site title.
+
+- There will eventually be a way to upload an alternate home screen icon. At this time, simply replace html/mobile/Images/WebClipIcon.png
+
+- You will eventually be able to alter the wording and order of the main menu items
+
+- Additional administration options will become available on the mobile interface, however some things will remain only in the desktop interface.
 
 
 NOTES ABOUT THE DASHCODE PROJECT FILE
 
-A Dashcode project file has been included to aid in customization. If you download and install the iPhone SDK, you will get a version of Dashcode that will be able to create and edit iPhone OS based web applications. 
+A Dashcode project file has been included to aid in customization. You will need to use the Dashcode that comes with OS X 10.6 Snow Leopard. 
 
 Keep in mind that Dashcode does not handle CSS classes perfectly especially when renaming, so beware as you add and remove elements that it does not do unintentional things to the CSS file (it will!). Simply copying and pasting the original main.css file into the dashcode editor will typically reset things.
 
-Due to how Dashcode does it's work, you cannot RUN it inside of Dashcode as is. The reason is that it uses file:// type of URLs in the simulator that make the php scripts not function quite right. Intrepid users need to alter the baseURL variable in the main.js file to add a full url i.e.  http://host.something.com/rootpath/ to make sure the js.php file is properly referenced in the simulator. Do not include a trailing slash. Localhost should work just fine.
-
-You will then need to build the scripts and then replace them (CAREFULLY!) in the mobilAP folder. Be careful not to clobber any CSS or image files that are already there. You then MUST rename the resulting index.html to index_mobile.html for it to work cooperatively with the desktop version.
+Due to how Dashcode does it's work, it is not possible to completely test software inside Dashcode. Because the data calls require PHP, and the dashcode "server" does not understand it, none of the data can be loaded. In order to test your changes you will have to deploy the site and run it from a server that has PHP.
 
 Please contact mobilap@daap.uc.edu if you have any questions, bug submissions or requests. We make no guarantee, however, with respect to future releases.
 
