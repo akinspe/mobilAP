@@ -132,7 +132,7 @@ class mobilAP
     
     public static function setDefaultConfigs()
     {
-        require_once('config/mobilAP_config.php');
+        require_once('setup/mobilAP_default_config.php');
         foreach ($_CONFIG as $var=>$value) {
             if (is_bool($value)) {
                 $type = 'B';

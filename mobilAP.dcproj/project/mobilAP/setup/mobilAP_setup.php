@@ -2,7 +2,7 @@
 <style type="text/css">@import url(../mobilAP/mobilAP_setup.css);</style>
 <?php
 
-require_once('../mobilAP.php');
+require_once('../../mobilAP.php');
     
 if (mobilAP::isSetup()) { 
     echo "<p>This site has already been setup</p>";

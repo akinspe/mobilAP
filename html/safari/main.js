@@ -204,7 +204,7 @@ function load()
         viewDidLoad: function(viewID)
         {
             var script = document.createElement("script");
-            script.src = "../mobilAP/mobilAP_setup.js";
+            script.src = "../mobilAP/setup/mobilAP_setup.js";
             document.body.appendChild(script);
         }
     }

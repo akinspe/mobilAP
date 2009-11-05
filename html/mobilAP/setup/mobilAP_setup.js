@@ -245,4 +245,4 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
 
 mobilAP.setupController = new MobilAP.SetupController();
 mobilAP.setupController.scriptDidLoad();
-MobilAP.loadContent('setup', base_url + 'setup.php', { callback: mobilAP.setupController.contentDidLoad.bind(mobilAP.setupController)});
+MobilAP.loadContent('setup', base_url + 'setup/mobilAP_setup.php', { callback: mobilAP.setupController.contentDidLoad.bind(mobilAP.setupController)});
