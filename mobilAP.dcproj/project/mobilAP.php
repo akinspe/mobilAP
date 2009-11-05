@@ -22,7 +22,7 @@ if (!function_exists('json_encode')) {
 }
 
 require_once('classes/mobilAP.php');
-include_once(mobilAP::dbConfigFile());
+@include_once(mobilAP::dbConfigFile());
 require_once('classes/mobilAP_utils.php');
 require_once('classes/mobilAP_db.php');
 require_once('classes/mobilAP_user.php');
