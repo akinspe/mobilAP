@@ -28,12 +28,21 @@ class mobilAP
     
     function canSaveDBConfigFile()
     {
-        return is_writable(mobilAP::dbConfigFile());
+        if (file_exists(mobilAP::dbConfigFile())) {
+            return is_writable(mobilAP::dbConfigFile());
+        } else {
+            return is_writable(mobilAP::dbConfigFolder());
+        }
+    }
+
+    function dbConfigFolder()
+    {
+        return implode(DIRECTORY_SEPARATOR, array(MOBILAP_BASE, 'mobilAP','data'));
     }
     
     function dbConfigFile()
     {
-        return implode(DIRECTORY_SEPARATOR, array(MOBILAP_BASE, 'mobilAP','config','mobilAP_dbconfig.php'));
+        return implode(DIRECTORY_SEPARATOR, array(mobilAP::dbConfigFolder(),'mobilAP_dbconfig.php'));
     }
 
     /**
