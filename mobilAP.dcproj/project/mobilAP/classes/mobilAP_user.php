@@ -538,10 +538,14 @@ class mobilAP_UserSession
 				return $result;
 			}
 			if ($row = $result->fetchRow()) {
-    			if ($row['token']) {
-					$this->login_token = $row['token'];
-	    			return $row['userID'];
-				}
+                if ($user = mobilAP_User::getUserByID($row['userID'])) {
+                    if ($row['token']) {
+                        $this->login_token = $row['token'];
+                        return $user->getUserID();
+                    }
+                } else {
+                    $this->_clearLoginCookie();
+                }
     		} else {
     			$this->_clearLoginCookie();
     		}
@@ -587,7 +591,9 @@ class mobilAP_UserSession
 	
 	public function setUserID($userID)
 	{
-		$this->userID = $userID;
+		if ($user = mobilAP_User::getUserByID($userID)) {
+			$this->userID = $user->getUserID();
+		}
 	}
 }
 
