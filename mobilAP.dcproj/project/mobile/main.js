@@ -83,6 +83,7 @@ function load()
         profileController: mobilAP.profileController
     });
     mobilAP.addViewController('directory', mobilAP.directoryController);
+    mobilAP.directoryController.setReloadTimer(60);
 
     mobilAP.presenterController = new MobilAP.MobileDirectoryController('sessionInfoPresentersList', {
         sessionController: mobilAP.sessionController,
@@ -122,6 +123,7 @@ function load()
 
     mobilAP.announcementsController = new MobilAP.MobileAnnouncementController('announcementsList');
     mobilAP.addViewController('announcements', mobilAP.announcementsController);
+    mobilAP.announcementsController.setReloadTimer(60);
     
     mobilAP.sessionEvaluationController = new MobilAP.MobileSessionEvaluationController({
         sessionController: mobilAP.sessionController,
@@ -511,11 +513,11 @@ MobilAP.MobileDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCont
 
 MobilAP.MobileDirectoryController = Class.create(MobilAP.DirectoryController, {
     viewDidUnload: function() {
-        this.stopReloadTimer();
+  //      this.stopReloadTimer();
     },
     viewDidLoad: function() {
         this.clearSelection();
-        this.setReloadTimer(60);
+//        this.setReloadTimer(60);
     },
     rowSelected: function(change, keyPath) {
     	this.base(change,keyPath);

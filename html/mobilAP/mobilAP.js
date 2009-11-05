@@ -779,10 +779,13 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
         schedule_item.post = 'update';
         this.post(base_url + 'schedule.php', schedule_item,callback);
     },
+    reloadData: function() {
+        dashcode.getDataSource('schedule').queryUpdated();
+    },
     _processXHR: function(json,callback) {
         var result = this.base(json);
         if (!this.isError(result)) {
-            dashcode.getDataSource('schedule').queryUpdated();
+            this.reloadData();
         }
 
         if ("function"==typeof callback) {
@@ -1262,7 +1265,7 @@ MobilAP.SessionEvaluationController = Class.create(MobilAP.DataSourceController,
         this.base(change, keyPath);
         this.responses = new Array(this.content().length);
     },
-    submitEvaluation: function() {
+    submitEvaluation: function(callback) {
         if (!mobilAP.isLoggedIn()) {
             return new MobilAP.Error("Please login to post", mobilAP.ERROR_NO_USER);
         }
@@ -1351,10 +1354,13 @@ MobilAP.AnnouncementController = Class.create(MobilAP.ListController, {
       
         this.post(base_url + 'announcements.php', params, callback);
     },
+    reloadData: function() {
+        dashcode.getDataSource('announcements').queryUpdated();
+    },
     _processXHR: function(json, callback) {
         var result = this.base(json);
         if (!this.isError(result)) {
-            dashcode.getDataSource('announcements').queryUpdated();
+            this.reloadData();
         }
 
         if ("function"==typeof callback) {
@@ -1366,6 +1372,7 @@ MobilAP.AnnouncementController = Class.create(MobilAP.ListController, {
 });
 
 MobilAP.DirectoryController = Class.create(MobilAP.ListController, {
+
     reloadData: function() {
         dashcode.getDataSource('users').queryUpdated();
     },
@@ -2170,6 +2177,8 @@ mobilAP_UserTransformer = Class.create(DC.ValueTransformer,{
             }
         }
 
+        //reload the users since it's likely it's a new user
+        dashcode.getDataSource('users').queryUpdated();
 		return value;
     }
 });

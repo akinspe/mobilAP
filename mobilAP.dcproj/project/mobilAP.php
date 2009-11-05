@@ -13,7 +13,7 @@ define('MOBILAP_BASE', realpath(dirname(__FILE__)));
 
 //set include path
 ini_set('include_path', '.' . PATH_SEPARATOR . MOBILAP_BASE .'/mobilAP');
-ini_set('display_errors', 'on');
+ini_set('display_errors', 'off');
 
 
 /* some compatability checks */

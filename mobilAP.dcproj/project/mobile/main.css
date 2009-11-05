@@ -1776,30 +1776,22 @@ body.desktop {
 
 .evaluationQuestionResponsesCheck_template {
     position: absolute;
-    width: 8px;
+    width: 13px;
     height: 13px;
     right: 10px;
     top: 15px;
-    background-image: url(../Images/chevron.png);
     background-repeat: no-repeat;
 }
 
 .evaluationQuestionResponsesRow_template .DC_selectionBG {
-    background-image: url(../Images/selectedRowiPhone.png);
-    background-repeat: initial;
-    background-attachment: initial;
-    -webkit-background-clip: initial;
-    -webkit-background-origin: initial;
-    background-color: rgb(38, 127, 239);
-    -webkit-background-size: 100% 100%;
 }
 
 .evaluationQuestionResponsesRow_template.selected .evaluationQuestionResponsesText_template {
-    color: white;
+    color: rgb(38, 127, 239);
 }
 
 .evaluationQuestionResponsesRow_template.selected .evaluationQuestionResponsesCheck_template {
-    background-image: url(../Images/chevron_white.png);
+    background-image: url(../Images/checkbox.png);
 }
 
 #evaluationQuestionTextResponse {

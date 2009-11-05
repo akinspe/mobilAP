@@ -110,6 +110,7 @@ function load()
         }
     );
     mobilAP.addViewController('announcements', mobilAP.announcementsController);
+    mobilAP.announcementsController.setReloadTimer(60);
 
     mobilAP.profileController = new MobilAP.DesktopProfileController();
 
@@ -119,6 +120,7 @@ function load()
         profileEditButton: document.getElementById('directoryProfileAdminEditButton').object
     });
     mobilAP.addViewController('directory', mobilAP.directoryController);
+    mobilAP.directoryController.setReloadTimer(60);
 
     mobilAP.directoryAdminController = new MobilAP.DesktopDirectoryAdminController({
         directoryController: mobilAP.directoryController,

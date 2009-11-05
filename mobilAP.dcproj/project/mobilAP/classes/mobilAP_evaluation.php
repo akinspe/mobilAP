@@ -75,22 +75,10 @@ class mobilAP_evaluation_question
 			return $result;
 		}
         
-		$sql = sprintf("ALTER TABLE %s DROP q%d", mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index);
-		$result = mobilAP::query($sql);
-		if (mobilAP_Error::isError($result)) {
-			return $result;
-		}
-        
 		unset($questions[$this->question_index]);
         
 		for ($i=$this->question_index+1; $i<=count($questions); $i++) {
         
-			$sql = sprintf("ALTER TABLE %s CHANGE q%d q%d %s", mobilAP_session::SESSION_EVALUATION_TABLE, $i, $i-1, $questions[$i]->getColumnType());
-			$result = mobilAP::query($sql);
-			if (mobilAP_Error::isError($result)) {
-				return $result;
-			}
-            
 			$sql = sprintf("UPDATE %s SET question_index=%d WHERE question_index=%d", mobilAP_evaluation_question::EVALUATION_QUESTION_TABLE, $i-1, $i);
 			$result = mobilAP::query($sql);
 			if (mobilAP_Error::isError($result)) {
@@ -120,11 +108,6 @@ class mobilAP_evaluation_question
 			return $result;
 		}
 
-		$sql = sprintf("ALTER TABLE %s ADD q%d %s", mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->getColumnType());
-		$result = mobilAP::query($sql);
-		if (mobilAP_Error::isError($result)) {
-			return $result;
-		}
 		return true;
 	}
 
@@ -168,15 +151,6 @@ class mobilAP_evaluation_question
 			case mobilAP_evaluation_question::RESPONSE_TYPE_TEXT:
 			case mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES:
 
-				if (!is_null($this->question_index) && ($this->question_response_type != $question_response_type)) {
-					$this->question_response_type = $question_response_type;
-					$sql = sprintf("ALTER TABLE %s CHANGE q%d q%d %s", mobilAP_session::SESSION_EVALUATION_TABLE, $this->question_index, $this->question_index, $this->getColumnType());
-					$result = mobilAP::query($sql);
-					if (mobilAP_Error::isError($result)) {
-						return $result;
-					}
-				}
-			
 				$this->question_response_type = $question_response_type;
 				if (!is_null($this->question_index)) {
 					$sql = sprintf("UPDATE %s SET question_response_type='%s' WHERE question_index=%d", 

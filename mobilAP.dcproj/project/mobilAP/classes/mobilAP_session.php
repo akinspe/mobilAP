@@ -23,6 +23,7 @@ class mobilAP_session
 	const SESSION_PRESENTER_TABLE='session_presenters';
 	const SESSION_DISCUSSION_TABLE='session_discussion';
 	const SESSION_EVALUATION_TABLE='session_evaluations';
+	const SESSION_EVALUATION_ANSWERS_TABLE='session_evaluation_answers';
 	const SESSION_FLAGS_DEFAULT=15;
 	const SESSION_FLAGS_LINKS=1;
 	const SESSION_FLAGS_USER_LINKS=2;
@@ -731,9 +732,7 @@ class mobilAP_session
 		
 		for($i=0; $i<count($evaluation_questions); $i++) {
 			if (!isset($responses[$i])) {
-				$responses[$i] = 'NULL';
-			} else {
-				$responses[$i] = $evaluation_questions[$i]->question_response_type == 'T' ? "'" . mobilAP::db_escape($responses[$i]) . "'"  : intval($responses[$i]);
+				$responses[$i] = null;
 			}
 		}
 		
@@ -755,19 +754,28 @@ class mobilAP_session
 		}
 		
 		$sql = sprintf("INSERT INTO %s
-				(session_id, post_user, post_timestamp, q%s) 
+				(session_id, post_user, post_timestamp)
 				VALUES
-				(%d, '%s', %d, %s)",
-				mobilAP_session::SESSION_EVALUATION_TABLE,
-				implode(", q", array_keys($evaluation_questions)),
-				$this->session_id,
-				$user->getUserID(),
-				time(),
-				implode(",", $responses));
-		$result = mobilAP::query($sql);
+				(?, ?, ?)",
+				mobilAP_session::SESSION_EVALUATION_TABLE);
+                
+		$result = mobilAP::query($sql, array($this->session_id, $user->getUserID(), time()));
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+        
+        $evaluation_id = $result->get_last_insert_id();
+        
+        foreach ($responses as $index=>$value) {
+            $sql = sprintf("INSERT INTO %s
+                    (evaluation_id, question_index, question_answer)
+                    VALUES
+                    (?, ?, ?)",
+                    mobilAP_session::SESSION_EVALUATION_ANSWERS_TABLE);
+                    
+            $result = mobilAP::query($sql, array($evaluation_id, $index, $value));
+        }
+        
 		return true;
 	}
 
