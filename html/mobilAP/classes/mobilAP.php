@@ -63,12 +63,15 @@ class mobilAP
 			return $configs;
 		}
 	
-		$configs = array();
+        require_once('setup/mobilAP_default_config.php');
+        $configs = $_CONFIG;
 		$sql = sprintf("SELECT config_var, config_type, config_value FROM %s", 'mobilAP_config');
 		$result = mobilAP::query($sql);
 		if (mobilAP_Error::isError($result)) {
+            
 			return $configs;
 		}
+        
 		while ($row = $result->fetchRow()) {
             $value = $row['config_value'];
             switch ($row['config_type'])

@@ -1,5 +1,5 @@
 <div id="setupHeader" class="mobilAP_header">mobilAP Setup</div>
-<style type="text/css">@import url(../mobilAP/mobilAP_setup.css);</style>
+<style type="text/css">@import url(../mobilAP/setup/mobilAP_setup.css);</style>
 <?php
 
 require_once('../../mobilAP.php');
@@ -27,7 +27,7 @@ if ($db_type != 'default') {
 
 <?php
 if (!mobilAP::canSaveDBConfigFile()) { ?>
-    <p><b>Error:</b> The webserver cannot save the database configuration file. You will either need to allow the webserver to write to <b><?= mobilAP::dbConfigFile() ?></b> or manually edit the file. Please see this file for more information.</p>
+    <p><b>Error:</b> The webserver cannot save the database configuration file. You will need to allow the webserver to write to <b><?= mobilAP::dbConfigFolder() ?></b>.</p>
 <?php
 die();
 
