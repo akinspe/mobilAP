@@ -226,7 +226,7 @@ body.DC_windowInactive .homeRow_template.selected {
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     float: left;
-    width: 100px;
+    width: auto;    
     height: 100px;
     position: absolute;
     left: 11px;
@@ -236,17 +236,17 @@ body.DC_windowInactive .homeRow_template.selected {
     margin-top: 0px;
 }
 
-#directoryProfileImage {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    left: 0px;
-    top: 0px;
-    margin: auto;
-    max-width: 100%;
-    max-height: 100%;
+.mobilAP_editmode #directoryProfileImageContainer {
+    height: 130px;
+}
+
+#directoryProfileImageUpload {
+    margin-left: 0;
     width: auto;
-    height: auto;
+}
+
+#directoryProfileImage {
+    margin-bottom: 4px;
 }
 /*
 #directoryProfileFirstNameEdit {
@@ -309,6 +309,11 @@ body.DC_windowInactive .homeRow_template.selected {
     width: auto;
     height: 45px;
 }
+
+#directoryProfileOrganizationEdit {
+    margin-bottom: 30px;
+}
+
 /*
 #directoryProfileOrganizationEdit {
     color: black;
@@ -4006,6 +4011,12 @@ body.DC_windowInactive .announcementsListRow_template.selected {
 
 .adminmode .mobilAP_admin {
     display: block;
+}
+
+#upload_iframe {
+    width: 0;
+    height: 0;
+    border: none;
 }
 
 /* ENDOFCSS */

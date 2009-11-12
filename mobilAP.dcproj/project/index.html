@@ -39,7 +39,11 @@
                     <div id="directoryProfilePanel">
                         <div id="directoryProfileImageContainer" apple-part="com.apple.Dashcode.part.imageLayout" apple-group="image">
                             <img id="directoryProfileImage" class="apple-hidden" apple-group="image" src="Images/profile_placeholder.png">
+                            <div id="directoryProfileImageUpload" class="profileEditField"><form method="POST" action="../mobilAP/user.php" id="directoryProfileUploadForm" enctype="multipart/form-data">
+                                <input id="directoryProfileImageFile" type="file" name="directoryProfileImageFile"></form>
+                            </div>
                         </div>
+
                         <div id="directoryProfileFirstNameEdit" class="profileEditField">first
                             <input id="directoryProfileFirstNameField" type="text" name="" value="" class="apple-textfield apple-no-children mobilAP_adminfield" apple-part="com.apple.Dashcode.part.textfield">
                         </div>

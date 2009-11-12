@@ -1,6 +1,8 @@
 <?php
 
 require_once('../mobilAP.php');
+$content_type = 'application/json';
+
 
 if (isset($_POST['post'])) {
     $post_action = $_POST['post'];
@@ -30,6 +32,17 @@ if (isset($_POST['post'])) {
             } else {
                 $data = mobilAP_Error::throwError("Not logged in");
             }
+            break;
+        case 'updateUserImage':
+            $userID = isset($_POST['userID']) ? $_POST['userID'] : '';
+            if ($user = mobilAP_User::getUserByID($userID)) {
+                $file = isset($_FILES['directoryProfileImageFile']) ? $_FILES['directoryProfileImageFile'] : array();
+                $data = $user->uploadImage($file);
+            } else {
+                $data = mobilAP_Error::throwError("Unable to find user for userID " . $userID,-2, $userID);
+            }
+            
+            $content_type = 'text/html';
             break;
         case 'updateUser':
             $userID = isset($_POST['userID']) ? $_POST['userID'] : '';
@@ -72,7 +85,7 @@ if (isset($_POST['post'])) {
     $data = new mobilAP_user(true);
 }
 
-header('Content-type: application/json');
+header("Content-type: $content_type");
 echo json_encode($data);
 
 ?>

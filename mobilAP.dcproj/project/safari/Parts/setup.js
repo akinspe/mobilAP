@@ -54,7 +54,7 @@ var dashcodePartSpecs = {
     "directoryProfileAdminEditButton": { "initialHeight": 25, "initialWidth": 64, "leftImageWidth": 5, "onclick": "directoryAdminToggleEdit", "rightImageWidth": 5, "text": "Edit", "view": "DC.PushButton" },
     "directoryProfileEmail": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.email" } }, "text": "email", "view": "DC.Text" },
     "directoryProfileFirstName": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.FirstName" } }, "text": "First Name", "view": "DC.Text" },
-    "directoryProfileImageContainer": { "view": "DC.ImageLayout" },
+    "directoryProfileImageContainer": { "propertyValues": { "srcBinding": { "keypath": "directoryList.selection.imageThumbURL" } }, "view": "DC.ImageLayout" },
     "directoryProfileLastName": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.LastName" } }, "text": "Last Name", "view": "DC.Text" },
     "directoryProfileOrganization": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.organization" } }, "text": "Organization", "view": "DC.Text" },
     "directoryProfileResetPasswordButton": { "initialHeight": 25, "initialWidth": 136, "leftImageWidth": 5, "onclick": "directoryAdminResetPassword", "rightImageWidth": 5, "text": "Reset Password", "view": "DC.PushButton" },
@@ -196,6 +196,8 @@ var dashcodePartSpecs = {
     "splitLayout": { "flexibleViewIndex": 1, "initialSize": 728, "initialSplitterSize": 1, "isVertical": true, "splitterPosition": 171, "view": "DC.SplitLayout" },
     "welcomeText": { "text": "Welcome", "view": "DC.Text" }
 };
+
+
 
 
 

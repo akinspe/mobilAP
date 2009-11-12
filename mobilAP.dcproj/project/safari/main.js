@@ -128,7 +128,8 @@ function load()
         profileLastNameField: document.getElementById('directoryProfileLastNameField'),
         profileOrganizationField: document.getElementById('directoryProfileOrganizationField'),
         profileEmailField: document.getElementById('directoryProfileEmailField'),
-        profileAdminSwitch: new MobilAP.Switch('directoryProfileAdminSwitch')
+        profileAdminSwitch: new MobilAP.Switch('directoryProfileAdminSwitch'),
+        profileUploadForm: document.getElementById('directoryProfileUploadForm')
     });
     
     mobilAP.sessionEvaluationController = new MobilAP.DesktopSessionEvaluationController({
@@ -965,6 +966,11 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
     deleteUser: function() {
         return this.base(this.user.userID);
     },
+    processImageUpload: function(data) {
+        if (this.isError(data)) {
+            alert("Error uploading image: "+ data.error_message);
+        }
+    },
     saveUser: function(user, callback) {
         if ('object' == typeof user) {
             return this.base(user,callback);
@@ -980,6 +986,13 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
             alert(result.error_message);
             return false;
         }
+
+        var params = {
+            post: 'updateUserImage',
+            userID: this.user.userID
+        }
+        this.uploadFile(this.profileUploadForm, params, this.processImageUpload.bind(this));
+
         return true;
     },
     constructor: function(params) {

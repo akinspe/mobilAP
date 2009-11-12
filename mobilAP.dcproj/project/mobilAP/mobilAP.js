@@ -173,6 +173,81 @@ MobilAP = {
                 return new MobilAP.Error('There was an server error with the request', -1, e);
             }
         },
+        uploadFile: function(form, params, callback)
+        {
+            // Create the iframe...
+            var iframe = document.createElement("iframe");
+            iframe.id="upload_iframe";
+            iframe.name="upload_iframe";
+            // Add to document...
+            form.parentNode.appendChild(iframe);
+            window.frames['upload_iframe'].name="upload_iframe";
+            iframeId = document.getElementById("upload_iframe");
+            var inputs = [];
+            for (var param in params) {
+                var input = document.createElement('input');
+                input.type='hidden';
+                input.name=param;
+                input.value=params[param];
+                inputs.push(input);
+                form.appendChild(input);
+            }
+            
+            var self = this;
+            // Add event...
+            var eventHandler = function()  {
+                if (iframeId.detachEvent) {
+                    iframeId.detachEvent("onload", eventHandler);
+                } else {
+                    iframeId.removeEventListener("load", eventHandler, false);
+                }
+                
+                for (var i=0; i< inputs.length;i++) {
+                    form.removeChild(inputs[i]);
+                }
+
+                // Message from server...
+                var content;
+
+                if (iframeId.contentDocument) {
+                    content = iframeId.contentDocument.body.innerHTML;
+                } else if (iframeId.contentWindow) {
+                    content = iframeId.contentWindow.document.body.innerHTML;
+                } else if (iframeId.document) {
+                    content = iframeId.document.body.innerHTML;
+                }
+                
+                self.log(content);
+                try { 
+                    content = eval('('+content+')');
+                    if ('object'==typeof content && content.error_message) {
+                        content = new MobilAP.Error(content.error_message, content.error_code, content.error_userInfo);
+                    }
+                } catch(e) {
+                    content = new MobilAP.Error("Error processing upload: " +e);
+                }
+
+                if (typeof callback=='function') {
+                    callback(content);
+                }
+
+                // Del the iframe...
+                setTimeout(function() { iframeId.parentNode.removeChild(iframeId)}, 250);
+            }
+            
+            if (iframeId.addEventListener) {
+                iframeId.addEventListener("load", eventHandler, true);
+            }
+
+            if (iframeId.attachEvent) {
+                iframeId.attachEvent("onload", eventHandler);
+            }
+
+            // Set properties of form...
+            form.target='upload_iframe';
+            // Submit the form...
+            form.submit();
+        },
 
 		constructor: function(parameters) {
 			this.base(parameters);
