@@ -10,6 +10,8 @@
 
 //where in the filesystem are we
 define('MOBILAP_BASE', realpath(dirname(__FILE__)));
+//try to figure out the base URL. If DOCUMENT_ROOT isn't set, then this probably isn't going to work. Apache is fine, other servers???
+define('MOBILAP_URL_BASE', isset($_SERVER['DOCUMENT_ROOT']) ? substr(MOBILAP_BASE, strlen($_SERVER['DOCUMENT_ROOT'])) : '/');
 
 //set include path
 ini_set('include_path', '.' . PATH_SEPARATOR . MOBILAP_BASE .'/mobilAP');
