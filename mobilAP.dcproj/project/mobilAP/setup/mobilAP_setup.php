@@ -77,32 +77,32 @@ die();
         <h2>Step 3: Options</h2>
         <p>Now it's time to set a few options that affect the behavior of mobilAP. You can change these and other options later using the admin tools.</p>
 
-<label>Site Title</label>
+<div class="mobilAP_label">Site Title</div>
 <input type="text" id="admin_site_title" value="mobilAP" size="50">
 
-<label>Require Login to view content</label>
-<p class="explanation">You can make all the content on the site private and require users to login in order to view the site</p>
-<div id="admin_content_private"></div>
+<div class="mobilAP_label">Require Login to view content</div>
+<p class="mobilAP_explanation">You can make all the content on the site private and require users to login in order to view the site</p>
+<div id="admin_content_private" class="mobilAP_switch"></div>
 
-<label>Use Passwords</label>
-<p class="explanation">You can require attendees to enter a password when logging in. You assign passwords either at import or by editing the user in the attendee administration.</p>
-<div id="admin_use_passwords"></div>
+<div class="mobilAP_label">Use Passwords</div>
+<p class="mobilAP_explanation">You can require attendees to enter a password when logging in. You assign passwords either at import or by editing the user in the attendee administration.</p>
+<div id="admin_use_passwords" class="mobilAP_switch"></div>
 
-<label>Require Password for admins</label>
-<p class="explanation">You can require admins to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</p> 
-<div id="admin_use_admin_passwords"></div>
+<div class="mobilAP_label">Require Password for admins</div>
+<p class="mobilAP_explanation">You can require admins to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</p> 
+<div id="admin_use_admin_passwords" class="mobilAP_switch"></div>
 
-<label>Require Password for presenters</label>
-<p class="explanation">You can require presenters to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</p>
-<div id="admin_use_presenter_passwords"></div>        
+<div class="mobilAP_label">Require Password for presenters</div>
+<p class="mobilAP_explanation">You can require presenters to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</p>
+<div id="admin_use_presenter_passwords" class="mobilAP_switch"></div>        
 
-<label>Allow self-created users</label>
-<p class="explanation">You can allow anyone to create an account in the system by supplying their email address. If off, you must administer all users before they can login.</p>
-<div id="admin_allow_self_created_users"></div>        
+<div class="mobilAP_label">Allow self-created users</div>
+<p class="mobilAP_explanation">You can allow anyone to create an account in the system by supplying their email address. If off, you must administer all users before they can login.</p>
+<div id="admin_allow_self_created_users" class="mobilAP_switch"></div>        
 
-<label>Don't use schedule</label>
-<p class="explanation">For simpler events where there is only 1 session, you can turn off the schedule</p>
-<div id="admin_single_session_mode"></div>        
+<div class="mobilAP_label">Don't use schedule</div>
+<p class="mobilAP_explanation">For simpler events where there is only 1 session, you can turn off the schedule</p>
+<div id="admin_single_session_mode" class="mobilAP_switch"></div>        
         
     </div>
     <div id="setupFinished">
