@@ -64,7 +64,7 @@ class mobilAP
 		}
 	
         require_once('setup/mobilAP_default_config.php');
-        $configs = $_CONFIG;
+        $configs = $GLOBALS['CONFIG'];
 		$sql = sprintf("SELECT config_var, config_type, config_value FROM %s", 'mobilAP_config');
 		$result = mobilAP::query($sql);
 		if (mobilAP_Error::isError($result)) {
@@ -136,7 +136,7 @@ class mobilAP
     public static function setDefaultConfigs()
     {
         require_once('setup/mobilAP_default_config.php');
-        foreach ($_CONFIG as $var=>$value) {
+        foreach ($GLOBALS['CONFIG'] as $var=>$value) {
             if (is_bool($value)) {
                 $type = 'B';
                 $value = $value ? -1 : 0;
