@@ -574,6 +574,7 @@ class mobilAP_User
 			}
 
 			chmod($this->getPhotoFile(), 0644);
+			$this->fixPhotoOrientation($this->getPhotoFile());
 			$result = $this->createPhotoThumb();
 			return $result;
     
@@ -581,6 +582,59 @@ class mobilAP_User
         
         return false;
     }
+    
+    /*  attempt to fix orientations from photos taken containing EXIF orientation information. It should
+    	prevent photos from displaying incorrectly in browsers that do not propery parse EXIF orientation information
+    	This is a optimistic function. If it fails it's non-fatal
+	*/
+    public function fixPhotoOrientation($file)
+    {
+		if (!function_exists('exif_read_data')) {
+			return; // no exif functions
+		}
+
+		if (!function_exists('ImageCreateFromJPEG')) {
+			return; //no gd functions
+		}
+
+		if (!is_file($file)) {
+			return; //file not there
+		}
+
+		if (!$data = @exif_read_data($file)) {
+			return; // no exif data
+		}
+		
+		if (!isset($data['Orientation'])) {
+			return; // no orientation data
+		}
+
+		switch ($data['Orientation'])
+		{
+			case 1:
+				return;
+				break;
+			case 3:
+				$deg = 180;
+				break;
+			case 6:
+				$deg = 90;
+				break;
+			case 8:
+				$deg = -90;
+				break;
+			default:
+				return; // image flipped. we're not handling that now
+				break;				
+		}
+		
+		$im = ImageCreateFromJPEG($file);
+		$rotate = imagerotate($im, $deg*-1, 0);	
+		ImageJPEG($rotate, $file);
+		
+		return;
+	}
+    
     
 	/* THIS FUNCTION COULD BE REWRITTEN TO HANDLE AUTHORIZATION. IT SHOULD RETURN true or false */
     static function Auth($id, $password)
