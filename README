@@ -1,5 +1,5 @@
-mobilAP Version 2.0b
-November 4, 2009
+mobilAP Version 2.0b2
+November 18, 2009
 
 RELEASE NOTES
 
@@ -11,34 +11,34 @@ REQUIREMENTS AND SETUP
 
 - mobilAP requires a web server running PHP 5.2. It _may_ run under 5.1 with the included JSON emulation functions, however it is likely that performance will suffer. It also requires the PDO (PHP data objects) extension for database abstraction. 
 
-- In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/config folder
-
-- In order to use SQLite, the webserver must be able to write to the html/mobilAP/data folder. 
-
 - Copy the HTML folder to your website. You can either copy the contents of the folder to the root of your website, or into a subfolder. Using a desktop browser, go to the URL of the folder you placed mobilAP in, it will begin the setup process of configuring the database, creating and initial user, and setting some initial options.
 
+- In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder
+
+FIXED Since 2.0b1
+
+- Evaluation questions can be added by admins and answered by users
+- Config files and welcome content have been moved to html/mobilAP/data. This was done so you only have to open up 1 folder that must be writable.
+- Setup files were rearranged.
+- Directory and Announcements are refreshed every 60 seconds
+- Administrators can upload directory photos
+- EXIF orientation is removed to account for the difference in how browsers handle it. In order for this to work requires PHP's EXIF and GD functions. If those functions aren't available, you will need to rotate the images manually.
+- If passwords are optional the password box will not show
+- The content private setting now works as expected
 
 KNOWN ISSUES/PLANNED UPDATES BEFORE 2.0 final
 
 - Documentation should be better and nicer looking
 
-- Making the site private in the settings has no effect
+- You will eventually be able to specify an alternate location of the SQLite database file and other data files
 
-- The handling of optional passwords is not complete
-
-- The setup routine will not succeed if the webserver cannot write to the database file, even if you update it manually as directed.
-
-- You will eventually be able to specify an alternate location of the SQLite database file
-
-- You must specify the server timezone using the date.timezone php.ini setting. IF you do not have access to this file, you can add a date_default_timezone_set() call to html/mobilAP.php.
+- You must specify the server timezone using the date.timezone php.ini setting. If you do not have access to this file, you can add a date_default_timezone_set() call to html/mobilAP.php.
 
 - It is hoped that timezone selection will eventually be part of the setup process
 
+- When uploading a new directory image, you may have to reload the site to see the updated image.
+
 - Mass import of users is currently non-functional
-
-- Evaluation questions are currently non-functional
-
-- Uploading of directory images is non-functional/non-existent.
 
 - Due to a coding flaw in Apple's Dashcode framework code, if you edit the project file and then re-publish the site, the desktop version will not work in Firefox. The template used to program the Stack Layout part calls a method that does not exist in Firefox. In the code that comes with mobilAP, that method is properly handled. If you republish the project it will overwrite that file (html/safari/Parts/parts.js).
 
@@ -46,7 +46,7 @@ KNOWN ISSUES/PLANNED UPDATES BEFORE 2.0 final
 
 - The mobile site will always say "mobilAP" at the home screen. It is hoped that the final version will use the site title.
 
-- There will eventually be a way to upload an alternate home screen icon. At this time, simply replace html/mobile/Images/WebClipIcon.png
+- There will eventually be a way to upload an alternate home screen icon. At this time, simply replace html/mobilAP/data/WebClipIcon.png
 
 - You will eventually be able to alter the wording and order of the main menu items
 
