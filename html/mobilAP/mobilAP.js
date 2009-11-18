@@ -126,6 +126,7 @@ MobilAP = {
 	BaseClass: Class.create(DC.Bindable, {
         SESSION_SINGLE_ID:1,
 		ERROR_NO_USER: -1,
+        ERROR_REQUIRES_PASSWORD: -4,
         CREATE_NEW_USER: -6,
 		LOGGING: true,
 		log: function(msg) {
@@ -133,7 +134,11 @@ MobilAP = {
 			try { console.log(msg); } catch (e) {}		
 		},
 		getConfig: function(config_var) {
-            return dashcode.getDataSource('config').content().valueForKey(config_var);
+            try {
+                return dashcode.getDataSource('config').content().valueForKey(config_var);
+            } catch (e) {
+                return null;
+            }
 		},
 		isError: function(obj) {
 			if ('object' == typeof obj) {

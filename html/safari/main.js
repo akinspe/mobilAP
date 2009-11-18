@@ -19,6 +19,7 @@ function load()
     mobilAP.loginController = new MobilAP.DesktopLoginController({
         userID_field: document.getElementById('login_userID'),
         password_field: document.getElementById('login_pword'),
+        password_fields: document.getElementById('login_password'),
         login_result: document.getElementById('login_result'),
         createNewUserButton: document.getElementById('loginCreateNewUserButton').object
     });
@@ -218,6 +219,19 @@ MobilAP.DesktopApplicationController = Class.create(MobilAP.ApplicationControlle
     },
     logout: function() {
         this.loadView('logout', 'Logout');
+    },          
+    indexForView: function(view) {
+        var homeContent = dashcode.getDataSource('homeData').content();
+        if (homeContent) {
+            for (var i=0 ; i<homeContent.length; i++) {
+                if (homeContent[i].id == view) {
+                    this.log("View " + view + ' is index ' + i);
+                    return i;
+                }
+            }
+        }
+        this.log("Unable to find index for view " + view);
+        return null;
     },
     loadViewIndex: function(index) {
         if (this.homeList.rows[index]) {
@@ -228,6 +242,12 @@ MobilAP.DesktopApplicationController = Class.create(MobilAP.ApplicationControlle
         force = 'undefined' == typeof force ? false : force;
         if (!document.getElementById(toView)) {
             throw("View " + toView + " not found");
+        }
+        
+        if (this.getConfig('CONTENT_PRIVATE') && !this.isLoggedIn() && toView != 'login') {
+            this.loadViewIndex(this.indexForView('login'));
+            this.loginController.setLoginResult('You must login to view content on this site');
+            return;
         }
         
         if (force || (this.detailStack.getCurrentView().id != toView)) {
@@ -244,6 +264,19 @@ MobilAP.DesktopApplicationController = Class.create(MobilAP.ApplicationControlle
             this.loadView(selectedObjects[0].valueForKey('id'), selectedObjects[0].valueForKey('title'));
         }
     },
+    configUpdated: function(change,keyPath) {
+        this.base(change,keyPath);
+        this.checkPrivate();
+    },
+    homeUpdated: function(change,keyPath) {
+        this.checkPrivate();
+    },
+    checkPrivate: function() {
+        if (this.getConfig('CONTENT_PRIVATE') && !this.isLoggedIn()) {
+            this.loadViewIndex(this.indexForView('login'));
+            this.loginController.setLoginResult('You must login to view content on this site');
+        }
+    },
     userUpdated: function(change,keyPath) {
         this.base(change,keyPath);
         var oldUser = change.oldValue ? new MobilAP.User(change.oldValue) : new MobilAP.User();
@@ -254,12 +287,15 @@ MobilAP.DesktopApplicationController = Class.create(MobilAP.ApplicationControlle
             dashcode.getDataSource('homeData').queryUpdated();
             this.loadViewIndex(0);
         }
+        
+        this.checkPrivate();
     },
     constructor: function(params)
     {
         this.product = 'safari';
         this.base(params);
         this.homeList.addObserverForKeyPath(this, this.homeSelected, "selectionIndexes");
+        dashcode.getDataSource('homeData').addObserverForKeyPath(this, this.homeUpdated, "content");
     }
     
 });
@@ -270,8 +306,14 @@ MobilAP.DesktopLoginController= Class.create(MobilAP.LoginController, {
         this.createNewUserButton.viewElement().style.display='none';
         if (this.isError(result)) {
             this.setLoginResult(json.error_message);
-            if (result.error_code==mobilAP.CREATE_NEW_USER) {
-                this.createNewUserButton.viewElement().style.display='block';
+            switch (result.error_code)
+            {
+                case this.CREATE_NEW_USER:
+                    this.createNewUserButton.viewElement().style.display='block';
+                    break;
+                case this.ERROR_REQUIRES_PASSWORD:
+                    this.password_fields.style.display='block';
+                    break;
             }
         }
     },
@@ -291,6 +333,9 @@ MobilAP.DesktopLoginController= Class.create(MobilAP.LoginController, {
         this.userID_field.value = '';
         this.password_field.value = '';
         this.setLoginResult('');
+        if (!this.getConfig('USE_PASSWORDS')) {
+        	this.password_fields.style.display = 'none';
+        }
         this.createNewUserButton.viewElement().style.display='none';
     }
 });
@@ -987,11 +1032,14 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
             return false;
         }
 
-        var params = {
-            post: 'updateUserImage',
-            userID: this.user.userID
+        if (this.user.userID) {
+            var params = {
+                post: 'updateUserImage',
+                userID: this.user.userID
+            }
+
+            this.uploadFile(this.profileUploadForm, params, this.processImageUpload.bind(this));
         }
-        this.uploadFile(this.profileUploadForm, params, this.processImageUpload.bind(this));
 
         return true;
     },

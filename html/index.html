@@ -39,7 +39,7 @@
                     <div id="directoryProfilePanel">
                         <div id="directoryProfileImageContainer">
                             <img id="directoryProfileImage" src="Images/profile_placeholder.png">
-                            <div id="directoryProfileImageUpload" class="profileEditField"><form method="POST" action="../mobilAP/user.php" id="directoryProfileUploadForm" enctype="multipart/form-data">
+                            <div id="directoryProfileImageUpload" class="profileUpdateField"><form method="POST" action="../mobilAP/user.php" id="directoryProfileUploadForm" enctype="multipart/form-data">
                                     <input id="directoryProfileImageFile" type="file" name="directoryProfileImageFile">
                                 </form>
                             </div>
@@ -528,8 +528,10 @@
                     <div id="loginText"></div>
                     <div id="login_userID_label" class="mobilAP_label"></div>
                     <input id="login_userID" type="text" name="" value="" class="mobilAP_field">
-                    <div id="login_pword_label" class="mobilAP_label"></div>
-                    <input id="login_pword" type="password" name="" value="" class="mobilAP_field">
+                    <div id="login_password">
+                        <div id="login_pword_label" class="mobilAP_label"></div>
+                        <input id="login_pword" type="password" name="" value="" class="mobilAP_field">
+                    </div>
                     <div id="login_result"></div>
                     <div id="loginCreateNewUserButton"></div>
                     <div id="loginSubmit"></div>

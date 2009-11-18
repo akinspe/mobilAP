@@ -19,6 +19,7 @@ function load()
     mobilAP.loginController = new MobilAP.MobileLoginController({
         userID_field: document.getElementById('loginUserID'),
         password_field: document.getElementById('loginPassword'),
+        password_fields: document.getElementById('loginPasswordFields'), 
         login_result: document.getElementById('loginResult'),
         createNewUserButton: document.getElementById('loginCreateNewUserButton').object
     });
@@ -191,6 +192,12 @@ MobilAP.MobileApplicationController= Class.create(MobilAP.ApplicationController,
         dashcode.getDataSource('session').queryUpdated();
     },
     loadView: function(toView, title) {        
+        if (this.getConfig('CONTENT_PRIVATE') && !this.isLoggedIn() && toView != 'login') {
+            this.loadView('login', 'Login');
+            this.loginController.setLoginResult('You must login to view content on this site');
+            return;
+        }
+
         // don't go forward if we're already at the view
         if (this.browser.getCurrentView().id != toView) {
             this.browser.goForward(toView, title, this.browserBackHandler.bind(this));
@@ -534,8 +541,14 @@ MobilAP.MobileLoginController= Class.create(MobilAP.LoginController, {
         this.createNewUserButton.viewElement().style.display='none';
         if (this.isError(result)) {
             this.setLoginResult(json.error_message);
-            if (result.error_code==mobilAP.CREATE_NEW_USER) {
-                this.createNewUserButton.viewElement().style.display='block';
+            switch (result.error_code)
+            {
+                case this.CREATE_NEW_USER:
+                    this.createNewUserButton.viewElement().style.display='block';
+                    break;
+                case this.ERROR_REQUIRES_PASSWORD:
+                    this.password_fields.style.display='block';
+                    break;
             }
         } else {
             mobilAP.goBack();
@@ -560,6 +573,9 @@ MobilAP.MobileLoginController= Class.create(MobilAP.LoginController, {
         this.password_field.value = '';
         this.createNewUserButton.viewElement().style.display='none';
         this.setLoginResult('');
+        if (!this.getConfig('USE_PASSWORDS')) {
+        	this.password_fields.style.display = 'none';
+        }
     }
 });
 
