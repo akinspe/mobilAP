@@ -1550,6 +1550,8 @@ body.DC_windowInactive .sessionQuestionAdminResponsesRow_template.selected {
 }
 
 #login_result {
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
     margin-top: 9px;
     margin-bottom: 9px;
     height: auto;
@@ -1574,6 +1576,7 @@ body.DC_windowInactive .sessionQuestionAdminResponsesRow_template.selected {
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     margin-left: 0px;
+    margin-top: 9px;
     width: 73px;
 }
 
