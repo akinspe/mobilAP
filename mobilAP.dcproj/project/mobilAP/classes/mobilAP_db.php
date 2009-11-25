@@ -134,7 +134,7 @@ class mobilAP_db
         foreach (mobilAP_db::known_db_types() as $db_type) {
             require_once(sprintf("db/mobilAP_db_%s.php", $db_type));
             $class = "mobilAP_db_" . $db_type;
-            $db_types[$db_type] = $class::info();
+            $db_types[$db_type] = call_user_func(array($class,'info'));Ï
         }
         
         return $db_types;
