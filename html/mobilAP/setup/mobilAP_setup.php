@@ -27,7 +27,7 @@ if ($db_type != 'default') {
 
 <?php
 if (!mobilAP::canSaveDBConfigFile()) { ?>
-    <p><b>Error:</b> The webserver cannot save the database configuration file. You will need to allow the webserver to write to <b><?= mobilAP::dbConfigFolder() ?></b>.</p>
+    <p><b>Error:</b> The webserver cannot save the database configuration file. You will need to allow the webserver to write to <b><?php echo mobilAP::dbConfigFolder(); ?></b>.</p>
 <?php
 die();
 
@@ -36,24 +36,24 @@ die();
 <div id="setupStack">
     <div id="setupDB">
         <h2>Step 1: Database configuration</h2>
-        <p>mobilAP uses a database to store its data. It currently supports <?= count($db_types) ?> database types:</p>
+        <p>mobilAP uses a database to store its data. It currently supports <?php echo count($db_types); ?> database types:</p>
         <ul>
         <?php 
         foreach ($db_types as $db_type=>$data) { 
-        ?><li><?php if ($data['supported']) { ?><input type="radio" name="db_type" value="<?= $db_type ?>" onclick="mobilAP.setupController.setDBType('<?= $db_type ?>')"><?php } else { ?> - <?php } ?> <b><?= $data['title'] ?></b>. <?= $data['description'] ?> Availability: <span class="<?= $data['supported'] ? 'db_supported' : 'db_notsupported' ?>"><?= $data['supported_message'] ?></span></li>
+        ?><li><?php if ($data['supported']) { ?><input type="radio" name="db_type" value="<?php echo $db_type; ?>" onclick="mobilAP.setupController.setDBType('<?php echo $db_type; ?>')"><?php } else { ?> - <?php } ?> <b><?php echo $data['title']; ?></b>. <?php echo $data['description']; ?> Availability: <span class="<?php echo $data['supported'] ? 'db_supported' : 'db_notsupported'; ?>"><?php echo $data['supported_message']; ?></span></li>
         <?php } ?>
         </ul>
 
         <div id="db_host_info">
        <p>Please enter your database connection information</p>
             <label>Host:</label>
-            <input type="text" id="db_host" value="<?= mobilAP::getDBConfig('db_host') ?>">
+            <input type="text" id="db_host" value="<?php echo mobilAP::getDBConfig('db_host'); ?>">
             <label>Username:</label>
-            <input type="text" id="db_username" value="<?= mobilAP::getDBConfig('db_username') ?>">
+            <input type="text" id="db_username" value="<?php echo mobilAP::getDBConfig('db_username'); ?>">
             <label>Password:</label>
             <input type="password" id="db_password" value="">
             <label>Database:</label>
-            <input type="text" id="db_database" value="<?= mobilAP::getDBConfig('db_database') ?>">
+            <input type="text" id="db_database" value="<?php echo mobilAP::getDBConfig('db_database'); ?>">
             <div id="db_test_results"></div>
             <input type="button" id="db_test" onclick="mobilAP.setupController.dbtest()" value="Validate Connection">
         </div>
