@@ -1,5 +1,5 @@
-mobilAP Version 2.0b3
-November 25, 2009
+mobilAP Version 2.0b4
+February 2, 2010
 
 RELEASE NOTES
 
@@ -14,6 +14,10 @@ REQUIREMENTS AND SETUP
 - Copy the HTML folder to your website. You can either copy the contents of the folder to the root of your website, or into a subfolder. Using a desktop browser, go to the URL of the folder you placed mobilAP in, it will begin the setup process of configuring the database, creating and initial user, and setting some initial options.
 
 - In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder
+
+FIXED Since 2.0b3
+- Fixed an issue that would prevent the mobilAP setup from working when short_open_tags was not enabled
+- Added character encoding to output.
 
 FIXED Since 2.0b2
 - Fixed an issue that would prevent mobilAP from working in PHP versions less than 5.3
