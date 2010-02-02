@@ -1,6 +1,9 @@
 <?php
 
 $GLOBALS['CONFIG'] = array(
+	'MOBILAP_MAJOR_VERSION'=>2,
+	'MOBILAP_MINOR_VERSION'=>0,
+	'MOBILAP_TERTIARY_VERSION'=>0,
     'SITE_TITLE'=>'mobilAP',
     'CONTENT_PRIVATE'=>false,
     'USE_PASSWORDS'=>true,
