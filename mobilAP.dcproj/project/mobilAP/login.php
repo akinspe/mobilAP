@@ -61,7 +61,7 @@ if (!empty($login_userID)) {
         $login_result = $user_session;
 	}
 }
-header('Content-type: application/json');
+header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
 echo json_encode($login_result);
 
 ?>

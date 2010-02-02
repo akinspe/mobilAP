@@ -85,7 +85,7 @@ if (isset($_POST['post'])) {
     $data = new mobilAP_user(true);
 }
 
-header("Content-type: $content_type");
+header("Content-type: $content_type; charset=utf-8");
 echo json_encode($data);
 
 ?>

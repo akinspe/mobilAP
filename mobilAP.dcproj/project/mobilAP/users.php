@@ -10,7 +10,7 @@ if (isset($_REQUEST['letter'])) {
     $data = mobilAP_User::getUsers();
 }
 
-header('Content-type: application/json');
+header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
 echo json_encode($data);
 
 ?>

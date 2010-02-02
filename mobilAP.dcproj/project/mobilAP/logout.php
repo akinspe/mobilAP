@@ -19,7 +19,7 @@ if ($user_session->loggedIn()) {
     $data = mobilAP_error::throwError("Not logged in");
 }
 
-header('Content-type: application/json');
+header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
 echo json_encode($data);
 
 ?>

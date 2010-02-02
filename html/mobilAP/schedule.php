@@ -52,7 +52,7 @@ if (isset($_POST['post'])) {
     mobilAP_Cache::setCache('mobilAP_schedule', $data, 600);
 }
 
-header('Content-type: application/json');
+header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
 echo json_encode($data);
 
 ?>

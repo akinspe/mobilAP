@@ -170,7 +170,7 @@ if ($session = mobilAP::getSessionByID($session_id)) {
     }
 }
 
-header('Content-type: application/json');
+header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
 echo json_encode($data);			
 
 ?>

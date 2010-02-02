@@ -72,7 +72,7 @@ if (isset($_POST['post'])) {
     $data = mobilAP::getEvaluationQuestions();
 }
 
-header('Content-type: application/json');
+header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
 echo json_encode($data);
 
 ?>

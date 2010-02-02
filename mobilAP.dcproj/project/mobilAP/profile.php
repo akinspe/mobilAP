@@ -7,7 +7,7 @@ if (!$data = mobilAP_User::getUserByID($userID)) {
     $data = new mobilAP_User();
 }
 
-header('Content-type: application/json');
+header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
 echo json_encode($data);
 
 ?>
