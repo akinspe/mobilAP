@@ -127,9 +127,9 @@ class mobilAP_announcement
      */
 	private function loadFromArray($arr)
 	{
-		$this->announcement_id = $arr['announcement_id'];
+		$this->announcement_id = intval($arr['announcement_id']);
 		$this->announcement_title = $arr['announcement_title'];
-		$this->announcement_timestamp = $arr['announcement_timestamp'];
+		$this->announcement_timestamp = intval($arr['announcement_timestamp']);
 		$this->userID = $arr['userID'];
 		$this->announcement_text = $arr['announcement_text'];
 	}	
