@@ -1375,7 +1375,7 @@ class mobilAP_session_question
 	function loadQuestionFromArray($arr)
 	{
 		$question = new mobilAP_session_question($arr['session_id']);
-		$question->question_id = $arr['question_id'];
+		$question->question_id = intval($arr['question_id']);
 		$question->question_index = intval($arr['question_index']);
 		$question->question_text = $arr['question_text'];
 		$question->question_list_text = $arr['question_list_text'];
