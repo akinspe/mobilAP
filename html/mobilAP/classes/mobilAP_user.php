@@ -236,6 +236,10 @@ class mobilAP_User
             return true;
         }
         
+        if (!$this->getUserID()) {
+        	return false;
+        }
+        
     	if (!is_array($row)){
 			$sql = sprintf("SELECT * FROM %s WHERE userID=?", 
 							mobilAP_user::USER_TABLE);
