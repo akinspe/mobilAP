@@ -1375,7 +1375,7 @@ class mobilAP_session_question
 	function loadQuestionFromArray($arr)
 	{
 		$question = new mobilAP_session_question($arr['session_id']);
-		$question->question_id = $arr['question_id'];
+		$question->question_id = intval($arr['question_id']);
 		$question->question_index = intval($arr['question_index']);
 		$question->question_text = $arr['question_text'];
 		$question->question_list_text = $arr['question_list_text'];
@@ -1588,7 +1588,7 @@ class mobilAP_session_question
 
 	function getAnswers()
 	{
-		$answers = array('total'=>0);
+		$answers = array('total'=>0,'users'=>array());
 		foreach ($this->responses as $index=>$response) {
 			$answers[$response->response_value] = 0;
 		}
@@ -1602,10 +1602,23 @@ class mobilAP_session_question
 				return $answers;
 			}
 			while ($row = $result->fetchRow()) {
-				$answers['total']+=$row['count'];
-				$answers[$row['response_value']]+=$row['count'];
+				if ($row['response_value']) {
+					$answers['total']+=$row['count'];
+					$answers[$row['response_value']]+=$row['count'];
+				}
 			}
-		}		
+			
+			$sql = "SELECT DISTINCT response_userID FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
+			WHERE question_id=$this->question_id AND response_value";
+			$result = mobilAP::query($sql);
+			if (mobilAP_Error::isError($result)) {
+				return $answers;
+			}
+
+			while ($row = $result->fetchRow()) {
+				$answers['users'][] = $row['response_userID'];
+			}
+		}
 		
 		return $answers;
 	}
