@@ -17,6 +17,22 @@ if (isset($_POST['post'])) {
     $post_action = $_POST['post'];
     switch ($post_action)
     {
+        case 'readAnnouncement':
+            $announcement_id = isset($_REQUEST['announcement_id']) ? $_REQUEST['announcement_id'] : '';
+            if ($announcement = mobilAP_announcement::getAnnouncementById($announcement_id)) {
+				$data = $announcement->readAnnouncement($user->getUserID(),true);
+            } else {
+                $data = mobilAP_Error::throwError("Invalid announcement");
+            }
+            break;
+        case 'unreadAnnouncement':
+            $announcement_id = isset($_REQUEST['announcement_id']) ? $_REQUEST['announcement_id'] : '';
+            if ($announcement = mobilAP_announcement::getAnnouncementById($announcement_id)) {
+				$data = $announcement->readAnnouncement($user->getUserID(),false);
+            } else {
+                $data = mobilAP_Error::throwError("Invalid announcement");
+            }
+            break;
         case 'deleteAnnouncement':
             $announcement_id = isset($_POST['announcement_id']) ? $_POST['announcement_id'] : '';
             if ($announcement = mobilAP_announcement::getAnnouncementById($announcement_id)) {
@@ -55,6 +71,7 @@ if (isset($_POST['post'])) {
 
     $data = mobilAP::getAnnouncements();
     foreach ($data as $idx=>$announcement) {
+        $data[$idx]->readUserID = $user->getUserID();
         $data[$idx]->read = $announcement->hasRead($user->getUserID());
         $data[$idx]->user = mobilAP_user::getUserById($announcement->userID);
     }

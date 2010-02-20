@@ -15,6 +15,7 @@ class mobilAP_announcement
 	public $announcement_id;
 	public $announcement_title;
 	public $announcement_timestamp;
+	public $announcement_date;
 	public $userID;
 	public $announcement_text;
 
@@ -130,6 +131,7 @@ class mobilAP_announcement
 		$this->announcement_id = intval($arr['announcement_id']);
 		$this->announcement_title = $arr['announcement_title'];
 		$this->announcement_timestamp = intval($arr['announcement_timestamp']);
+		$this->announcement_date = strftime('%b %d, %Y %H:%M:%S', $arr['announcement_timestamp']);
 		$this->userID = $arr['userID'];
 		$this->announcement_text = $arr['announcement_text'];
 	}	
@@ -200,24 +202,35 @@ class mobilAP_announcement
 			} else {
 				return false;
 			}
+		} else {
+			return false;
 		}
 	}
 
     /*
      * sets the announcemnt read flag for a user
      * @param string $userID, the user who has read the announcement
+     * @param bool $read, true to "read" it, false to "unread" it
      * @return true if sucessful, or an error object if there was an error
      */
-	function readAnnouncement($userID)
+	function readAnnouncement($userID, $read=true)
 	{
 		if ($user = mobilAP_user::getUserById($userID)) {
-			$sql = sprintf("INSERT INTO %s (announcement_id, userID, read_timestamp)
-							VALUES (?, ?, ?)",mobilAP_announcement::ANNOUNCEMENT_READ_TABLE);
-            $params = array($this->announcement_id, $user->getUserID(), time());
+			if ($read) {
+				$sql = sprintf("INSERT INTO %s (announcement_id, userID, read_timestamp)
+								VALUES (?, ?, ?)",mobilAP_announcement::ANNOUNCEMENT_READ_TABLE);
+				$params = array($this->announcement_id, $user->getUserID(), time());
+			} else {
+				$sql = sprintf("DELETE FROM %s WHERE announcement_id=? AND userID=?",
+							    mobilAP_announcement::ANNOUNCEMENT_READ_TABLE);
+				$params = array($this->announcement_id, $user->getUserID());
+			}
 			$result = mobilAP::query($sql,$params);
 			return mobilAP_Error::isError($result) ? $result : true;
-		} else {
+		} elseif ($userID) {
 			return mobilAP_Error::throwError("Invalid user $userID");
+		} else {
+			return true; //no-op if there's no user
 		}
 	}
 
