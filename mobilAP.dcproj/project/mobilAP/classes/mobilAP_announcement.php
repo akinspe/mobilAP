@@ -18,7 +18,12 @@ class mobilAP_announcement
 	public $announcement_date;
 	public $userID;
 	public $announcement_text;
-
+	
+	private function updateSerial()
+	{
+		mobilAP::setSerialValue('announcements');
+	}
+    
     /*
      * commits the annoucement object to the database. You must set the object values before committing
      * @param string $userID, the userID of the user submitting the announcement
@@ -48,6 +53,7 @@ class mobilAP_announcement
 		}
         $this->announcement_timestamp = $ts;
 		$this->announcement_id = $result->get_last_insert_id();
+		$this->updateSerial();
         return true;
 	}
 	
@@ -67,7 +73,8 @@ class mobilAP_announcement
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
-        return true;
+		$this->updateSerial();
+		return true;
 	}
 
     /*
@@ -89,7 +96,8 @@ class mobilAP_announcement
 				return $result;
 			}
 		}
-        return true;
+		$this->updateSerial();
+		return true;
 	}
 	
     /*

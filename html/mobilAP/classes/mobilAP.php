@@ -17,6 +17,8 @@
 */
 class mobilAP
 {
+    const CONFIG_TABLE='mobilAP_config';
+    const SERIAL_TABLE='mobilAP_serials';
     /**
      * returns whether or not mobilAP has been setup or not
      * @return bool
@@ -25,6 +27,60 @@ class mobilAP
 	{
         return mobilAP::getConfig('setupcomplete');
 	}
+    
+    /**
+    * returns a list of serial number entries. serial numbers reduce transferring large amounts of code to clients 
+    * that can cache data by tracking changes to the underlying data
+    * @return array
+    */
+    function getSerials()
+    {
+        $serials = array();
+		$sql = sprintf("SELECT serial_var,serial_value FROM %s", mobilAP::SERIAL_TABLE);
+		$result = mobilAP::query($sql);
+		if (mobilAP_Error::isError($result)) {
+			return $serials;
+		}
+        
+		while ($row = $result->fetchRow()) {
+			$serials[$row['serial_var']] = intval($row['serial_value']);
+		}
+	
+		return $serials;
+    }
+    
+    /**
+    * returns a serial value for a particular serial key
+    * @param string $serial_var a serial variable to return
+    * @return int a serial value or false if none exists
+    */
+    function getSerialValue($serial_var)
+    {
+        $serials = mobilAP::getSerials();
+		return isset($serials[$serial_var]) ? $serials[$serial_var] : false;
+    }
+
+    /**
+    * purges a serial value
+    * @param string $serial_var a serial variable to purge
+    * @return void
+    */
+    function purgeSerialValue($serial_var)
+    {
+		$sql = sprintf("DELETE FROM %s WHERE serial_var=?", mobilAP::SERIAL_TABLE);		
+		$result = mobilAP::query($sql, array($serial_var));
+    }
+
+    /**
+    * sets/updates a serial value
+    * @param string $serial_var a serial variable to update
+    * @return void
+    */
+    function setSerialValue($serial_var)
+    {
+		$sql = sprintf("REPLACE INTO %s (serial_var,serial_value) VALUES (?,?)", mobilAP::SERIAL_TABLE);		
+		$result = mobilAP::query($sql, array($serial_var,time()));
+    }
     
     function canSaveDBConfigFile()
     {
@@ -129,7 +185,7 @@ class mobilAP
                 break;
         }
         
-        
+        mobilAP::setSerialValue('config');
 		return mobilAP_Error::isError($result) ? $result : true;
 	}
     

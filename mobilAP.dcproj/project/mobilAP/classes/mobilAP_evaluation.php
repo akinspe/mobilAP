@@ -20,6 +20,11 @@ class mobilAP_evaluation_question
 	const EVALUATION_QUESTION_TABLE='evaluation_questions';	
 	const EVALUATION_QUESTION_RESPONSE_TABLE='evaluation_question_responses';
 	
+	function updateSerial()
+	{
+		mobilAP::setSerialValue('evaluation_questions');	
+	}
+	
 	function removeResponse($response_index)
 	{
 		$sql = sprintf("DELETE FROM %s WHERE question_index=%d AND response_index=%d",
@@ -35,7 +40,8 @@ class mobilAP_evaluation_question
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
-        return true;
+		$this->updateSerial();
+		return true;
 	}
 	
 	function addResponse($response_text)
@@ -54,7 +60,8 @@ class mobilAP_evaluation_question
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
-        return true;
+		$this->updateSerial();
+		return true;
 	}
 	
 	function deleteQuestion()
@@ -91,6 +98,7 @@ class mobilAP_evaluation_question
 				return $result;
 			}
 		}
+		$this->updateSerial();
         return true;
 	}
 	
@@ -108,6 +116,7 @@ class mobilAP_evaluation_question
 			return $result;
 		}
 
+		$this->updateSerial();
 		return true;
 	}
 
@@ -120,6 +129,7 @@ class mobilAP_evaluation_question
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -159,6 +169,7 @@ class mobilAP_evaluation_question
 					if (mobilAP_Error::isError($result)) {
 						return $result;
 					}
+					$this->updateSerial();
 				}
 				
 				return true;

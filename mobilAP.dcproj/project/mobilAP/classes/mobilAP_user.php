@@ -39,6 +39,14 @@ class mobilAP_User
 		$this->userID = $userID;
     }
 
+	private function updateSerial($updateAllUsers=false)
+	{
+		mobilAP::setSerialValue($this->userID);
+		if ($updateAllUsers) {
+			mobilAP::setSerialValue('users');
+		}
+	}
+	
 	private static function getNextUserID()
 	{
 		$userID = md5(uniqid(rand(), true));
@@ -157,6 +165,7 @@ class mobilAP_User
             $result = true;
         }
 		
+		$this->updateSerial(true);
 		return $result;
     }
     
@@ -178,6 +187,7 @@ class mobilAP_User
             $this->admin ? -1 : 0,
 			$this->getUserID());
     	$result = mobilAP::query($sql,$params);
+		$this->updateSerial(true);
 		return mobilAP_Error::isError($result) ? $result : true;
     }
     
@@ -224,6 +234,9 @@ class mobilAP_User
             $result = mobilAP::query($sql,$params);
         }
         
+		mobilAP::setSerialValue('users');
+		mobilAP::purgeSerialValue($this->getUserID());
+		
         return true;
     }
     
@@ -391,6 +404,7 @@ class mobilAP_User
 	{
 		@unlink($this->getPhotoThumb());
 		@unlink($this->getPhotoFile());
+		$this->updateSerial();
 	}
 	
 	/* this probably needs to be a configuration setting */
@@ -498,6 +512,7 @@ class mobilAP_User
 				}
 				
 			}
+			$this->updateSerial();
 		}
 	}
 
@@ -530,6 +545,7 @@ class mobilAP_User
 				return mobilAP_Error::throwError("Error creating thumbnail");
 			}
 		
+			$this->updateSerial();
 			return true;
 		} else {
 			// try GD
@@ -550,6 +566,7 @@ class mobilAP_User
 				return mobilAP_Error::throwError("Error creating thumbnail");
 			}
 			
+			$this->updateSerial();
 			return true;
 		}
         
@@ -580,6 +597,7 @@ class mobilAP_User
 			chmod($this->getPhotoFile(), 0644);
 			$this->fixPhotoOrientation($this->getPhotoFile());
 			$result = $this->createPhotoThumb();
+			$this->updateSerial();
 			return $result;
     
 		}

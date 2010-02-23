@@ -42,6 +42,11 @@ class mobilAP_session
     public $session_presenters = array();
     public $session_discussion = array();
     public $session_flags_evaluation = 0;
+
+	public function updateSerial()
+	{
+		mobilAP::setSerialValue(sprintf('session_%s',$this->session_id));
+	}
     	
     /**
      * sets the session flags, updating the convinence variables
@@ -146,6 +151,8 @@ class mobilAP_session
 		$sql = sprintf("UPDATE %s SET session_id=null WHERE session_id=%d",
 		mobilAP::SCHEDULE_TABLE, $this->session_id);
 		$result = mobilAP::query($sql);
+		mobilAP::setSerialValue('sessions');
+		mobilAP::purgeSerialValue('session_' . $this->session_id);
 		return mobilAP_Error::isError($result) ? $result : true;
 	}
 
@@ -178,6 +185,7 @@ class mobilAP_session
 			return $result;
 		}
 		$this->session_id = $result->get_last_insert_id();
+		mobilAP::setSerialValue('sessions');
 		return true;
 	}
 
@@ -584,6 +592,7 @@ class mobilAP_session
 			if (mobilAP_Error::isError($result)) {
 				return $result;
 			}
+			$this->updateSerial();
 			return true;
 		} else {
 			return mobilAP_Error::throwError("User $presenter_userID not found");
@@ -626,6 +635,8 @@ class mobilAP_session
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -668,6 +679,7 @@ class mobilAP_session
 			return $result;
 		}
 		$question->question_id = $result->get_last_insert_id();
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -705,6 +717,7 @@ class mobilAP_session
 			return $result;
 		}
 		$link_id = $result->get_last_insert_id();
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -776,6 +789,7 @@ class mobilAP_session
             $result = mobilAP::query($sql, array($evaluation_id, $index, $value));
         }
         
+		$this->updateSerial();
 		return true;
 	}
 
@@ -793,6 +807,8 @@ class mobilAP_session
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+
+		$this->updateSerial();
 		return true;
 	}
 
@@ -811,6 +827,8 @@ class mobilAP_session
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -843,6 +861,8 @@ class mobilAP_session
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -860,6 +880,8 @@ class mobilAP_session
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+
+		$this->updateSerial();
 		return true;
 	}
 
@@ -936,6 +958,8 @@ class mobilAP_session
 			return $result;
 		}
 		mobilAP_Cache::flushCache('mobilAP_schedule');				
+		mobilAP::setSerialValue('sessions');
+		$this->updateSerial();
         return true;
 	}
 }
@@ -1098,6 +1122,17 @@ class mobilAP_session_link
 	var $link_type;
 	var $post_timestamp;
 	
+	private function updateSerial()
+	{
+		$session = $this->getSession();
+		$session->updateSerial();
+	}
+	
+	function getSession()
+	{
+		return mobilAP_session::getSessionByID($this->session_id);
+	}
+	
 	function setURL($url)
 	{
 		if (preg_match('@http[s]?://(.+)@', $url)) {
@@ -1132,6 +1167,8 @@ class mobilAP_session_link
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+
+		$this->updateSerial();
 		return true;
 	}
 
@@ -1147,6 +1184,7 @@ class mobilAP_session_link
 			}
 		}
 		
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -1202,6 +1240,17 @@ class mobilAP_session_question
 			'bhs'=>'Bar Chart'
 		);
 			
+	}
+
+	private function updateSerial()
+	{
+		$session = $this->getSession();
+		$session->updateSerial();
+	}
+	
+	function getSession()
+	{
+		return mobilAP_session::getSessionByID($this->session_id);
 	}
 	
 	function setQuestionActive($active)
@@ -1359,6 +1408,7 @@ class mobilAP_session_question
 			}
 		}
 		$this->answers = $this->getAnswers();
+		$this->updateSerial();
         return true;
 	}
 	
@@ -1424,6 +1474,7 @@ class mobilAP_session_question
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -1435,6 +1486,7 @@ class mobilAP_session_question
 			return $result;
 		}
 		$this->answers = $this->getAnswers();
+		$this->updateSerial();
         return true;
 	}
 	
@@ -1489,20 +1541,23 @@ class mobilAP_session_question
 				return $result;
 			}
 			
-			$sql = sprintf("UPDATE %s SET 
-				response_index=response_index-1 
-				WHERE question_id=%d AND response_index>%d
-				ORDER BY response_index ASC",
-                mobilAP_session::POLL_RESPONSES_TABLE,
-                $this->question_id,
-                $index
-            );
-			$result = mobilAP::query($sql);
-			if (mobilAP_Error::isError($result)) {
-				return $result;
-			}
+            $sql = sprintf("SELECT response_index FROM %s WHERE question_id=? AND response_index>? ORDER BY response_index ASC",mobilAP_session::POLL_RESPONSES_TABLE);
+            
+            $result = mobilAP::query($sql,array($this->question_id,$index));
+            while ($row = $result->fetchRow()) {
+            
+                $sql = sprintf("UPDATE %s SET 
+                    response_index=response_index-1 
+                    WHERE question_id=? AND response_index=?",
+                    mobilAP_session::POLL_RESPONSES_TABLE);
+                $_result = mobilAP::query($sql,array($this->question_id, $row['response_index']));
+                if (mobilAP_Error::isError($_result)) {
+                    return $_result;
+                }
+            }
 			$this->responses = $this->getResponses();
 			$this->answers = $this->getAnswers();
+			$this->updateSerial();
 			return true;
 		} else {
 			return mobilAP_Error::throwError("There is no response $response_value for this question");
@@ -1536,6 +1591,7 @@ class mobilAP_session_question
 			}
 			return $result;
 		}
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -1637,11 +1693,12 @@ class mobilAP_session_question
 				mobilAP_session::POLL_QUESTIONS_TABLE);
 		$params = array($this->question_text, $this->question_list_text, 
 		$this->question_minchoices, $this->question_maxchoices, $this->question_active,$this->chart_type,$this->response_type, 
-		$this-question_id);
+		$this->question_id);
 		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+		$this->updateSerial();
 		return true;
 	}
 
@@ -1660,6 +1717,17 @@ class mobilAP_session_question_response
 	{
 		return $this->response_text;
 	}
+
+	private function updateSerial()
+	{
+		$session = $this->getSession();
+		$session->updateSerial();
+	}
+	
+	function getSession()
+	{
+		return mobilAP_session::getSessionByID($this->session_id);
+	}
 	
 	function deleteResponse()
 	{
@@ -1672,6 +1740,7 @@ class mobilAP_session_question_response
 				return $result;
 			}
 		}
+		$this->updateSerial();
 		return true;
 	}
 	
@@ -1695,6 +1764,7 @@ class mobilAP_session_question_response
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
+		$this->updateSerial();
 		return true;
 	}
 

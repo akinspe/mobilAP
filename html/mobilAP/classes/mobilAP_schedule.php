@@ -61,6 +61,12 @@ class mobilAP_schedule_item
 	public $session_id;
 	public $session_group_id;
 
+	private function updateSerial()
+	{
+		mobilAP_Cache::flushCache('mobilAP_schedule');		
+		mobilAP::setSerialValue('schedule');
+	}
+
     private function getStartTime() {
         return $this->start_time;
     }
@@ -158,7 +164,7 @@ class mobilAP_schedule_item
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
-		mobilAP_Cache::flushCache('mobilAP_schedule');		
+		$this->updateSerial();
         return true;
 	}
 	
@@ -181,7 +187,7 @@ class mobilAP_schedule_item
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
-		mobilAP_Cache::flushCache('mobilAP_schedule');		
+		$this->updateSerial();
 		return true;
 	}
     
