@@ -73,6 +73,9 @@ class mobilAP_session
 	{
 		//initialize
 		$data = array('questions'=>array(), 'evaluation'=>false);
+		foreach ($this->session_questions as $question) {
+			$data['questions'][$question->question_id] = false;
+		}
 
 		//see whether they've submitted the evaluation
 		$sql = sprintf("SELECT count(*) FROM %s WHERE session_id=? AND post_user=?", 
@@ -96,7 +99,7 @@ class mobilAP_session
 			return $data;
 		}
 		while ($row = $result->fetchRow()) {
-			$data['questions'][$row['question_id']] = $row['answer_id'];
+			$data['questions'][$row['question_id']] = intval($row['answer_id']);
 		}
 
 		return $data;

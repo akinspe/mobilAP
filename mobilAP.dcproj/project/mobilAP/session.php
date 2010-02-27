@@ -148,6 +148,7 @@ if ($session = mobilAP::getSessionByID($session_id)) {
         $session->session_discussion = $session->get_discussion();
         $session->session_userdata = $session->getUserSubmissions($user->getUserID());
         $session->isPresenter = $session->isPresenter($user->getUserID());
+        $session->userID = $user->getUserID();
         $data =& $session;
     }
 } else {
