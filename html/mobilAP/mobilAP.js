@@ -304,6 +304,56 @@ MobilAP.Controller = Class.create(MobilAP.BaseClass, {
     }
 });
 
+MobilAP.SerialController = Class.create(MobilAP.Controller, {
+    serials: false,
+	setSerial: function(key, value) 
+	{
+		this.serials[key] = value;
+	},
+	serialsUpdated: function(change,keyPath) {
+        if (this.serials) {
+            var new_serials = change.newValue;
+            for (var key in new_serials) {
+                if (new_serials[key] != this.serials[key] && !key.match(/__/)) {
+                    var re;
+                    switch (key)
+                    {
+                        case 'config':
+                        case 'sessions':
+                        case 'announcements':
+                        case 'evaluation_questions':
+                        case 'schedule':
+                        case 'users':
+                            dashcode.getDataSource(key).queryUpdated();
+                            break;
+                        default:
+                            if (re = key.match(/session_(\d+)/)) {
+                            	if (mobilAP.sessionController.session_id == re[1]) {
+                            		mobilAP.sessionController.reloadData();
+								}
+                            } else {
+                                alert("unhandled update for key " + key);
+                            }
+                    }
+                
+                }
+            }
+        }
+        this.serials = change.newValue;
+    },
+    reloadData: function() {
+        
+        dashcode.getDataSource('serials').queryUpdated();
+    },
+    constructor: function(parameters)
+    {
+        this.base(parameters);
+        
+        dashcode.getDataSource('serials').addObserverForKeyPath(this, this.serialsUpdated, "content");
+    }
+
+});
+
 MobilAP.ApplicationController = Class.create(MobilAP.Controller, {
     viewControllers: {},
     addViewController: function(view_id, controller) {
@@ -1110,6 +1160,7 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
     sessionUpdated: function(change, keyPath) {
         if (change.newValue) {
             this.session = change.newValue;
+            mobilAP.serialController.setSerial('session_' + this.session_id, this.session.serial);
         }
     },
     questionById: function(question_id) {
@@ -2257,9 +2308,6 @@ mobilAP_UserTransformer = Class.create(DC.ValueTransformer,{
             }
         }
 
-        //reload the users since it's likely it's a new user
-        mobilAP.log("user " + value + " not found");
-//        dashcode.getDataSource('users').queryUpdated();
 		return value;
     }
 });

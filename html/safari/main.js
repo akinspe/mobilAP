@@ -111,7 +111,6 @@ function load()
         }
     );
     mobilAP.addViewController('announcements', mobilAP.announcementsController);
-    mobilAP.announcementsController.setReloadTimer(60);
 
     mobilAP.profileController = new MobilAP.DesktopProfileController();
 
@@ -121,7 +120,6 @@ function load()
         profileEditButton: document.getElementById('directoryProfileAdminEditButton').object
     });
     mobilAP.addViewController('directory', mobilAP.directoryController);
-    mobilAP.directoryController.setReloadTimer(60);
 
     mobilAP.directoryAdminController = new MobilAP.DesktopDirectoryAdminController({
         directoryController: mobilAP.directoryController,
@@ -211,6 +209,11 @@ function load()
         }
     }
     mobilAP.addViewController('setup', mobilAP.setupController);
+    
+    mobilAP.serialController = new MobilAP.DesktopSerialController({
+    });
+    mobilAP.serialController.setReloadTimer(5);
+    
 }
 
 MobilAP.DesktopApplicationController = Class.create(MobilAP.ApplicationController, {
@@ -339,6 +342,10 @@ MobilAP.DesktopLoginController= Class.create(MobilAP.LoginController, {
         this.createNewUserButton.viewElement().style.display='none';
     }
 });
+
+MobilAP.DesktopSerialController = Class.create(MobilAP.SerialController, {
+});
+
 
 MobilAP.DesktopUserProfileController = Class.create(MobilAP.UserProfileController, {
     setUser: function(user) {
@@ -834,7 +841,6 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
         this.log('view: ' + view_id);
         this.log('admin: ' + this.isAdmin());
         MobilAP.setClassName(view_id,'mobilAP_sessionadmin',this.isAdmin());
-        this.setReloadTimer(5);
     },
     addLink: function(link_url, link_title) {
         var result = this.base(link_url, link_title);
@@ -1083,7 +1089,6 @@ MobilAP.DesktopDirectoryController = Class.create(MobilAP.DirectoryController, {
     viewDidLoad: function() { 
         this.clearSelection();
         this.profilePanel.style.display = 'none';
-        this.setReloadTimer(60);
     },
     viewDidUnload: function() {
         this.stopReloadTimer();

@@ -84,7 +84,6 @@ function load()
         profileController: mobilAP.profileController
     });
     mobilAP.addViewController('directory', mobilAP.directoryController);
-    mobilAP.directoryController.setReloadTimer(60);
 
     mobilAP.presenterController = new MobilAP.MobileDirectoryController('sessionInfoPresentersList', {
         sessionController: mobilAP.sessionController,
@@ -124,7 +123,6 @@ function load()
 
     mobilAP.announcementsController = new MobilAP.MobileAnnouncementController('announcementsList');
     mobilAP.addViewController('announcements', mobilAP.announcementsController);
-    mobilAP.announcementsController.setReloadTimer(60);
     
     mobilAP.sessionEvaluationController = new MobilAP.MobileSessionEvaluationController({
         sessionController: mobilAP.sessionController,
@@ -165,6 +163,11 @@ function load()
     mobilAP.directoryAdminController = new MobilAP.MobileDirectoryAdminController({
         directoryController: mobilAP.directoryController
     });
+    
+    mobilAP.serialController = new MobilAP.MobileSerialController({
+    });
+    mobilAP.serialController.setReloadTimer(5);
+    
     
     window.scrollTo(0,1);
 }
@@ -255,6 +258,9 @@ MobilAP.MobileApplicationController= Class.create(MobilAP.ApplicationController,
     }
     
         
+});
+
+MobilAP.MobileSerialController = Class.create(MobilAP.SerialController, {
 });
 
 MobilAP.MobileProfileController = Class.create(MobilAP.ProfileController, {
@@ -524,7 +530,6 @@ MobilAP.MobileDirectoryController = Class.create(MobilAP.DirectoryController, {
     },
     viewDidLoad: function() {
         this.clearSelection();
-//        this.setReloadTimer(60);
     },
     rowSelected: function(change, keyPath) {
     	this.base(change,keyPath);
@@ -818,7 +823,6 @@ MobilAP.MobileSessionController = Class.create(MobilAP.SessionController, {
         this.log('view: ' + view_id);
         this.log('admin: ' + this.isAdmin());
         MobilAP.setClassName(view_id,'mobilAP_sessionadmin',this.isAdmin());
-        this.setReloadTimer(15);
     },
     addLink: function(link_url, link_title) {
         var result = this.base(link_url, link_title);
