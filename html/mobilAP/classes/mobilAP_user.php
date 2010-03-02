@@ -41,7 +41,7 @@ class mobilAP_User
 
 	private function updateSerial($updateAllUsers=false)
 	{
-		mobilAP::setSerialValue($this->userID);
+		//mobilAP::setSerialValue($this->userID);
 		if ($updateAllUsers) {
 			mobilAP::setSerialValue('users');
 		}
