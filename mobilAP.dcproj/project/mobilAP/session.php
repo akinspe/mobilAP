@@ -142,6 +142,7 @@ if ($session = mobilAP::getSessionByID($session_id)) {
         
     } else {
 
+		$session->serial = mobilAP::getSerialValue('session_' . $session->session_id);
         $session->session_links = $session->getLinks();
         $session->session_questions = $session->getQuestions();				
         $session->session_presenters = $session->getPresenters();
