@@ -342,7 +342,7 @@ body.desktop {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgb(224, 224, 224);
-    height: 54px;
+    min-height: 54px;
     margin-right: 0px;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
@@ -369,18 +369,13 @@ body.desktop {
 }
 
 .scheduleListDetail_template {
-    color: black;
+    color: rgb(100,100,100);
     font-family: Helvetica;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    position: absolute;
-    margin-top: 0px;
     font-size: 14px;
-    left: 55px;
-    top: 32px;
-    right: 30px;
+    margin-left: 55px;
+    margin-right: 30px;
+    margin-bottom: 5px;
     width: auto;
-    bottom: 6px;
     height: auto;
 }
 
@@ -389,18 +384,13 @@ body.desktop {
 }
 
 .scheduleListTitle_template {
-    position: absolute;
-    height: 22px;
-    right: 30px;
+    margin-right: 30px;
     width: auto;
     color: black;
     font-family: Helvetica;
     font-weight: bold;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    left: 55px;
-    top: 11px;
+    margin-left: 55px;
+    margin-top: 11px;
     font-size: 17px;
 }
 
@@ -444,6 +434,14 @@ body.desktop {
     font-size: 17px;
     font-weight: normal;
     color: white;
+    position: absolute;
+    margin: 0;
+	position: absolute;
+    height: 22px;
+    right: 30px;
+    width: auto;
+    left: 55px;
+
 }
 
 /* schedule day */
