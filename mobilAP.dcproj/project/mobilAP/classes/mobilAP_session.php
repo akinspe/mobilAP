@@ -893,7 +893,7 @@ class mobilAP_session
 		$sql = sprintf("SELECT post_id,post_timestamp, post_user, post_text, email FROM %s c 
 				LEFT JOIN %s u ON c.post_user=u.userID
 				WHERE session_id=? AND post_id>?
-				ORDER BY post_timestamp DESC",
+				ORDER BY post_timestamp ASC",
         mobilAP_session::SESSION_DISCUSSION_TABLE,
          mobilAP_user::USER_TABLE);
         $params = array($this->session_id,$last_post);
