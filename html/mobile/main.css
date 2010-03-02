@@ -560,7 +560,7 @@ body.desktop {
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     width: auto;
-    height: 55px;
+    min-height: 55px;
 }
 
 .scheduleDayTime_template {
@@ -583,32 +583,24 @@ body.desktop {
 }
 
 .scheduleDayTitle_template {
-    position: absolute;
-    top: 11px;
+    margin-top: 11px;
     color: black;
     font-family: Helvetica;
     font-weight: bold;
     font-size: 17px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    left: 55px;
-    right: 30px;
+    margin-left: 55px;
+    margin-right: 30px;
     width: auto;
     height: auto;
 }
 
 .scheduleDayDetail_template {
-    color: black;
+    color: rgb(100,100,100);
     font-family: Helvetica;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    position: absolute;
-    margin-top: 0px;
     font-size: 14px;
-    top: 32px;
-    left: 55px;
-    right: 30px;
+    margin-left: 55px;
+    margin-right: 30px;
+    margin-bottom: 5px;
     width: auto;
     height: auto;
 }
