@@ -1302,7 +1302,7 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
     reloadData: function() {
         this.log("Reloading session data");
         dashcode.getDataSource('session').queryUpdated();
-        dashcode.getDataSource('sessions').queryUpdated();
+//        dashcode.getDataSource('sessions').queryUpdated();
     },
     constructor: function(params) {
         this.base(params);
@@ -2258,7 +2258,8 @@ mobilAP_UserTransformer = Class.create(DC.ValueTransformer,{
         }
 
         //reload the users since it's likely it's a new user
-        dashcode.getDataSource('users').queryUpdated();
+        mobilAP.log("user " + value + " not found");
+//        dashcode.getDataSource('users').queryUpdated();
 		return value;
     }
 });
