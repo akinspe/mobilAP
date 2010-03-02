@@ -586,19 +586,21 @@ class mobilAP_User
         //make sure the array is a valid php upload array
         if (isset($file['tmp_name']) && isset($file['type'])) {
 
-			if ($file['type'] != 'image/jpeg') {
-				return mobilAP_Error::throwError("Image must be JPEG");
+			if (is_uploaded_file($file['tmp_name'])) {
+				if ($file['type'] != 'image/jpeg') {
+					return mobilAP_Error::throwError("Image must be JPEG");
+				}
+				
+				if (!move_uploaded_file($file['tmp_name'], $this->getPhotoFile())) {
+					return mobilAP_Error::throwError("Error saving file");
+				}
+	
+				chmod($this->getPhotoFile(), 0644);
+				$this->fixPhotoOrientation($this->getPhotoFile());
+				$result = $this->createPhotoThumb();
+				$this->updateSerial();
+				return $result;
 			}
-			
-			if (!move_uploaded_file($file['tmp_name'], $this->getPhotoFile())) {
-				return mobilAP_Error::throwError("Error saving file");
-			}
-
-			chmod($this->getPhotoFile(), 0644);
-			$this->fixPhotoOrientation($this->getPhotoFile());
-			$result = $this->createPhotoThumb();
-			$this->updateSerial();
-			return $result;
     
 		}
         
