@@ -1,5 +1,5 @@
-mobilAP Version 2.0b4
-February 2, 2010
+mobilAP Version 2.0b5
+March 2, 2010
 
 RELEASE NOTES
 
@@ -14,6 +14,20 @@ REQUIREMENTS AND SETUP
 - Copy the HTML folder to your website. You can either copy the contents of the folder to the root of your website, or into a subfolder. Using a desktop browser, go to the URL of the folder you placed mobilAP in, it will begin the setup process of configuring the database, creating and initial user, and setting some initial options.
 
 - In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder
+
+FIXED Since 2.0b4
+- Fixed an issue that would appear when mobilAP was placed on a case sensitive file system
+- Some JSON values should be returned as numbers rather than strings
+- Added announcement read/unread methods (not fully implemented)
+- Added framework to enable updating of data only when it has been changed saving bandwidth and processing time. This has not been fully implemented yet
+- Fixed an issue when an error was given if a user was updated but no picture was uploaded (admin)
+- updated discussion formatting (desktop)
+- Discussion is now sorted ascending (i.e. most recent at the bottom)
+- Fixed formatting issue when editing announcements
+- Optimized some unnecessary data loads
+- removed dissolve when changing session "tabs" behaves more like native app
+- fixed formatting issue with long titles/detail in schedule (mobile)
+- changed session reload timer to 15 seconds (will eventually altered to only reload when data has changed)
 
 FIXED Since 2.0b3
 - Fixed an issue that would prevent the mobilAP setup from working when short_open_tags was not enabled
