@@ -1647,7 +1647,7 @@ class mobilAP_session_question
 
 	function getAnswers()
 	{
-		$answers = array('total'=>0,'users'=>array());
+		$answers = array('total'=>0,'users'=>0);
 		foreach ($this->responses as $index=>$response) {
 			$answers[$response->response_value] = 0;
 		}
@@ -1670,13 +1670,15 @@ class mobilAP_session_question
 			$sql = "SELECT DISTINCT response_userID FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
 			WHERE question_id=$this->question_id AND response_value";
 			$result = mobilAP::query($sql);
+			$users = array();
 			if (mobilAP_Error::isError($result)) {
 				return $answers;
 			}
 
 			while ($row = $result->fetchRow()) {
-				$answers['users'][] = $row['response_userID'];
+				$users[] = $row['response_userID'];
 			}
+			$answers['users'] = count($users);
 		}
 		
 		return $answers;
