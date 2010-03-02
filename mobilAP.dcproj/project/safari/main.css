@@ -3148,10 +3148,6 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
 
 .sessionDiscussionListText_template {
     height: auto;
-    font-family: Helvetica, Arial, sans-serif;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
     margin-top: 3px;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
@@ -3169,12 +3165,12 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
 }
 
 .sessionDiscussionListTime_template {
-    font-family: 'Lucida Grande', Arial, sans-serif;
     text-overflow: ellipsis;
+    color: rgb(100,100,100);
     overflow: hidden;
     position: absolute;
     margin-top: 0px;
-    font-size: 11px;
+    font-size: 12px;
     width: 150px;
     left: 214px;
     top: 3px;
@@ -3186,12 +3182,12 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
 }
 
 .sessionDiscussionListUser_template {
-    font-family: 'Lucida Grande', Arial, sans-serif;
     text-overflow: ellipsis;
     overflow: hidden;
     position: absolute;
     margin-top: 0px;
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: bold;
     width: 200px;
     height: auto;
     top: 3px;
