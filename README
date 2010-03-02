@@ -15,6 +15,9 @@ REQUIREMENTS AND SETUP
 
 - In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder
 
+FIXED Since 2.0b5
+- ADDITION: Implemented the serial numbering system that dramatically reduces network reloads by detecting whether a given set of data has been updated. This is crucial on the iPhone version since parsing and then updating the UI can be very expensive depending on the data set. This allows more frequent updates (5 sec) but will only pull down and parse data if it's new. 
+
 FIXED Since 2.0b4
 - Fixed an issue that would appear when mobilAP was placed on a case sensitive file system
 - Some JSON values should be returned as numbers rather than strings
