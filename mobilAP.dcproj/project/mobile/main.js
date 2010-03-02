@@ -818,7 +818,7 @@ MobilAP.MobileSessionController = Class.create(MobilAP.SessionController, {
         this.log('view: ' + view_id);
         this.log('admin: ' + this.isAdmin());
         MobilAP.setClassName(view_id,'mobilAP_sessionadmin',this.isAdmin());
-        this.setReloadTimer(5);
+        this.setReloadTimer(15);
     },
     addLink: function(link_url, link_title) {
         var result = this.base(link_url, link_title);
