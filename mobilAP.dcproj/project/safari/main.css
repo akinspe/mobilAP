@@ -3572,6 +3572,10 @@ body.DC_windowInactive .sessionAdminPresentersRow_template.selected {
     margin-top: 9px;
 }
 
+#announcementsPanel.mobilAP_admin  {
+	padding-bottom: 48px;
+}
+
 #announcementEditButton {
     font-family: Helvetica;
     font-weight: bold;

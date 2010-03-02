@@ -889,6 +889,7 @@ MobilAP.DesktopAnnouncementController = Class.create(MobilAP.AnnouncementControl
         this.setAnnouncement(new MobilAP.Announcement());
         this.announcementPanel.style.display = 'none';
         this.announcementsNotice.style.display = this.content().length == 0 ? '' : 'none';
+        MobilAP.setClassName(this.announcementPanel, 'mobilAP_admin', mobilAP.isAdmin());
     },
     rowSelected: function(change, keyPath) {
         this.base(change, keyPath);
