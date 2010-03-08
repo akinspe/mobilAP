@@ -22,7 +22,7 @@ class mobilAP_evaluation_question
 	
 	function updateSerial()
 	{
-		mobilAP::setSerialValue('evaluation_questions');	
+		mobilAP::setSerialValue('evaluation');	
 	}
 	
 	function removeResponse($response_index)

@@ -322,7 +322,7 @@ MobilAP.SerialController = Class.create(MobilAP.Controller, {
                         case 'config':
                         case 'sessions':
                         case 'announcements':
-                        case 'evaluation_questions':
+                        case 'evaluation':
                         case 'schedule':
                         case 'users':
                             dashcode.getDataSource(key).queryUpdated();
@@ -1095,7 +1095,7 @@ MobilAP.EvaluationQuestionAdminController = Class.create(MobilAP.ListController,
     _processXHR: function(json,callback) {
         var result = this.base(json);
         if (!this.isError(result)) {
-            dashcode.getDataSource('evaluation_questions').queryUpdated();
+            dashcode.getDataSource('evaluation').queryUpdated();
             this.reloadData();
         }
 
@@ -1139,7 +1139,7 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
         return true;
     },
     showevaluation: function() {
-        return this.session.session_flags_evaluation && dashcode.getDataSource('evaluation_questions').content().length>0;
+        return this.session.session_flags_evaluation && dashcode.getDataSource('evaluation').content().length>0;
     },
     showlinks: function() {
         return this.session.session_flags_links;
@@ -1425,7 +1425,7 @@ MobilAP.SessionEvaluationController = Class.create(MobilAP.DataSourceController,
         return result;
     },
     constructor: function(params) {
-        this.base('evaluation_questions',params);
+        this.base('evaluation',params);
     }
 });
 
