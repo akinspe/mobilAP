@@ -130,8 +130,14 @@ class mobilAP_schedule_item
 		}
 	}
 
-	public function createItem()
+	public function createItem($userID)
 	{
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
         if (!$this->start_ts) {
 			return mobilAP_Error::throwError("Invalid start time");
 		} elseif (!$this->end_ts) {
@@ -156,8 +162,14 @@ class mobilAP_schedule_item
 		return true;
 	}
 
-	public function deleteItem()
+	public function deleteItem($userID)
 	{
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
 		$sql = sprintf("DELETE FROM %s WHERE schedule_id=?", mobilAP_schedule::SCHEDULE_TABLE);
         $params = array($this->schedule_id);
 		$result = mobilAP::query($sql,$params);
@@ -168,8 +180,14 @@ class mobilAP_schedule_item
         return true;
 	}
 	
-	public function updateItem()
+	public function updateItem($userID)
 	{
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
 		$sql = sprintf("UPDATE %s SET
 				start_time=?,
 				end_time=?,

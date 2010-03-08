@@ -3,6 +3,9 @@
 require_once('../mobilAP.php');
 require_once('classes/mobilAP_schedule.php');
 
+$user_session = new mobilAP_UserSession();
+$user = new mobilAP_user(true);
+
 if (isset($_POST['post'])) {
     $post_action = $_POST['post'];
     switch ($post_action)
@@ -10,7 +13,7 @@ if (isset($_POST['post'])) {
         case 'delete':
             $schedule_id = isset($_POST['schedule_id']) ? $_POST['schedule_id'] : '';
             if ($schedule_item = mobilAP_schedule_item::getScheduleItem($schedule_id)) {
-                $data = $schedule_item->deleteItem();
+                $data = $schedule_item->deleteItem($user->getUserID());
             } else {
                 $data = mobilAP_Error::throwError("Unable to load schedule item for id " . $schedule_id,-2, $schedule_id);
             } 
@@ -38,15 +41,17 @@ if (isset($_POST['post'])) {
 			$schedule_item->setSession($session_id);
             
             if ($post_action=='add') {
-                $data = $schedule_item->createItem();
+                $data = $schedule_item->createItem($user->getUserID());
             } else {
-                $data = $schedule_item->updateItem();
+                $data = $schedule_item->updateItem($user->getUserID());
             }
             break;
         default:
             $data = mobilAP_Error::throwError("Invalid request",-1, $_POST['post']);
             break;
     }
+} elseif (mobilAP::getConfig('CONTENT_PRIVATE') && !$user_session->loggedIn()) {
+	$data = array();
 } elseif (!$data = mobilAP_Cache::getCache('mobilAP_schedule')) {
     $data = mobilAP::getSchedule();
     mobilAP_Cache::setCache('mobilAP_schedule', $data, 600);
