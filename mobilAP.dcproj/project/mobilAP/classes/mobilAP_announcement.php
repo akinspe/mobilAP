@@ -33,6 +33,8 @@ class mobilAP_announcement
 	{
 		if (!$user = mobilAP_user::getUserById($userID)) {
 			return mobilAP_Error::throwError("Invalid user $userID");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
 		}
         
         if (empty($this->announcement_title)) {
@@ -64,6 +66,12 @@ class mobilAP_announcement
      */
 	public function updateAnnouncement($userID)
 	{
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
 		$sql = sprintf("UPDATE %s SET
 						announcement_title=?, announcement_text=?
 						WHERE announcement_id=?",
@@ -84,6 +92,12 @@ class mobilAP_announcement
      */
 	public function deleteAnnouncement($userID)
 	{
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
 		$tables = array(
             mobilAP_announcement::ANNOUNCEMENT_TABLE, 
             mobilAP_announcement::ANNOUNCEMENT_READ_TABLE

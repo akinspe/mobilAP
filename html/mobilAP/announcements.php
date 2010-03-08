@@ -11,6 +11,7 @@
 require_once('../mobilAP.php');
 require_once('classes/mobilAP_announcement.php');
 
+$user_session = new mobilAP_UserSession();
 $user = new mobilAP_user(true);
 
 if (isset($_POST['post'])) {
@@ -68,13 +69,17 @@ if (isset($_POST['post'])) {
             break;
     }
 } else {
+	if (mobilAP::getConfig('CONTENT_PRIVATE') && !$user_session->loggedIn()) {
+		$data = array();
+	} else {
 
-    $data = mobilAP::getAnnouncements();
-    foreach ($data as $idx=>$announcement) {
-        $data[$idx]->readUserID = $user->getUserID();
-        $data[$idx]->read = $announcement->hasRead($user->getUserID());
-        $data[$idx]->user = mobilAP_user::getUserById($announcement->userID);
-    }
+		$data = mobilAP::getAnnouncements();
+		foreach ($data as $idx=>$announcement) {
+			$data[$idx]->readUserID = $user->getUserID();
+			$data[$idx]->read = $announcement->hasRead($user->getUserID());
+			$data[$idx]->user = mobilAP_user::getUserById($announcement->userID);
+		}
+	}
 }
 
 header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
