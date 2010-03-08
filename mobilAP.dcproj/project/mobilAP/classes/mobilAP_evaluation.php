@@ -64,8 +64,15 @@ class mobilAP_evaluation_question
 		return true;
 	}
 	
-	function deleteQuestion()
+	function deleteQuestion($userID)
 	{
+		// check privilages
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
 		$questions = mobilAP::getEvaluationQuestions();
         
 		$sql = sprintf("DELETE FROM %s WHERE question_index=%d",
@@ -102,8 +109,15 @@ class mobilAP_evaluation_question
         return true;
 	}
 	
-	function addQuestion()
+	function addQuestion($userID)
 	{
+		// check privilages
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
 		$questions = mobilAP::getEvaluationQuestions();
 		$this->question_index = count($questions);
 
@@ -120,8 +134,15 @@ class mobilAP_evaluation_question
 		return true;
 	}
 
-	function updateQuestion()
+	function updateQuestion($userID)
 	{
+		// check privilages
+		if (!$user = mobilAP_user::getUserById($userID)) {
+			return mobilAP_Error::throwError("Unauthorized");
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized");
+		}
+
 		$sql = sprintf("UPDATE %s SET question_text='%s', question_response_type='%s' WHERE question_index=%d", 
 		mobilAP_evaluation_question::EVALUATION_QUESTION_TABLE);
 		$params = array($this->question_text, $this->question_response_type, $this->question_index);

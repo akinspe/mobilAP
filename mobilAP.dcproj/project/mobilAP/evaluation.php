@@ -3,9 +3,11 @@
 require_once('../mobilAP.php');
 require_once('classes/mobilAP_evaluation.php');
 
+$user_session = new mobilAP_UserSession();
+$user = new mobilAP_user(true);
+
 if (isset($_POST['post'])) {
     $post_action = $_POST['post'];
-    $user = new mobilAP_user(true);
 
     switch ($post_action)
     {
@@ -55,7 +57,7 @@ if (isset($_POST['post'])) {
                         $result = $question->addResponse($response_text);
                         if (mobilAP_Error::isError($result)) {
                             if ($post_action=='addQuestion') {
-                                $question->deleteQuestion();
+                                $question->deleteQuestion($user->getUserID());
                             }
                             $data = $result;
                             break;
@@ -69,7 +71,11 @@ if (isset($_POST['post'])) {
             break;
     }
 } else {
-    $data = mobilAP::getEvaluationQuestions();
+	if (mobilAP::getConfig('CONTENT_PRIVATE') && !$user_session->loggedIn()) {
+		$data = array();
+	} else {
+		$data = mobilAP::getEvaluationQuestions();
+	}
 }
 
 header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
