@@ -2,7 +2,11 @@
 
 require_once('../mobilAP.php');
 
-if (isset($_REQUEST['letter'])) {
+$user_session = new mobilAP_UserSession();
+
+if (mobilAP::getConfig('CONTENT_PRIVATE') && !$user_session->loggedIn()) {
+	$data = array();
+} elseif (isset($_REQUEST['letter'])) {
     $data = mobilAP_User::getUsers(array('letter'=>$_REQUEST['letter']));
 } elseif (isset($_REQUEST['q'])) {
     $data = mobilAP_User::getUsers(array('search'=>$_REQUEST['q']));

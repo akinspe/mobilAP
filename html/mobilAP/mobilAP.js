@@ -128,6 +128,7 @@ MobilAP = {
 		ERROR_NO_USER: -1,
         ERROR_REQUIRES_PASSWORD: -4,
         CREATE_NEW_USER: -6,
+        UNAUTHORIZED: -7,
 		LOGGING: true,
 		log: function(msg) {
 			if (!this.LOGGING) return;

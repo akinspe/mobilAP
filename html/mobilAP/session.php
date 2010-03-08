@@ -2,6 +2,7 @@
 
 require_once('../mobilAP.php');
 
+$user_session = new mobilAP_UserSession();
 $user = new mobilAP_user(true);
 $session_id = isset($_REQUEST['session_id']) ? $_REQUEST['session_id'] : '';
 if ($session = mobilAP::getSessionByID($session_id)) {
@@ -64,11 +65,11 @@ if ($session = mobilAP::getSessionByID($session_id)) {
                 break;
             case 'addPresenter':
             	$userID = isset($_POST['userID']) ? $_POST['userID'] : '';
-                $data = $session->addPresenter($userID);
+                $data = $session->addPresenter($userID, $user->getUserID());
                 break;
             case 'removePresenter':
             	$userID = isset($_POST['userID']) ? $_POST['userID'] : '';
-                $data = $session->removePresenter($userID);
+                $data = $session->removePresenter($userID, $user->getUserID());
                 break;
             case 'updateQuestion':
             	$question_id = isset($_POST['question_id']) ? $_POST['question_id'] : '';

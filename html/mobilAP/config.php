@@ -4,9 +4,15 @@ require_once('../mobilAP.php');
 
 if (isset($_POST['post'])) {
     $post_action = $_POST['post'];
-    switch ($post_action)
+	$user = new mobilAP_user(true);
+	
+	switch ($post_action)
     {
         case 'saveDB':
+        	if (mobilAP::getConfig('setupcomplete')) {
+				$data = mobilAP_Error::throwError("Setup already complete");
+				break;
+			}
             $dbconfig = isset($_POST['dbconfig']) ? $_POST['dbconfig'] : array();
             $data = true;
             foreach ($dbconfig as $var=>$value) {
@@ -24,6 +30,10 @@ if (isset($_POST['post'])) {
 
             break;
         case 'save':
+        	if (!$user->isSiteAdmin()) {
+				$data = mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+				break;
+			}
             $config = isset($_POST['config']) ? $_POST['config'] : array();
             $data = true;
             foreach ($config as $type=>$vars) {
@@ -37,6 +47,10 @@ if (isset($_POST['post'])) {
             }
             break;
         case 'dbtest':
+        	if (mobilAP::getConfig('setupcomplete')) {
+				$data = mobilAP_Error::throwError("Setup already complete");
+				break;
+			}
 
             $db_type = isset($_POST['db_type']) ? $_POST['db_type'] : '';
             $db_host = isset($_POST['db_host']) ? $_POST['db_host'] : '';

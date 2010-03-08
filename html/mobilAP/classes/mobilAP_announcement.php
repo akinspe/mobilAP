@@ -32,9 +32,9 @@ class mobilAP_announcement
 	public function postAnnouncement($userID)
 	{
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("Invalid user $userID");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
         
         if (empty($this->announcement_title)) {
@@ -67,9 +67,9 @@ class mobilAP_announcement
 	public function updateAnnouncement($userID)
 	{
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 
 		$sql = sprintf("UPDATE %s SET
@@ -93,9 +93,9 @@ class mobilAP_announcement
 	public function deleteAnnouncement($userID)
 	{
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 
 		$tables = array(

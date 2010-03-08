@@ -141,6 +141,12 @@ class mobilAP_User
 
     public function addUser($admin_userID)
     {
+		if (!$user = mobilAP_user::getUserById($admin_userID)) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		}
+
 		if (!mobilAP_utils::is_validEmail($this->email)) {
 			return mobilAP_Error::throwError(empty($this->email) ? "Email cannot be blank" : "Invalid email: $this->email");
 		} elseif (strlen($this->FirstName)==0 || strlen($this->LastName)==0) {
@@ -171,6 +177,12 @@ class mobilAP_User
     
     public function updateUser($admin_userID)
     {
+		if (!$user = mobilAP_user::getUserById($admin_userID)) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		} elseif (!$user->isSiteAdmin() && $user->getUserID() != $this->getUserID()) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		}
+
     	$sql = sprintf("UPDATE %s SET
     		FirstName=?, 
     		LastName=?, 
@@ -191,8 +203,14 @@ class mobilAP_User
 		return mobilAP_Error::isError($result) ? $result : true;
     }
     
-    public function deleteUser()
+    public function deleteUser($admin_userID)
     {
+		if (!$user = mobilAP_user::getUserById($admin_userID)) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		} elseif (!$user->isSiteAdmin()) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		}
+
         require_once('mobilAP_session.php');
 		$this->deleteDirectoryImage();		
 
@@ -715,6 +733,7 @@ class mobilAP_UserSession
 	const USER_REQUIRES_PASSWORD=-4;
 	const USER_ADMIN_LOGIN_FAILURE=-5;
 	const USER_CREATE_NEW_USER=-6;
+	const USER_UNAUTHORIZED=-7;
 	const LOGIN_COOKIE_LENGTH=1209600; //2 weeks
 	const COOKIE_TABLE='login_cookies';
 	public $userID;

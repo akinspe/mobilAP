@@ -68,9 +68,9 @@ class mobilAP_evaluation_question
 	{
 		// check privilages
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 
 		$questions = mobilAP::getEvaluationQuestions();
@@ -113,9 +113,9 @@ class mobilAP_evaluation_question
 	{
 		// check privilages
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 
 		$questions = mobilAP::getEvaluationQuestions();
@@ -138,9 +138,9 @@ class mobilAP_evaluation_question
 	{
 		// check privilages
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("Unauthorized");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 
 		$sql = sprintf("UPDATE %s SET question_text='%s', question_response_type='%s' WHERE question_index=%d", 

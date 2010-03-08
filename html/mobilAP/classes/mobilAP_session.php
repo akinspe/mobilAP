@@ -129,9 +129,9 @@ class mobilAP_session
 	{
 		// check privilages
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("User $userID not found");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("User $userID cannot delete this session");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 		
 		// remove questions
@@ -168,9 +168,9 @@ class mobilAP_session
 	{
 		// check privilages
 		if (!$user = mobilAP_user::getUserById($userID)) {
-			return mobilAP_Error::throwError("User $userID not found");
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
-			return mobilAP_Error::throwError("User $userID cannot create sessions");
+			return mobilAP_Error::throwError("Unauthoirzed", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 		
 		//check required fields
@@ -578,8 +578,13 @@ class mobilAP_session
      * @param $presenter_userID the userID to add
      * @return true if successful or error object
      */
-	public function addPresenter($presenter_userID)
+	public function addPresenter($presenter_userID, $admin_userID)
 	{
+		// check privilages
+		if (!$this->isAdmin($admin_userID)) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		}
+		
 		if ($user = mobilAP_user::getUserByID($presenter_userID)) {
             if ($this->isPresenter($user->getUserID())) {
                 return true;
@@ -607,8 +612,13 @@ class mobilAP_session
      * @param $presenter_userID the userID to remove
      * @return true if successful or error object
      */
-	public function removePresenter($presenter_userID)
+	public function removePresenter($presenter_userID, $admin_userID)
 	{
+		// check privilages
+		if (!$this->isAdmin($admin_userID)) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		}
+
 		$sql = sprintf("SELECT presenter_index FROM %s WHERE presenter_id=? AND session_id=?", 
 						mobilAP_session::SESSION_PRESENTER_TABLE);
 		$params = array($presenter_userID, $this->session_id);
@@ -648,8 +658,13 @@ class mobilAP_session
      * @param $question a question object
      * @return true if successful or error object
      */
-	public function addQuestion($question, $userID)
+	public function addQuestion($question, $admin_userID)
 	{
+		// check privilages
+		if (!$this->isAdmin($admin_userID)) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		}
+
 		if (!is_a($question, 'mobilAP_session_question')) {
 			return mobilAP_Error::throwError("Invalid question object");
 		}
@@ -799,10 +814,10 @@ class mobilAP_session
     /**
      * clears the evaluation data for this session
      */
-	public function clearEvaluations($userID)
+	public function clearEvaluations($admin_userID)
 	{
-        if (!$this->isAdmin($userID)) {
-            return new mobilAP_Error('Unauthorized');
+        if (!$this->isAdmin($admin_userID)) {
+            return new mobilAP_Error('Unauthorized', mobilAP_UserSession::USER_UNAUTHORIZED);
         }
 		$sql = sprintf("DELETE FROM %s WHERE session_id=%d",
 				mobilAP_session::SESSION_EVALUATION_TABLE, $this->session_id);
@@ -818,10 +833,10 @@ class mobilAP_session
     /**
      * clears the discussion for this session
      */
-	public function clearDiscussion($userID)
+	public function clearDiscussion($admin_userID)
 	{
-        if (!$this->isAdmin($userID)) {
-            return new mobilAP_Error('Unauthorized');
+        if (!$this->isAdmin($admin_userID)) {
+            return new mobilAP_Error('Unauthorized', mobilAP_UserSession::USER_UNAUTHORIZED);
         }
 
 		$sql = sprintf("DELETE FROM %s WHERE session_id=%d",
@@ -874,8 +889,13 @@ class mobilAP_session
      * @param int $post_id
      * @return true if successful or error object
      */
-	public function delete_discussion_post($post_id)
+	public function delete_discussion_post($post_id,$admin_userID)
 	{
+		// check privilages
+		if (!$this->isAdmin($admin_userID)) {
+			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
+		}
+
 		$sql = sprintf("DELETE FROM %s 
 				WHERE session_id=%d AND post_id=%d",
 				 mobilAP_session::SESSION_DISCUSSION_TABLE, $this->session_id, $post_id);
@@ -944,10 +964,10 @@ class mobilAP_session
      * @param string $userID user who is updating the data
      * @return true if successful or error object
      */
-	public function updateSession($userID)
+	public function updateSession($admin_userID)
 	{
-        if (!$this->isAdmin($userID)) {
-            return mobilAP_Error::throwError("$userID cannot update this session");
+        if (!$this->isAdmin($admin_userID)) {
+            return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
         }
         
 		$sql = sprintf("UPDATE %s SET
@@ -1459,7 +1479,7 @@ class mobilAP_session_question
 		return true;
 	}
 	
-	function deleteQuestion()
+	function deleteQuestion($userID)
 	{
 		$tables = array(mobilAP_session::POLL_QUESTIONS_TABLE, mobilAP_session::POLL_RESPONSES_TABLE, mobilAP_session::POLL_ANSWERS_TABLE);
 		foreach ($tables as $table)
@@ -1481,7 +1501,7 @@ class mobilAP_session_question
 		return true;
 	}
 	
-	function clearAnswers()
+	function clearAnswers($userID)
 	{
 		$sql = "DELETE FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " WHERE question_id=$this->question_id";
 		$result = mobilAP::query($sql);
@@ -1684,7 +1704,7 @@ class mobilAP_session_question
 		return $answers;
 	}
 	
-	function updateQuestion()
+	function updateQuestion($userID)
 	{
 		$sql = sprintf("UPDATE %s SET
 				question_text=?,
