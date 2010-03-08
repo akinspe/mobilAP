@@ -143,7 +143,7 @@ class mobilAP_evaluation_question
 			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		}
 
-		$sql = sprintf("UPDATE %s SET question_text='%s', question_response_type='%s' WHERE question_index=%d", 
+		$sql = sprintf("UPDATE %s SET question_text=?, question_response_type=? WHERE question_index=?", 
 		mobilAP_evaluation_question::EVALUATION_QUESTION_TABLE);
 		$params = array($this->question_text, $this->question_response_type, $this->question_index);
 		$result = mobilAP::query($sql,$params);
