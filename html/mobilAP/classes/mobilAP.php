@@ -225,7 +225,7 @@ class mobilAP
         $contents = array();
         $contents[]  = '<' . '?php';
         $contents[] = '$_DBCONFIG = unserialize(\'' . serialize($CONFIG) . "');";
-        $contents[] = "?>";
+        $contents[] = "?" . ">";
         return file_put_contents(mobilAP::dbConfigFile(), implode(PHP_EOL, $contents));
     }
 	
