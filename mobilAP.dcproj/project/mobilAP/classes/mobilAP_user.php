@@ -141,7 +141,9 @@ class mobilAP_User
 
     public function addUser($admin_userID)
     {
-		if (!$user = mobilAP_user::getUserById($admin_userID)) {
+		if (mobilAP::getConfig('ALLOW_SELF_CREATED_USERS')) {
+			// allow people to create new accounts
+		} elseif (!$user = mobilAP_user::getUserById($admin_userID)) {
 			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
 			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
