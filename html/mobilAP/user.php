@@ -3,7 +3,7 @@
 require_once('../mobilAP.php');
 $content_type = 'application/json';
 $user_session = new mobilAP_UserSession();
-$user = new mobilAP_user(true);
+$_user = new mobilAP_user(true);
 
 if (isset($_POST['post'])) {
     $post_action = $_POST['post'];
@@ -12,7 +12,7 @@ if (isset($_POST['post'])) {
         case 'deleteUser':
             $userID = isset($_POST['userID']) ? $_POST['userID'] : '';
             if ($user = mobilAP_User::getUserByID($userID)) {
-                $data = $user->deleteUser($user->getUserID());
+                $data = $user->deleteUser($_user->getUserID());
             } else {
                 $data = mobilAP_Error::throwError("Unable to find user for userID " . $userID,-2, $userID);
                 break;
@@ -68,9 +68,9 @@ if (isset($_POST['post'])) {
             $user->setAdmin($admin);
 
             if ($post_action =='addUser') {
-                $data = $user->addUser($user->getUserID());
+                $data = $user->addUser($_user->getUserID());
             } else {
-                $data = $user->updateUser($user->getUserID());
+                $data = $user->updateUser($_user->getUserID());
             }
 
             if (!mobilAP_Error::isError($data)) {
