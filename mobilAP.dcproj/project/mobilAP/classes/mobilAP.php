@@ -72,6 +72,20 @@ class mobilAP
     }
 
     /**
+    * returns a hash to distinguish mobilAP instances from each other
+    * @return string a 32 character hash value
+    */
+    function getHash()
+    {
+    	if (!$hash = mobilAP::getConfig('MOBILAP_HASH')) {
+    		$hash = md5(uniqid(rand(), true));
+    		mobilAP::setConfig('MOBILAP_HASH');
+    	}
+    	
+    	return $hash;
+    }
+
+    /**
     * sets/updates a serial value
     * @param string $serial_var a serial variable to update
     * @return void

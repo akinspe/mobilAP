@@ -94,6 +94,7 @@ class mobilAP_db
                 mobilAP_db::deleteTables();
             }
         }
+        mobilAP::setConfig('MOBILAP_HASH', mobilAP::getHash());
         mobilAP::setConfig('DB_VERSION', MOBILAP_DB_VERSION, 'I');
         mobilAP::setDBConfig('DB_VERSION', MOBILAP_DB_VERSION);
         mobilAP::setDefaultConfigs();
