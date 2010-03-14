@@ -79,7 +79,7 @@ class mobilAP
     {
     	if (!$hash = mobilAP::getConfig('MOBILAP_HASH')) {
     		$hash = md5(uniqid(rand(), true));
-    		mobilAP::setConfig('MOBILAP_HASH');
+    		mobilAP::setConfig('MOBILAP_HASH', $hash);
     	}
     	
     	return $hash;
