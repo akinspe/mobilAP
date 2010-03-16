@@ -30,7 +30,7 @@ if (isset($_POST['post'])) {
 
             break;
         case 'save':
-        	if (!$user->isSiteAdmin()) {
+        	if (mobilAP::getConfig('setupcomplete') && !$user->isSiteAdmin()) {
 				$data = mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 				break;
 			}
