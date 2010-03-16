@@ -56,16 +56,15 @@ class mobilAP_db
             'evaluation_questions'=>"CREATE TABLE IF NOT EXISTS evaluation_questions (question_index tinyint(4)  NOT NULL DEFAULT '0', question_text varchar(100) DEFAULT NULL,question_response_type char(1) DEFAULT NULL, PRIMARY KEY (question_index))",
             'login_cookies'=>"CREATE TABLE IF NOT EXISTS login_cookies (userID char(32) NOT NULL DEFAULT '',token char(32) NOT NULL DEFAULT '', timestamp datetime DEFAULT NULL, expires datetime DEFAULT NULL, PRIMARY KEY (userID,token))",
             'mobilAP_config'=>"CREATE TABLE IF NOT EXISTS mobilAP_config (config_var varchar(32) NOT NULL DEFAULT '',config_type char(1) DEFAULT NULL,config_value varchar(100) DEFAULT NULL, PRIMARY KEY  (config_var))",
-            'mobilAP_serials'=>"CREATE TABLE IF NOT EXISTS mobilAP_serials (serial_var varchar(32) NOT NULL DEFAULT '',serial_value int(11) DEFAULT NULL, PRIMARY KEY  (serial_var))",
-            'mobilAP_users'=>"CREATE TABLE IF NOT EXISTS mobilAP_users (userID char(32) NOT NULL DEFAULT '', FirstName varchar(50) DEFAULT NULL,LastName varchar(50) DEFAULT NULL, email varchar(50) DEFAULT NULL,
-  md5 char(32) DEFAULT NULL,directory_active tinyint(1) NOT NULL DEFAULT '-1', admin tinyint(1) NOT NULL DEFAULT '0', organization char(50) DEFAULT NULL, PRIMARY KEY (userID),UNIQUE (email))",
+            'mobilAP_serials'=>"CREATE TABLE IF NOT EXISTS mobilAP_serials (serial_var varchar(32) NOT NULL DEFAULT '',serial_value int(11),serial_type char(1) DEFAULT NULL, PRIMARY KEY  (serial_var))",
+            'mobilAP_users'=>"CREATE TABLE IF NOT EXISTS mobilAP_users (userID char(32) NOT NULL DEFAULT '', FirstName varchar(50) DEFAULT NULL,LastName varchar(50) DEFAULT NULL, email varchar(50) DEFAULT NULL, md5 char(32) DEFAULT NULL,directory_active tinyint(1) NOT NULL DEFAULT '-1', admin tinyint(1) NOT NULL DEFAULT '0', organization char(50) DEFAULT NULL, PRIMARY KEY (userID),UNIQUE (email))",
             'poll_answers'=>sprintf("CREATE TABLE IF NOT EXISTS poll_answers (answer_id INTEGER PRIMARY KEY %s,question_id int(11)  DEFAULT NULL,response_value smallint(5)  DEFAULT NULL,response_timestamp int(11) DEFAULT NULL,response_userID char(32) DEFAULT NULL)", $this->_autoincrement()),
             'poll_questions'=>sprintf("CREATE TABLE IF NOT EXISTS poll_questions (question_id INTEGER PRIMARY KEY %s,session_id int(10)  DEFAULT NULL,question_index smallint(6)  NOT NULL DEFAULT '0',question_text varchar(200) DEFAULT NULL,question_minchoices tinyint(4)  NOT NULL DEFAULT '0',question_maxchoices tinyint(4)  NOT NULL DEFAULT '0',response_type char(1) DEFAULT NULL,chart_type char(3) DEFAULT NULL,question_active tinyint(1) NOT NULL DEFAULT '-1',question_list_text varchar(50) DEFAULT NULL,UNIQUE (session_id,question_index))", $this->_autoincrement()),
             'poll_responses'=>"CREATE TABLE IF NOT EXISTS poll_responses (question_id int(11) NOT NULL DEFAULT '0',response_index smallint(6)  NOT NULL DEFAULT '0',response_value smallint(6)  NOT NULL DEFAULT '0',response_text varchar(200) DEFAULT NULL,PRIMARY KEY (question_id,response_index),UNIQUE (question_id,response_value),UNIQUE  (question_id,response_text))",
             'schedule'=>sprintf("CREATE TABLE IF NOT EXISTS schedule (schedule_id INTEGER PRIMARY KEY %s,schedule_type char(1) DEFAULT NULL,start_time datetime DEFAULT NULL,end_time datetime DEFAULT NULL,detail varchar(100) DEFAULT NULL,room char(32) DEFAULT NULL,session_id int(11) DEFAULT NULL,session_group_id int(11) DEFAULT NULL)", $this->_autoincrement()),
             'session_discussion'=>sprintf("CREATE TABLE IF NOT EXISTS session_discussion (post_id INTEGER PRIMARY KEY %s,session_id int(11) DEFAULT NULL,post_timestamp int(11) DEFAULT NULL,post_user char(32) DEFAULT NULL,post_text text)", $this->_autoincrement()),
             'session_evaluations'=>sprintf("CREATE TABLE IF NOT EXISTS session_evaluations (evaluation_id INTEGER PRIMARY KEY %s,session_id int(11) DEFAULT NULL,post_user char(32) DEFAULT NULL,post_timestamp int(11))", $this->_autoincrement()),
-            'session_evaluation_answers'=>"CREATE TABLE IF NOT EXISTS session_evaluation_answers (evaluation_id INTEGER, question_index INTEGER, question_answer TEXT)",
+            'session_evaluation_answers'=>"CREATE TABLE IF NOT EXISTS session_evaluation_answers (evaluation_id INTEGER, question_index INTEGER, question_answer TEXT, UNIQUE(evaluation_id,question_index))",
             "session_groups"=>sprintf("CREATE TABLE IF NOT EXISTS session_groups (session_group_id INTEGER PRIMARY KEY %s,session_group_title varchar(100) DEFAULT NULL,session_group_detail varchar(100) DEFAULT NULL)", $this->_autoincrement()),
             'session_links'=>sprintf("CREATE TABLE IF NOT EXISTS session_links (link_id INTEGER PRIMARY KEY %s,session_id int(11) DEFAULT NULL,link_url varchar(200) DEFAULT NULL,link_text varchar(150) DEFAULT NULL,post_user char(32) DEFAULT NULL,link_type char(1) DEFAULT NULL,post_timestamp int(11) DEFAULT NULL)", $this->_autoincrement()),
             'session_presenters'=>"CREATE TABLE IF NOT EXISTS session_presenters (session_id int(11) NOT NULL DEFAULT '0',presenter_id char(32) NOT NULL DEFAULT '',presenter_index tinyint(4)  DEFAULT NULL,PRIMARY KEY (session_id,presenter_id))",
@@ -73,6 +72,20 @@ class mobilAP_db
         );
         
         return $tables;
+    }
+    
+    protected function getIndexDefinitions()
+    {
+    	$indexes = array(
+            'serial_type'=>"CREATE INDEX serial_type ON mobilAP_serials (serial_type)",
+            'session_discussion_id'=>"CREATE INDEX session_discussion_id ON session_discussion (session_id)",
+            'poll_answers_question'=>"CREATE INDEX poll_answers_question ON poll_answers (question_id)",
+            'session_evaluations_index'=>"CREATE INDEX session_evaluations_index ON session_evaluations (session_id)",
+            'session_links_id'=>"CREATE INDEX session_links_id ON session_links (session_id)",
+            'session_presenters_id'=>"CREATE INDEX session_presenters_id ON session_presenters (session_id)"
+    	);
+    	
+    	return $indexes;
     }
     
     public static function createTables()
@@ -94,10 +107,29 @@ class mobilAP_db
                 mobilAP_db::deleteTables();
             }
         }
+
+		// we will be ignoring index creation errors
+        $definitions = $conn->getIndexDefinitions();
+        foreach ($definitions as $index=>$sql) {
+            mobilAP::query($sql);
+        }
+
         mobilAP::setConfig('MOBILAP_HASH', mobilAP::getHash());
         mobilAP::setConfig('DB_VERSION', MOBILAP_DB_VERSION, 'I');
         mobilAP::setDBConfig('DB_VERSION', MOBILAP_DB_VERSION);
         mobilAP::setDefaultConfigs();
+        return true;
+    }
+
+    public static function deleteIndexes()
+    {
+        $conn = mobilAP_db::conn();
+        $definitions = $conn->getIndexDefinitions();
+        foreach ($definitions as $index=>$create_sql) {
+            $sql = "DROP INDEX IF EXISTS $index";
+            mobilAP::query($sql);
+        }
+        
         return true;
     }
     

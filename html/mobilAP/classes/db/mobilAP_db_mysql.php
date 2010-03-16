@@ -28,6 +28,11 @@ class mobilAP_db_mysql extends mobilAP_db
         return $info;
         
 	}
+	
+    public static function deleteIndexes()
+    {
+    	return;
+    }
 
     protected function getTableDefinitions()
     {
