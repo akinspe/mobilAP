@@ -325,6 +325,7 @@ MobilAP.SerialController = Class.create(MobilAP.Controller, {
                         case 'evaluation':
                         case 'schedule':
                         case 'users':
+                        case 'user':
                             dashcode.getDataSource(key).queryUpdated();
                             break;
                         default:
@@ -333,7 +334,7 @@ MobilAP.SerialController = Class.create(MobilAP.Controller, {
                             		mobilAP.sessionController.reloadData();
 								}
                             } else {
-                                alert("unhandled update for key " + key);
+                                this.log("unhandled update for key " + key);
                             }
                     }
                 
