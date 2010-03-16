@@ -84,6 +84,7 @@ if (isset($_POST['post'])) {
     $data = mobilAP_User::getUserByID($_GET['userID']);
 } else {
     $data = new mobilAP_user(true);
+    $data->userData = $data->getUserData();
 }
 
 header("Content-type: $content_type; charset=utf-8");
