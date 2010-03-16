@@ -158,7 +158,7 @@ class mobilAP_schedule_item
 		}
 
 		$this->schedule_id = $result->get_last_insert_id();
-		$this->updateItem();
+		$this->updateItem($userID);
 		return true;
 	}
 
