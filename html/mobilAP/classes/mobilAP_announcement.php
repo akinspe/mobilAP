@@ -248,6 +248,8 @@ class mobilAP_announcement
 				$params = array($this->announcement_id, $user->getUserID());
 			}
 			$result = mobilAP::query($sql,$params);
+			mobilAP::setSerialValue($user->getUserID(),mobilAP::SERIAL_TYPE_USER);
+
 			return mobilAP_Error::isError($result) ? $result : true;
 		} elseif ($userID) {
 			return mobilAP_Error::throwError("Invalid user $userID");
