@@ -19,6 +19,8 @@ class mobilAP
 {
     const CONFIG_TABLE='mobilAP_config';
     const SERIAL_TABLE='mobilAP_serials';
+    const SERIAL_TYPE_DATA='D';
+    const SERIAL_TYPE_USER='U';
     /**
      * returns whether or not mobilAP has been setup or not
      * @return bool
@@ -33,10 +35,13 @@ class mobilAP
     * that can cache data by tracking changes to the underlying data
     * @return array
     */
-    function getSerials()
+    function getSerials($serial_type=null)
     {
         $serials = array();
 		$sql = sprintf("SELECT serial_var,serial_value FROM %s", mobilAP::SERIAL_TABLE);
+		if (in_array($serial_type, array(mobilAP::SERIAL_TYPE_DATA,mobilAP::SERIAL_TYPE_USER))) {
+			$sql .= " WHERE serial_type='$serial_type'";
+		}
 		$result = mobilAP::query($sql);
 		if (mobilAP_Error::isError($result)) {
 			return $serials;
@@ -47,6 +52,27 @@ class mobilAP
 		}
 	
 		return $serials;
+    }
+    
+    function resetSerials()
+    {
+		$sql = sprintf("DELETE FROM %s", mobilAP::SERIAL_TABLE);		
+		$result = mobilAP::query($sql);
+		$base_serials = array('users','evaluation','schedule','sessions','announcements','config');
+		foreach($base_serials as $serial) {
+			mobilAP::setSerialValue($serial,mobilAP::SERIAL_TYPE_DATA);
+		}
+		
+		$sessions = mobilAP::getSessions();
+		foreach ($sessions as $session) {
+			$session->updateSerial();
+		}
+
+		$users = mobilAP::getUsers();
+		foreach ($users as $user) {
+			$user->updateSerial(false);
+		}
+    	
     }
     
     /**
@@ -90,10 +116,13 @@ class mobilAP
     * @param string $serial_var a serial variable to update
     * @return void
     */
-    function setSerialValue($serial_var)
+    function setSerialValue($serial_var, $serial_type=mobilAP::SERIAL_TYPE_DATA)
     {
-		$sql = sprintf("REPLACE INTO %s (serial_var,serial_value) VALUES (?,?)", mobilAP::SERIAL_TABLE);		
-		$result = mobilAP::query($sql, array($serial_var,time()));
+    	if (!in_array($serial_type, array(mobilAP::SERIAL_TYPE_DATA, mobilAP::SERIAL_TYPE_USER))) {
+    		return;
+    	}
+		$sql = sprintf("REPLACE INTO %s (serial_var,serial_value,serial_type) VALUES (?,?,?)", mobilAP::SERIAL_TABLE);		
+		$result = mobilAP::query($sql, array($serial_var,time(),$serial_type));
     }
     
     function canSaveDBConfigFile()
@@ -225,8 +254,10 @@ class mobilAP
             return new mobilAP_Error('Cannot save config file');
         }
 
-        global $_DBCONFIG;
+        global $_DBCONFIG, $mobilAP_db;
+
         $_DBCONFIG[$var] = $value;
+        $mobilAP_db = false;
         return mobilAP::saveDBConfig($_DBCONFIG);
 	}
 
@@ -366,6 +397,15 @@ class mobilAP
     {
         require_once('mobilAP_session.php');
         return mobilAP_session::getSessions();
+    }
+
+    /**
+     * retrieves all userss
+     * @return array an array of mobilAP_users objects for each user
+     */
+    function getUsers()
+    {
+        return mobilAP_user::getUsers();
     }
 
 }
