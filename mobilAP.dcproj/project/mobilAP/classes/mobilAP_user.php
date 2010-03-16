@@ -39,9 +39,9 @@ class mobilAP_User
 		$this->userID = $userID;
     }
 
-	private function updateSerial($updateAllUsers=false)
+	public function updateSerial($updateAllUsers=false)
 	{
-		//mobilAP::setSerialValue($this->userID);
+		mobilAP::setSerialValue($this->userID,mobilAP::SERIAL_TYPE_USER);
 		if ($updateAllUsers) {
 			mobilAP::setSerialValue('users');
 		}
@@ -124,6 +124,67 @@ class mobilAP_User
 		return $user;
 	}
 	
+	public function getUserData()
+	{
+		require_once('mobilAP_session.php');
+		//initialize
+		$session_data = array('questions'=>array(), 'evaluation'=>false);
+		$data = array('sessions'=>array(),'annoucements'=>array());
+
+		$sql = sprintf("SELECT session_id FROM %s", mobilAP_session::SESSION_TABLE);
+		$result = mobilAP::query($sql);		
+		while ($row = $result->fetchRow()) {
+			$data['sessions'][$row['session_id']] = $session_data;
+		}
+		
+		if ($this->getUserID()) {
+			$sql = sprintf("SELECT session_id FROM %s WHERE post_user=?", mobilAP_session::SESSION_EVALUATION_TABLE);
+			$params = array($this->getUserID());
+			$result = mobilAP::query($sql,$params);
+			while ($row = $result->fetchRow()) {
+				$data['sessions'][$row['session_id']]['evaluation'] = true;
+			}
+			
+			//get their question responses
+			$sql = sprintf("SELECT q.session_id,a.* FROM %s a 
+							LEFT JOIN %s q USING (question_id) 
+							WHERE a.response_userID=?",
+						mobilAP_session::POLL_ANSWERS_TABLE, 
+						mobilAP_session::POLL_QUESTIONS_TABLE);
+	
+			$params = array($this->getUserID());
+			$result = mobilAP::query($sql, $params);
+	
+			while ($row = $result->fetchRow()) {
+				$data['sessions'][$row['session_id']]['questions'][$row['question_id']] = intval($row['answer_id']);
+			}
+		}
+
+		require_once('mobilAP_announcement.php');
+		//announcements
+		$sql = sprintf("SELECT announcement_id FROM %s", mobilAP_announcement::ANNOUNCEMENT_TABLE);
+		$result = mobilAP::query($sql);		
+		while ($row = $result->fetchRow()) {
+			$data['annoucements'][$row['announcement_id']] = false;
+		}
+
+		if ($this->getUserID()) {
+			//get their read announcements
+			$sql = sprintf("SELECT announcement_id FROM %s a 
+							WHERE userID=?",
+						mobilAP_announcement::ANNOUNCEMENT_READ_TABLE);
+	
+			$params = array($this->getUserID());
+			$result = mobilAP::query($sql, $params);
+	
+			while ($row = $result->fetchRow()) {
+				$data['annoucements'][$row['announcement_id']] = true;
+			}
+		}
+
+		return $data;
+	}
+	
     public function loadFromSession()
     {
     	$userSession = new mobilAP_UserSession();
@@ -143,6 +204,8 @@ class mobilAP_User
     {
 		if (mobilAP::getConfig('ALLOW_SELF_CREATED_USERS')) {
 			// allow people to create new accounts
+		} elseif (!mobilAP::getConfig('setupcomplete')) {
+			// allow the initial account
 		} elseif (!$user = mobilAP_user::getUserById($admin_userID)) {
 			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
 		} elseif (!$user->isSiteAdmin()) {
