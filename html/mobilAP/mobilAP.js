@@ -1110,10 +1110,17 @@ MobilAP.EvaluationQuestionAdminController = Class.create(MobilAP.ListController,
 MobilAP.SessionController = Class.create(MobilAP.Controller, {
     session: {
         session_questions: [],
-        session_links: []
+        session_links: [],
+        session_presenters: []
     },
     isPresenter: function() {
-        return this.session.isPresenter;
+		var presenters = this.session.session_presenters;
+		for (var i=0;i<presenters.length;i++) {
+			if (presenters[i].userID==mobilAP.user.userID) {
+				return true;
+			}
+		}
+		return false;
     },
     isAdmin: function() {
         var admin = this.isPresenter() || mobilAP.isAdmin();
@@ -1172,9 +1179,25 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
             }
         }
     },
+    evaluationCompleted: function() {
+    	var completed = false;
+		try {
+			completed = mobilAP.user.userData.sessions[this.session_id].evaluation;
+		} catch(e) {
+			completed = false;
+		}
+
+        return completed;
+    },
     questionAnswered: function(question_id) {
-        var questions = dashcode.getDataSource('session').content().valueForKey('session_userdata').questions;
-        return questions[question_id] ? true : false;
+    	var answered = false;
+		try {
+			answered = mobilAP.user.userData.sessions[this.session_id].questions[question_id];
+		} catch(e) {
+			answered = false;
+		}
+
+        return answered;
     },
     clearDiscussion: function(callback) {
         var params = {
@@ -2025,6 +2048,10 @@ MobilAP.User = Class.create({
     LastName: '',
     organization: '',
     email: '',
+    userData: { 
+    	sessions:{},
+    	announcements:{}
+	},
     isAdmin: function() {
         return this.admin;
     },

@@ -710,7 +710,7 @@ MobilAP.MobileSessionEvaluationController = Class.create(MobilAP.SessionEvaluati
         }
 	},
     viewDidLoad: function() {
-        if (this.sessionController.session.session_userdata.evaluation) {
+        if (this.sessionController.evaluationCompleted()) {
             this.sessionController.loadView('evaluation_thanks', false);
         } else {
             this.setQuestionIndex(0);
