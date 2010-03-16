@@ -145,6 +145,16 @@ class mobilAP_User
 				$data['sessions'][$row['session_id']]['evaluation'] = true;
 			}
 			
+			//populate questions
+			$sql = sprintf("SELECT session_id,question_id FROM %s",
+						mobilAP_session::POLL_QUESTIONS_TABLE);
+			$result = mobilAP::query($sql);
+			while ($row = $result->fetchRow()) {
+				$data['sessions'][$row['session_id']]['questions'][$row['question_id']] = 0;
+			}
+			
+			
+			
 			//get their question responses
 			$sql = sprintf("SELECT q.session_id,a.* FROM %s a 
 							LEFT JOIN %s q USING (question_id) 
