@@ -63,49 +63,6 @@ class mobilAP_session
 	}
 	
     /**
-     * gets what a user has done with a session, most notably if they've finished the evaluation or answered the questions 
-     * @param string $userID the user to check 
-     * @return array an associative array that containes a 'questions' and 'evaluation' key. The 'questions' key is an array
-	     containing a key/value for each question, the keys are the question_ids and the values are non-null if the question has been answered,
-	     the evaluation key is simply a boolean on whether they've answered the evaluation or not
-     */
-	public function getUserSubmissions($userID)
-	{
-		//initialize
-		$data = array('questions'=>array(), 'evaluation'=>false);
-		foreach ($this->session_questions as $question) {
-			$data['questions'][$question->question_id] = false;
-		}
-
-		//see whether they've submitted the evaluation
-		$sql = sprintf("SELECT count(*) FROM %s WHERE session_id=? AND post_user=?", 
-				mobilAP_session::SESSION_EVALUATION_TABLE);
-        $params = array($this->session_id, $userID);
-		$result = mobilAP::query($sql,$params);
-		if (mobilAP_Error::isError($result)) {
-			return $data;
-		}
-		$data['evaluation'] = $result->fetchColumn() ? true : false;
-				
-		//get their question responses
-		$sql = sprintf("SELECT * FROM %s WHERE 
-						question_id IN (SELECT question_id FROM %s WHERE session_id=%d)
-					AND response_userID='%s'", 
-					mobilAP_session::POLL_ANSWERS_TABLE, 
-					mobilAP_session::POLL_QUESTIONS_TABLE , $this->session_id, 
-					$userID);
-		$result = mobilAP::query($sql);
-		if (mobilAP_Error::isError($result)) {
-			return $data;
-		}
-		while ($row = $result->fetchRow()) {
-			$data['questions'][$row['question_id']] = intval($row['answer_id']);
-		}
-
-		return $data;
-	}
-	
-    /**
      * sets the variables from an array (probably from the database
      * @param array $arr an associative array of key/values 
      * @return object a session object
@@ -142,18 +99,19 @@ class mobilAP_session
 		
 		// clear out relevant tables
 		$tables = array(mobilAP_session::SESSION_TABLE, mobilAP_session::SESSION_LINK_TABLE, mobilAP_session::SESSION_PRESENTER_TABLE, mobilAP_session::SESSION_EVALUATION_TABLE, mobilAP_session::SESSION_DISCUSSION_TABLE);
+		$params = array($this->session_id);
 		foreach ($tables as $table) {
-			$sql = sprintf("DELETE FROM %s WHERE session_id=%d", $table, $this->session_id);
-			$result = mobilAP::query($sql);
+			$sql = sprintf("DELETE FROM %s WHERE session_id=?", $table);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $result;
 			}
 		}
 
 		// unassociate the session from any schedule items
-		$sql = sprintf("UPDATE %s SET session_id=null WHERE session_id=%d",
-		mobilAP::SCHEDULE_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+		$sql = sprintf("UPDATE %s SET session_id=null WHERE session_id=?",
+		mobilAP::SCHEDULE_TABLE);
+		$result = mobilAP::query($sql,$params);
 		mobilAP::setSerialValue('sessions');
 		mobilAP::purgeSerialValue('session_' . $this->session_id);
 		return mobilAP_Error::isError($result) ? $result : true;
@@ -189,6 +147,7 @@ class mobilAP_session
 		}
 		$this->session_id = $result->get_last_insert_id();
 		mobilAP::setSerialValue('sessions');
+		$this->updateSerial();
 		return true;
 	}
 
@@ -199,9 +158,10 @@ class mobilAP_session
      */
 	public static function getSessionByID($session_id)
 	{
-		$sql = sprintf("SELECT * FROM %s WHERE session_id=%d", 
-				mobilAP_session::SESSION_TABLE, $session_id);
-		$result = mobilAP::query($sql);
+		$sql = sprintf("SELECT * FROM %s WHERE session_id=?",
+				mobilAP_session::SESSION_TABLE);
+		$params = array($session_id);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return false;
 		}
@@ -255,12 +215,12 @@ class mobilAP_session
 			}
 			
 			$sql = sprintf("SELECT * FROM %s 	
-					WHERE session_id IN (SELECT session_id FROM %s WHERE presenter_id='%s')
+					WHERE session_id IN (SELECT session_id FROM %s WHERE presenter_id=?)
 					ORDER BY session_id",
 					mobilAP_session::SESSION_TABLE,
-					mobilAP_session::SESSION_PRESENTER_TABLE,
-					$user->getUserID());
-			$result = mobilAP::query($sql);
+					mobilAP_session::SESSION_PRESENTER_TABLE);
+			$params = array($user->getUserID());		
+			$result = mobilAP::query($sql,$params);
 			$sessions = array();
 			if (mobilAP_Error::isError($result)) {
 				return $sessions;
@@ -305,10 +265,10 @@ class mobilAP_session
 		if (count($avg_fields)) {
 	
 			$sql = sprintf("SELECT %s FROM %s
-					WHERE session_id=%d",
-					implode(',', $avg_fields), mobilAP_session::SESSION_EVALUATION_TABLE, $this->session_id);
-					
-			$result = mobilAP::query($sql);
+					WHERE session_id=?",
+					implode(',', $avg_fields), mobilAP_session::SESSION_EVALUATION_TABLE);
+			$params = array($this->session_id);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $data;
 			}
@@ -324,10 +284,11 @@ class mobilAP_session
 		if (count($count_fields)) {
 
 			$sql = sprintf("SELECT %s FROM %s
-					WHERE session_id=%d",
-					implode(',', $count_fields), mobilAP_session::SESSION_EVALUATION_TABLE, $this->session_id);
+					WHERE session_id=?",
+					implode(',', $count_fields), mobilAP_session::SESSION_EVALUATION_TABLE);
 	
-			$result = mobilAP::query($sql);
+			$params = array($this->session_id);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $data;
 			}
@@ -340,10 +301,11 @@ class mobilAP_session
 		
 		if (count($text_fields)) {
 
-			$sql = sprintf("SELECT %s FROM %s WHERE session_id=%d",
-				implode(',', $text_fields),mobilAP_session::SESSION_EVALUATION_TABLE, $this->session_id);
+			$sql = sprintf("SELECT %s FROM %s WHERE session_id=?",
+				implode(',', $text_fields),mobilAP_session::SESSION_EVALUATION_TABLE);
 	
-			$result = mobilAP::query($sql);
+			$params = array($this->session_id);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $data;
 			}
@@ -365,9 +327,10 @@ class mobilAP_session
      */
 	public function getEvaluations()
 	{
-		$sql = sprintf("SELECT * FROM %s WHERE session_id=%d", 
-				mobilAP_session::SESSION_EVALUATION_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+		$sql = sprintf("SELECT * FROM %s WHERE session_id=?", 
+				mobilAP_session::SESSION_EVALUATION_TABLE);
+			$params = array($this->session_id);
+		$result = mobilAP::query($sql,$params);
 		$evaluations = array();
 		if (mobilAP_Error::isError($result)) {
 			return $evaluations;
@@ -386,10 +349,11 @@ class mobilAP_session
 	public function getLinks()
 	{
 		$sql = sprintf("SELECT * FROM %s
-				WHERE session_id=%d
+				WHERE session_id=?
 				ORDER BY post_timestamp DESC",
-				mobilAP_session::SESSION_LINK_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+				mobilAP_session::SESSION_LINK_TABLE);
+		$params = array($this->session_id);
+		$result = mobilAP::query($sql,$params);
 		$links = array();
 		if (mobilAP_Error::isError($result)) {
 			return $links;
@@ -410,7 +374,7 @@ class mobilAP_session
 	public function getQuestions($show_all=false)
 	{
 		$where = array(
-			sprintf("session_id=%d", $this->session_id)
+			"session_id=?"
 		);
 		
 		if (!$show_all) {
@@ -421,7 +385,8 @@ class mobilAP_session
 				WHERE %s
 				ORDER BY question_index",
 				mobilAP_session::POLL_QUESTIONS_TABLE, implode(" AND ", $where)); 
-		$result = mobilAP::query($sql);
+		$params = array($this->session_id);
+		$result = mobilAP::query($sql,$params);
 		$questions = array();
 		if (mobilAP_Error::isError($result)) {
 			return $questions;
@@ -440,9 +405,10 @@ class mobilAP_session
      */
 	private function getNextQuestionIndex()
 	{
-		$sql = sprintf("SELECT count(*) FROM %s WHERE session_id=%d", 
-						mobilAP_session::POLL_QUESTIONS_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+		$sql = sprintf("SELECT count(*) FROM %s WHERE session_id=?", 
+						mobilAP_session::POLL_QUESTIONS_TABLE);
+		$params = array($this->session_id);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
@@ -457,9 +423,10 @@ class mobilAP_session
 	public function getQuestionById($question_id)
 	{
 		$sql = sprintf("SELECT * FROM %s WHERE
-				question_id=%d AND session_id=%d", 
-				mobilAP_session::POLL_QUESTIONS_TABLE, $question_id, $this->session_id);
-		$result = mobilAP::query($sql);
+				question_id=? AND session_id=?", 
+				mobilAP_session::POLL_QUESTIONS_TABLE);
+		$params = array($question_id, $this->session_id);
+		$result = mobilAP::query($sql,$params);
 		$question = false;
 		if (mobilAP_Error::isError($result)) {
 			return $question;
@@ -478,9 +445,10 @@ class mobilAP_session
 	public function getLinkById($link_id)
 	{
 		$sql = sprintf("SELECT * FROM %s WHERE
-				link_id=%d AND session_id=%d",
-				mobilAP_session::SESSION_LINK_TABLE, $link_id, $this->session_id);
-		$result = mobilAP::query($sql);
+				link_id=? AND session_id=?",
+				mobilAP_session::SESSION_LINK_TABLE);
+		$params = array($link_id, $this->session_id);
+		$result = mobilAP::query($sql,$params);
 		$link = false;
 		if (mobilAP_Error::isError($result)) {
 			return $link;
@@ -542,9 +510,10 @@ class mobilAP_session
 	public function getPresenters()
 	{
 		$sql = sprintf("SELECT presenter_id FROM %s 
-				WHERE session_id=%d ORDER BY presenter_index",
-				mobilAP_session::SESSION_PRESENTER_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+				WHERE session_id=? ORDER BY presenter_index",
+				mobilAP_session::SESSION_PRESENTER_TABLE);
+		$params = array($this->session_id);
+		$result = mobilAP::query($sql,$params);
 		$presenters = array();
 		if (mobilAP_Error::isError($result)) {
 			return $presenters;
@@ -564,8 +533,9 @@ class mobilAP_session
 	private function getNextPresenterIndex()
 	{
 		$sql = sprintf("SELECT count(*) FROM %s
-				WHERE session_id=%d", mobilAP_session::SESSION_PRESENTER_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+				WHERE session_id=?", mobilAP_session::SESSION_PRESENTER_TABLE);
+		$params = array($this->session_id);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
@@ -593,13 +563,16 @@ class mobilAP_session
 			//index field is user to keep them in order
 			$index = $this->getNextPresenterIndex();
 			$sql = sprintf("INSERT INTO %s (session_id, presenter_index, presenter_id)
-			VALUES (%d, %d, '%s')",
-			mobilAP_session::SESSION_PRESENTER_TABLE, $this->session_id, $index, $user->getUserID());
-			$result = mobilAP::query($sql);
+			VALUES (?,?,?)",
+			mobilAP_session::SESSION_PRESENTER_TABLE);
+			$params = array($this->session_id, $index, $user->getUserID());
+			$result = mobilAP::query($sql,$params);
 			//be nice if the presenter is already there
 			if (mobilAP_Error::isError($result)) {
 				return $result;
 			}
+
+			mobilAP::setSerialValue($user->getUserID(),mobilAP::SERIAL_TYPE_USER);
 			$this->updateSerial();
 			return true;
 		} else {
@@ -633,18 +606,22 @@ class mobilAP_session
 			return mobilAP_Error::throwError("User $presenter_userID is not a presenter for this session");
 		}
 		
-		$sql = sprintf("DELETE FROM %s WHERE session_id=%d AND presenter_index=%d",
-				mobilAP_session::SESSION_PRESENTER_TABLE, $this->session_id, $index);
-		$result = mobilAP::query($sql);
+		$sql = sprintf("DELETE FROM %s WHERE session_id=? AND presenter_index=?",
+				mobilAP_session::SESSION_PRESENTER_TABLE);
+		$params = array($this->session_id, $index);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
 		
+		mobilAP::setSerialValue($presenter_userID,mobilAP::SERIAL_TYPE_USER);
+
 		$sql = sprintf("UPDATE %s 
 						SET presenter_index=presenter_index-1 
-			    		WHERE session_id=%d AND presenter_index>%d",
-					mobilAP_session::SESSION_PRESENTER_TABLE, $this->session_id, $index);
-		$result = mobilAP::query($sql);
+			    		WHERE session_id=? AND presenter_index>?",
+					mobilAP_session::SESSION_PRESENTER_TABLE);
+		$params = array($this->session_id, $index);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
@@ -772,10 +749,10 @@ class mobilAP_session
 		$ts = time();
 		
 		$sql = sprintf("SELECT evaluation_id FROM %s 
-				WHERE session_id=%d AND post_user='%s'",
-				mobilAP_session::SESSION_EVALUATION_TABLE,
-				$this->session_id, $user->getUserID());
-		$result = mobilAP::query($sql);
+				WHERE session_id=? AND post_user=?",
+				mobilAP_session::SESSION_EVALUATION_TABLE);
+		$params = array($this->session_id, $user->getUserID());
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
@@ -807,6 +784,7 @@ class mobilAP_session
             $result = mobilAP::query($sql, array($evaluation_id, $index, $value));
         }
         
+		mobilAP::setSerialValue($user->getUserID(),mobilAP::SERIAL_TYPE_USER);
 		$this->updateSerial();
 		return true;
 	}
@@ -819,11 +797,25 @@ class mobilAP_session
         if (!$this->isAdmin($admin_userID)) {
             return new mobilAP_Error('Unauthorized', mobilAP_UserSession::USER_UNAUTHORIZED);
         }
-		$sql = sprintf("DELETE FROM %s WHERE session_id=%d",
-				mobilAP_session::SESSION_EVALUATION_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+        
+        //get users who have answered the evaluation so we can update their serials
+        $sql = sprintf("SELECT post_user FROM %s WHERE session_id=?", mobilAP_session::SESSION_EVALUATION_TABLE);
+        $params = array($this->session_id);
+		$result = mobilAP::query($sql, $params);
+		$users = array();
+		while ($row = $result->fetchRow()) {
+			$users[] = $row['post_user'];
+		}
+        
+		$sql = sprintf("DELETE FROM %s WHERE session_id=?",
+				mobilAP_session::SESSION_EVALUATION_TABLE);
+		$result = mobilAP::query($sql, $params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
+		}
+		
+		foreach ($users as $userID) {
+			mobilAP::setSerialValue($userID,mobilAP::SERIAL_TYPE_USER);
 		}
 
 		$this->updateSerial();
@@ -839,9 +831,10 @@ class mobilAP_session
             return new mobilAP_Error('Unauthorized', mobilAP_UserSession::USER_UNAUTHORIZED);
         }
 
-		$sql = sprintf("DELETE FROM %s WHERE session_id=%d",
-				mobilAP_session::SESSION_DISCUSSION_TABLE, $this->session_id);
-		$result = mobilAP::query($sql);
+		$sql = sprintf("DELETE FROM %s WHERE session_id=?",
+				mobilAP_session::SESSION_DISCUSSION_TABLE);
+		$params = array($this->session_id);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
@@ -897,9 +890,10 @@ class mobilAP_session
 		}
 
 		$sql = sprintf("DELETE FROM %s 
-				WHERE session_id=%d AND post_id=%d",
-				 mobilAP_session::SESSION_DISCUSSION_TABLE, $this->session_id, $post_id);
-		$result = mobilAP::query($sql);
+				WHERE session_id=? AND post_id=?",
+				 mobilAP_session::SESSION_DISCUSSION_TABLE);
+		$params = array($this->session_id, $post_id);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
@@ -982,6 +976,7 @@ class mobilAP_session
 		}
 		mobilAP_Cache::flushCache('mobilAP_schedule');				
 		mobilAP::setSerialValue('sessions');
+		mobilAP::setSerialValue('schedule');
 		$this->updateSerial();
         return true;
 	}
@@ -1198,10 +1193,11 @@ class mobilAP_session_link
 	function deleteLink()
 	{
 		$tables = array(mobilAP_session::SESSION_LINK_TABLE);
+		$params = array($this->link_id);
 		foreach ($tables as $table)
 		{
-			$sql = "DELETE FROM " . $table . " WHERE link_id=$this->link_id";
-			$result = mobilAP::query($sql);
+			$sql = sprintf("DELETE FROM %s WHERE link_id=?", $table);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $result;
 			}
@@ -1385,7 +1381,7 @@ class mobilAP_session_question
 
 	function submitAnswer($responses, $user_token)
 	{
-		$userIDStr = $user_token ? "'$user_token'" : 'NULL';
+		$user_token = $user_token ? $user_token : null;
 		$responses = is_array($responses) ? $responses : array();
 		$ts = time();
 		$_responses=array();
@@ -1408,9 +1404,10 @@ class mobilAP_session_question
 		}
 		
 		if ($user_token) {		
-			$sql = "SELECT answer_id FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
-				    WHERE question_id=$this->question_id AND response_userID='$user_token'";
-			$result = mobilAP::query($sql);
+			$sql = sprintf("SELECT answer_id FROM %s
+				    WHERE question_id=? AND response_userID=?", mobilAP_session::POLL_ANSWERS_TABLE);
+			$params = array($this->question_id, $user_token);
+			$result = mobilAP::query($sql, $params);
 			if (mobilAP_Error::isError($result)) {
 				return $result;
 			}
@@ -1422,8 +1419,9 @@ class mobilAP_session_question
 		foreach ($responses as $response_value) {
 			if ($this->is_response($response_value)) {
 				$sql = sprintf("INSERT INTO %s (question_id, response_value, response_timestamp, response_userID)
-				VALUES (%d, %d, %d, %s)", mobilAP_session::POLL_ANSWERS_TABLE, $this->question_id, $response_value,$ts, $userIDStr);
-				$result = mobilAP::query($sql);
+				VALUES (?,?,?,?)", mobilAP_session::POLL_ANSWERS_TABLE);
+				$params = array($this->question_id, $response_value, $ts, $user_token);
+				$result = mobilAP::query($sql, $params);
 
 				if (mobilAP_Error::isError($result)) {
 					return $result;
@@ -1431,6 +1429,9 @@ class mobilAP_session_question
 			}
 		}
 		$this->answers = $this->getAnswers();
+		if ($user_token) {
+			mobilAP::setSerialValue($user_token,mobilAP::SERIAL_TYPE_USER);
+		}
 		$this->updateSerial();
         return true;
 	}
@@ -1481,21 +1482,39 @@ class mobilAP_session_question
 	
 	function deleteQuestion($userID)
 	{
+		//find out who answered the question so we can update their serial
+		$sql = sprintf("SELECT response_userID FROM %s WHERE question_id=?", mobilAP_session::POLL_ANSWERS_TABLE);
+		$params = array($this->question_id);
+		$result = mobilAP::query($sql,$params);
+		$users = array();
+		while ($row = $result->fetchRow()) {
+			$users[] = $row['response_userID'];
+		}
+	
 		$tables = array(mobilAP_session::POLL_QUESTIONS_TABLE, mobilAP_session::POLL_RESPONSES_TABLE, mobilAP_session::POLL_ANSWERS_TABLE);
 		foreach ($tables as $table)
 		{
-			$sql = "DELETE FROM " . $table . " WHERE question_id=$this->question_id";
-			$result = mobilAP::query($sql);
+			$sql = sprintf("DELETE FROM %s WHERE question_id=?", $table);
+			$params = array($this->question_id);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $result;
 			}
 		}
-		
+				
 		//reindex questions
-		$sql = "UPDATE " . mobilAP_session::POLL_QUESTIONS_TABLE . " SET question_index=question_index-1 WHERE session_id='$this->session_id' AND question_index>$this->question_index";
-		$result = mobilAP::query($sql);
+		$sql = sprintf("UPDATE %s SET
+						question_index=question_index-1 
+						WHERE session_id=? AND question_index>?",
+						mobilAP_session::POLL_QUESTIONS_TABLE);
+		$params = array($this->session_id,$this->question_index);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
+		}
+
+		foreach ($users as $userID) {
+			mobilAP::setSerialValue($userID, mobilAP::SERIAL_TYPE_USER);
 		}
 		$this->updateSerial();
 		return true;
@@ -1503,12 +1522,27 @@ class mobilAP_session_question
 	
 	function clearAnswers($userID)
 	{
-		$sql = "DELETE FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " WHERE question_id=$this->question_id";
-		$result = mobilAP::query($sql);
+		//find out who answered the question so we can update their serial
+		$sql = sprintf("SELECT response_userID FROM %s WHERE question_id=?",mobilAP_session::POLL_ANSWERS_TABLE);
+		$params = array($this->question_id);
+		$result = mobilAP::query($sql,$params);
+		$users = array();
+		while ($row = $result->fetchRow()) {
+			$users[] = $row['response_userID'];
+		}
+
+		$sql = sprintf("DELETE FROM %s WHERE question_id=?", mobilAP_session::POLL_ANSWERS_TABLE);
+		$params = array($this->question_id);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
 		$this->answers = $this->getAnswers();
+
+		foreach ($users as $userID) {
+			mobilAP::setSerialValue($userID, mobilAP::SERIAL_TYPE_USER);
+		}
+		
 		$this->updateSerial();
         return true;
 	}
@@ -1520,9 +1554,11 @@ class mobilAP_session_question
 
 	function getNextResponseValue()
 	{
-		$sql = "SELECT MAX(response_value) response_value FROM " . mobilAP_session::POLL_RESPONSES_TABLE . " 
-				WHERE question_id=$this->question_id";
-		$result = mobilAP::query($sql);
+		$sql = sprintf("SELECT MAX(response_value) response_value FROM %s
+				WHERE question_id=?",
+				mobilAP_session::POLL_RESPONSES_TABLE);
+		$params = array($this->question_id);
+		$result = mobilAP::query($sql,$params);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
 		}
@@ -1564,16 +1600,20 @@ class mobilAP_session_question
 				return $result;
 			}
 			
-            $sql = sprintf("SELECT response_index FROM %s WHERE question_id=? AND response_index>? ORDER BY response_index ASC",mobilAP_session::POLL_RESPONSES_TABLE);
-            
-            $result = mobilAP::query($sql,array($this->question_id,$index));
+            $sql = sprintf("SELECT response_index FROM %s 
+            				WHERE question_id=? AND response_index>? 
+            				ORDER BY response_index ASC",
+            				mobilAP_session::POLL_RESPONSES_TABLE);
+			$params = array($this->question_id,$index);            
+            $result = mobilAP::query($sql,$params);
             while ($row = $result->fetchRow()) {
             
                 $sql = sprintf("UPDATE %s SET 
                     response_index=response_index-1 
                     WHERE question_id=? AND response_index=?",
                     mobilAP_session::POLL_RESPONSES_TABLE);
-                $_result = mobilAP::query($sql,array($this->question_id, $row['response_index']));
+                $params = array($this->question_id, $row['response_index']);
+                $_result = mobilAP::query($sql,$params);
                 if (mobilAP_Error::isError($_result)) {
                     return $_result;
                 }
@@ -1631,9 +1671,11 @@ class mobilAP_session_question
 	
 	function getResponses()
 	{
-		$sql = "SELECT * FROM " . mobilAP_session::POLL_RESPONSES_TABLE . " 
-		WHERE question_id=$this->question_id ORDER BY response_index";
-		$result = mobilAP::query($sql);
+		$sql = sprintf("SELECT * FROM %s 
+						WHERE question_id=? ORDER BY response_index",
+						mobilAP_session::POLL_RESPONSES_TABLE);
+		$params = array($this->question_id);
+		$result = mobilAP::query($sql,$params);
 		$responses = array();
 		if (mobilAP_Error::isError($result)) {
 			return $responses;
@@ -1648,12 +1690,13 @@ class mobilAP_session_question
 	
 	function getAllAnswers()
 	{
-		$sql = "SELECT pa.*, a.FirstName, a.LastName, a.email FROM " .  mobilAP_session::POLL_ANSWERS_TABLE . " pa
-				LEFT JOIN " .  mobilAP_attendee::ATTENDEE_TABLE . " a ON pa.response_userID=a.attendee_id
-				WHERE question_id=$this->question_id
-				ORDER BY response_value, LastName, FirstName
-				";
-		$result = mobilAP::query($sql);
+		$sql = sprintf("SELECT pa.*, a.FirstName, a.LastName, a.email FROM %s pa
+				LEFT JOIN %s a ON pa.response_userID=a.attendee_id
+				WHERE question_id=?
+				ORDER BY response_value, LastName, FirstName",
+				mobilAP_session::POLL_ANSWERS_TABLE, mobilAP_attendee::ATTENDEE_TABLE);
+		$params = array($this->question_id);
+		$result = mobilAP::query($sql,$params);
 		$answers = array();
 		if (mobilAP_Error::isError($result)) {
 			return $answers;
@@ -1673,10 +1716,12 @@ class mobilAP_session_question
 		}
 		
 		if (count($this->responses)>0) {
-			$sql = "SELECT count(*) count, response_value FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
-			WHERE question_id=$this->question_id
-			GROUP BY response_value";
-			$result = mobilAP::query($sql);
+			$sql = sprintf("SELECT count(*) count, response_value FROM %s
+			WHERE question_id=?
+			GROUP BY response_value",
+			mobilAP_session::POLL_ANSWERS_TABLE);
+			$params = array($this->question_id);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $answers;
 			}
@@ -1687,9 +1732,11 @@ class mobilAP_session_question
 				}
 			}
 			
-			$sql = "SELECT DISTINCT response_userID FROM " . mobilAP_session::POLL_ANSWERS_TABLE . " 
-			WHERE question_id=$this->question_id AND response_value";
-			$result = mobilAP::query($sql);
+			$sql = sprintf("SELECT DISTINCT response_userID FROM %s
+							WHERE question_id=? AND response_value",
+							mobilAP_session::POLL_ANSWERS_TABLE);
+			$params = array($this->question_id);
+			$result = mobilAP::query($sql,$params);
 			$users = array();
 			if (mobilAP_Error::isError($result)) {
 				return $answers;
@@ -1756,14 +1803,28 @@ class mobilAP_session_question_response
 	
 	function deleteResponse()
 	{
+		$sql = sprintf("SELECT response_userID FROM %s WHERE question_id=? AND response_value=?", 
+						mobilAP_session::POLL_ANSWERS_TABLE);
+		$params = array($this->question_id, $this->response_value);
+		$result = mobilAP::query($sql,$params);
+		$users = array();
+		while ($row = $result->fetchRow()) {
+			$users[] = $row['response_userID'];
+		}
+		
 		$tables = array(mobilAP_session::POLL_RESPONSES_TABLE, mobilAP_session::POLL_ANSWERS_TABLE);
 		foreach ($tables as $table)
 		{
-			$sql = "DELETE FROM " . $table . " WHERE question_id=$this->question_id AND response_value=$this->response_value";
-			$result = mobilAP::query($sql);
+			$sql = sprintf("DELETE FROM %s WHERE question_id=? AND response_value=?", $table);
+			$params = array($this->question_id, $this->response_value);
+			$result = mobilAP::query($sql,$params);
 			if (mobilAP_Error::isError($result)) {
 				return $result;
 			}
+		}
+		
+		foreach ($users as $userID) {
+			mobilAP::setSerialValue($userID, mobilAP::SERIAL_TYPE_USER);
 		}
 		$this->updateSerial();
 		return true;
