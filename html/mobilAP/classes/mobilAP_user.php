@@ -129,12 +129,20 @@ class mobilAP_User
 		require_once('mobilAP_session.php');
 		//initialize
 		$session_data = array('questions'=>array(), 'evaluation'=>false);
-		$data = array('sessions'=>array(),'annoucements'=>array());
+		$data = array('sessions'=>array(),'announcements'=>array());
 
 		$sql = sprintf("SELECT session_id FROM %s", mobilAP_session::SESSION_TABLE);
 		$result = mobilAP::query($sql);		
 		while ($row = $result->fetchRow()) {
 			$data['sessions'][$row['session_id']] = $session_data;
+		}
+
+		//populate questions
+		$sql = sprintf("SELECT session_id,question_id FROM %s",
+					mobilAP_session::POLL_QUESTIONS_TABLE);
+		$result = mobilAP::query($sql);
+		while ($row = $result->fetchRow()) {
+			$data['sessions'][$row['session_id']]['questions'][$row['question_id']] = 0;
 		}
 		
 		if ($this->getUserID()) {
@@ -144,16 +152,6 @@ class mobilAP_User
 			while ($row = $result->fetchRow()) {
 				$data['sessions'][$row['session_id']]['evaluation'] = true;
 			}
-			
-			//populate questions
-			$sql = sprintf("SELECT session_id,question_id FROM %s",
-						mobilAP_session::POLL_QUESTIONS_TABLE);
-			$result = mobilAP::query($sql);
-			while ($row = $result->fetchRow()) {
-				$data['sessions'][$row['session_id']]['questions'][$row['question_id']] = 0;
-			}
-			
-			
 			
 			//get their question responses
 			$sql = sprintf("SELECT q.session_id,a.* FROM %s a 
@@ -175,7 +173,7 @@ class mobilAP_User
 		$sql = sprintf("SELECT announcement_id FROM %s", mobilAP_announcement::ANNOUNCEMENT_TABLE);
 		$result = mobilAP::query($sql);		
 		while ($row = $result->fetchRow()) {
-			$data['annoucements'][$row['announcement_id']] = false;
+			$data['announcements'][$row['announcement_id']] = false;
 		}
 
 		if ($this->getUserID()) {
@@ -188,7 +186,7 @@ class mobilAP_User
 			$result = mobilAP::query($sql, $params);
 	
 			while ($row = $result->fetchRow()) {
-				$data['annoucements'][$row['announcement_id']] = true;
+				$data['announcements'][$row['announcement_id']] = true;
 			}
 		}
 
