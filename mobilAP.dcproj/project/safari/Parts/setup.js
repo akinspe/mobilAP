@@ -5,8 +5,9 @@
  code generator otherwise the changes will be lost.
  */
 var dashcodePartSpecs = {
-    "adminEvaluationQuestionsAddButton": { "initialHeight": 30, "initialWidth": 65, "leftImageWidth": 5, "onclick": "evaluationQuestionAddQuestion", "rightImageWidth": 5, "text": "Add", "view": "DC.PushButton" },
-    "adminEvaluationQuestionsDelete": { "initialHeight": 25, "initialWidth": 79, "leftImageWidth": 5, "onclick": "evalutionQuestionDelete", "rightImageWidth": 5, "text": "Delete", "view": "DC.PushButton" },
+    "adminEvaluationQuestionsAddButton": { "initialHeight": 30, "initialWidth": 121, "leftImageWidth": 5, "onclick": "evaluationQuestionAddQuestion", "rightImageWidth": 5, "text": "New Question", "view": "DC.PushButton" },
+    "adminEvaluationQuestionsCancel": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionCancel", "rightImageWidth": 5, "text": "Cancel", "view": "DC.PushButton" },
+    "adminEvaluationQuestionsDelete": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionDelete", "rightImageWidth": 5, "text": "Delete", "view": "DC.PushButton" },
     "adminEvaluationQuestionsHeader": { "text": "Evaluation Questions", "view": "DC.Text" },
     "adminEvaluationQuestionsList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "adminEvaluationQuestionsListQuestionText", "listStyle": "List.DESKTOP_LIST", "propertyValues": { "dataArrayBinding": { "keypath": "evaluation.content" } }, "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "adminEvaluationQuestionsListQuestionText": { "propertyValues": { "textBinding": { "keypath": "*.question_text" } }, "text": "Item", "view": "DC.Text" },
@@ -15,11 +16,11 @@ var dashcodePartSpecs = {
     "adminEvaluationQuestionsQuestionResponsesRemoveButton": { "initialHeight": 25, "initialWidth": 65, "leftImageWidth": 5, "rightImageWidth": 5, "text": "Remove", "view": "DC.PushButton" },
     "adminEvaluationQuestionsQuestionResponseText": { "text": "Item", "view": "DC.Text" },
     "adminEvaluationQuestionsQuestionTextLabel": { "text": "Question Text", "view": "DC.Text" },
-    "adminEvaluationQuestionsSave": { "initialHeight": 25, "initialWidth": 71, "leftImageWidth": 5, "onclick": "evalutionQuestionSave", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
+    "adminEvaluationQuestionsSave": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionSave", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
     "adminSettingsHeader": { "text": "Settings", "view": "DC.Text" },
     "adminSettingsSaveButton": { "initialHeight": 30, "initialWidth": 111, "leftImageWidth": 5, "onclick": "adminSettingsSave", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
     "adminTabbar": { "allowsEmptySelection": true, "dataArray": [["Settings", "settings"], ["Evaluation Questions", "evaluation_questions"], ["Something", "something"]], "dataSourceName": "admin_tabs", "labelElementId": "adminTabTitle", "listStyle": "List.DESKTOP_LIST", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
-    "adminTabs": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }], "view": "DC.StackLayout" },
+    "adminTabs": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }], "view": "DC.StackLayout" },
     "adminTabTitle": { "text": "Item", "view": "DC.Text" },
     "announcementAdminCancelButton": { "initialHeight": 30, "initialWidth": 82, "leftImageWidth": 5, "onclick": "announcementAdminCancel", "rightImageWidth": 5, "text": "Cancel", "view": "DC.PushButton" },
     "announcementAdminSaveButton": { "initialHeight": 30, "initialWidth": 71, "leftImageWidth": 5, "onclick": "announcementSave", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
@@ -196,6 +197,7 @@ var dashcodePartSpecs = {
     "splitLayout": { "flexibleViewIndex": 1, "initialSize": 728, "initialSplitterSize": 1, "isVertical": true, "splitterPosition": 171, "view": "DC.SplitLayout" },
     "welcomeText": { "text": "Welcome", "view": "DC.Text" }
 };
+
 
 
 

@@ -31,10 +31,10 @@ if (isset($_POST['post'])) {
             	}
 
 				$question_text = isset($_POST['question_text']) ? $_POST['question_text'] : $question->question_text;
-				$response_type = isset($_POST['response_type']) ? $_POST['response_type'] : $question->response_type;
+				$question_response_type = isset($_POST['question_response_type']) ? $_POST['question_response_type'] : $question->question_response_type;
 				
 				$question->setQuestionText($question_text);
-				$question->setQuestionResponseType($response_type);
+				$question->setQuestionResponseType($question_response_type);
 				
 				if ($post_action =='updateQuestion') {
 					$data = $question->updateQuestion($user->getUserID());

@@ -226,7 +226,7 @@ body.DC_windowInactive .homeRow_template.selected {
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     float: left;
-    width: auto;    
+    width: auto;
     height: 100px;
     position: absolute;
     left: 11px;
@@ -241,7 +241,7 @@ body.DC_windowInactive .homeRow_template.selected {
 }
 
 #directoryProfileImageUpload {
-    margin-left: 0;
+    margin-left: 0px;
     width: auto;
 }
 
@@ -367,7 +367,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.296875) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.269531) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -425,7 +425,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.179688) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.152344) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 80px;
@@ -449,7 +449,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.222656) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.195312) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -740,15 +740,18 @@ body.DC_windowInactive .scheduleTypeListTemplate_template.selected {
     overflow: hidden;
     position: relative;
     width: auto;
-    margin-top: 9px;
+    margin-top: 0;
     margin-right: 0px;
     margin-left: 0px;
-    margin-bottom: 2px;
-    height: auto;
+    margin-bottom: 0;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
+    line-height:30px;
+    padding-left: 9px;
+    height: 30px;
+    background-color: rgb(238,238,238);
 }
 
 #scheduleCalendar {
@@ -946,10 +949,11 @@ body.DC_windowInactive .scheduleListRow_template.selected {
 }
 
 #scheduleList .schedule_date {
-    height: 18px;
+    height: 30px;
     border-bottom-style: none;
     border-bottom-width: initial;
     border-bottom-color: initial;
+    background-color: rgb(238,238,238);
 }
 
 #scheduleList.mobilAP_editmode .scheduleStart {
@@ -969,10 +973,10 @@ body.DC_windowInactive .scheduleListRow_template.selected {
 }
 
 #scheduleList .schedule_date .scheduleListTitle_template {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
-    left: 0px;
-    top: 0px;
+    left: 9px;
+    top: 6px;
 }
 
 .scheduleListStart_template {
@@ -1511,7 +1515,7 @@ body.DC_windowInactive .sessionQuestionAdminResponsesRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.324219) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.296875) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -1812,11 +1816,12 @@ body.DC_windowInactive .adminTabbarRow_template.selected {
     cursor: default;
     -webkit-user-select: none;
     -moz-user-select: none;
-    position: relative;
+    position: absolute;
+    right: 9px;
+    top: 0px;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
-    width: 65px;
-    margin-left: 0px;
+    width: 121px;
 }
 
 #adminEvaluationQuestionsList {
@@ -1879,8 +1884,8 @@ body.DC_windowInactive .adminEvaluationQuestionsListRow_template.selected {
 
 #adminEvaluationQuestionsQuestionResponses {
     margin-bottom: 9px;
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 9px;
+    margin-right: 9px;
 }
 
 #adminEvaluationQuestionsQuestionResponsesList {
@@ -2005,10 +2010,10 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     position: absolute;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
-    width: 71px;
     height: 25px;
     top: 0px;
     left: 0px;
+    width: 70px;
 }
 
 #adminEvaluationQuestionsDelete {
@@ -2027,10 +2032,32 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     position: absolute;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
-    width: 79px;
     height: 25px;
     top: 0px;
-    left: 80px;
+    left: 158px;
+    width: 70px;
+}
+
+#adminEvaluationQuestionsCancel {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.574219) 0px -1px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-dashboard-region: dashboard-region(control rectangle);
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: absolute;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    height: 25px;
+    left: 79px;
+    top: 0px;
+    width: 70px;
 }
 
 #session {
@@ -2974,7 +3001,7 @@ body.DC_windowInactive .sessionQuestionAskQuestionResponsesRow_template.selected
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.476562) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.449219) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -2989,7 +3016,6 @@ body.DC_windowInactive .sessionQuestionAskQuestionResponsesRow_template.selected
     left: 158px;
     top: 0px;
 }
-
 
 #question_results {
     width: 100%;
@@ -3099,7 +3125,7 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.449219) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.421875) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3166,7 +3192,7 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
 
 .sessionDiscussionListTime_template {
     text-overflow: ellipsis;
-    color: rgb(100,100,100);
+    color: rgb(100, 100, 100);
     overflow: hidden;
     position: absolute;
     margin-top: 0px;
@@ -3366,7 +3392,7 @@ body.DC_windowInactive .sessionAdminPresentersAddRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.105469) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.078125) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -3386,7 +3412,7 @@ body.DC_windowInactive .sessionAdminPresentersAddRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.136719) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.109375) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -3572,8 +3598,8 @@ body.DC_windowInactive .sessionAdminPresentersRow_template.selected {
     margin-top: 9px;
 }
 
-#announcementsPanel.mobilAP_admin  {
-	padding-bottom: 48px;
+#announcementsPanel.mobilAP_admin {
+    padding-bottom: 48px;
 }
 
 #announcementEditButton {
@@ -3856,7 +3882,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.289062) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.261719) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3902,7 +3928,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.347656) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.320312) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4017,13 +4043,14 @@ body.DC_windowInactive .announcementsListRow_template.selected {
 }
 
 #upload_iframe {
-    width: 0;
-    height: 0;
-    border: none;
+    width: 0px;
+    height: 0px;
+    border-style: none;
+    border-width: initial;
+    border-color: initial;
 }
 
 /* ENDOFCSS */
-
 #session .mobilAP_sessionadmin {
     display: none;
 }

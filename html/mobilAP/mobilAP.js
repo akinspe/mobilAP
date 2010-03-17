@@ -1047,7 +1047,7 @@ MobilAP.EvaluationQuestionAdminController = Class.create(MobilAP.ListController,
             return new MobilAP.Error('Question text cannot be blank');
         }
 
-        if (question.response_type=='M') {
+        if (question.question_response_type=='M') {
             if (question.responses.length==0) {
                 return new MobilAP.Error('Please include at least 1 response');
             }
@@ -1057,7 +1057,7 @@ MobilAP.EvaluationQuestionAdminController = Class.create(MobilAP.ListController,
             post: 'updateQuestion',
             question_index: this.question_index,
             question_text: question.question_text,
-            response_type: question.response_type
+            question_response_type: question.question_response_type
         }
         
         for (var i=0; i<question._deletedResponses.length; i++) {
@@ -1078,10 +1078,10 @@ MobilAP.EvaluationQuestionAdminController = Class.create(MobilAP.ListController,
         var params = {
             post: 'addQuestion',
             question_text: question.question_text,
-            response_type: question.response_type
+            question_response_type: question.question_response_type
         }
 
-        if (question.response_type=='M') {
+        if (question.question_response_type=='M') {
             if (question.responses.length==0) {
                 return new MobilAP.Error('Please include at least 1 response');
             }
@@ -1893,14 +1893,14 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
 MobilAP.EvaluationQuestion =Class.create({
     question_index: null,
 	question_text: '',
-    response_type: 'M',
+    question_response_type: 'M',
     setQuestionText: function(question_text) {
         this.question_text = question_text;
     },
     setResponseType: function(response_type)
     {
-        this.response_type = response_type;
-        if (response_type=='T') {   
+        this.question_response_type = response_type;
+        if (this.question_response_type=='T') {   
             this.responses = [];
         }
     },

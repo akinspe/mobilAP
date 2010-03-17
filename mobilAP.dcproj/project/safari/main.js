@@ -189,7 +189,9 @@ function load()
        adminController: mobilAP.adminController,
        questionTextField : document.getElementById('adminEvaluationQuestionsQuestionText'),
        questionResponseTypeField : document.getElementById('adminEvaluationQuestionsQuestionResponseType'),
-       questionResponsesList : document.getElementById('adminEvaluationQuestionsQuestionResponsesList').object
+       questionResponses : document.getElementById('adminEvaluationQuestionsQuestionResponses'),
+       questionResponsesList : document.getElementById('adminEvaluationQuestionsQuestionResponsesList').object,
+       questionAddResponseField : document.getElementById('adminEvaluationQuestionsQuestionResponseAddField')
     });
     mobilAP.adminController.addViewController('EvaluationQuestions', mobilAP.evaluationQuestionAdminController);
     
@@ -1191,9 +1193,13 @@ MobilAP.DesktopEvaluationQuestionAdminController = Class.create(MobilAP.Evaluati
         this.base();
         this.clearSelection();
     },
-    viewDidLoad: function() {
+    reset: function() {
         this.clearSelection();
+        this.setQuestion(new MobilAP.EvaluationQuestion());
         document.getElementById('adminEvaluationQuestionsQuestion').style.display = 'none';
+    },
+    viewDidLoad: function() {
+        this.reset();
     },
     _processXHR: function(json) {
         var result = this.base(json);
@@ -1209,6 +1215,8 @@ MobilAP.DesktopEvaluationQuestionAdminController = Class.create(MobilAP.Evaluati
                 this.questionResponseTypeField.selectedIndex = i;
             }
         }
+    	mobilAP.evaluationQuestionAdminController.questionAddResponseField.value = '';
+		this.questionResponses.style.display = this.question.question_response_type == 'M' ? '' : 'none';
         this.questionResponsesList.reloadData();
     },
     rowSelected: function(change, keyPath) {
@@ -1262,6 +1270,7 @@ MobilAP.DesktopEvaluationQuestionAdminController = Class.create(MobilAP.Evaluati
     questionResponseTypeChanged: function() {
         var response_type = this.questionResponseTypeField.options[this.questionResponseTypeField.selectedIndex].value;
         this.question.setResponseType(response_type);
+		this.questionResponses.style.display = response_type == 'M' ? '' : 'none';
         this.questionResponsesList.reloadData();
     },
     constructor: function(part_id, params) {
@@ -1776,10 +1785,12 @@ function mailto(event)
 
 function evaluationQuestionAdminAddResponse(event)
 {
-    var response = document.getElementById('adminEvaluationQuestionsQuestionResponseAddField').value;
+    var response = mobilAP.evaluationQuestionAdminController.questionAddResponseField.value;
     var result = mobilAP.evaluationQuestionAdminController.addResponse(response);
     if (mobilAP.isError(result)) {
         alert(result.error_message);
+    } else {
+    	mobilAP.evaluationQuestionAdminController.questionAddResponseField.value = '';
     }
 }
 
@@ -1790,18 +1801,33 @@ function evaluationQuestionAddQuestion(event)
 }
 
 
-function evalutionQuestionSave(event)
+function evaluationQuestionSave(event)
 {
     mobilAP.evaluationQuestionAdminController.question.setQuestionText(document.getElementById('adminEvaluationQuestionsQuestionText').value);
-    mobilAP.evaluationQuestionAdminController.save();
+    var result = mobilAP.evaluationQuestionAdminController.save();
+	if (mobilAP.isError(result)) {
+		alert(result.error_message);
+	} else {
+		mobilAP.evaluationQuestionAdminController.reset();
+	}
 }
 
 
-function evalutionQuestionDelete(event)
+function evaluationQuestionDelete(event)
 {
+	if (mobilAP.evaluationQuestionAdminController.mode=='add') {
+	    mobilAP.evaluationQuestionAdminController.reset();
+	    return;
+	}
+	
     if (confirm('Do you want to remove this question?')) {
         mobilAP.evaluationQuestionAdminController.deleteQuestion(mobilAP.evaluationQuestionAdminController.question);
     }
+}
+
+function evaluationQuestionCancel(event)
+{
+    mobilAP.evaluationQuestionAdminController.reset();
 }
 
 function adminSettingsSave(event)
