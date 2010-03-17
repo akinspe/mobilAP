@@ -238,6 +238,12 @@ class mobilAP_announcement
 	function readAnnouncement($userID, $read=true)
 	{
 		if ($user = mobilAP_user::getUserById($userID)) {
+			$hasRead = $this->hasRead($userID);
+			if ($hasRead == $read) {
+				//no op if it's the same
+				return true;
+			}
+			
 			if ($read) {
 				$sql = sprintf("INSERT INTO %s (announcement_id, userID, read_timestamp)
 								VALUES (?, ?, ?)",mobilAP_announcement::ANNOUNCEMENT_READ_TABLE);
