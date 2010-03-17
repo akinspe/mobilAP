@@ -755,8 +755,8 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
             }
         }
     },
-    _processXHR: function(json) {
-        var result = this.base(json);
+    _processXHR: function(json,callback) {
+        var result = this.base(json,callback);
         if (this.isError(result)) {
             alert(result.error_message);
         }
@@ -1473,7 +1473,14 @@ function sessionSave(event)
     }
     mobilAP.sessionController.setFlags(session_flags);
 
-    var result = mobilAP.sessionController.saveSessionAdmin();
+    var result = mobilAP.sessionController.saveSessionAdmin(function(result) {
+        if (mobilAP.isError(result)) {
+            alert(result.error_message);
+        } else {
+            alert('Session Saved');
+        }
+    
+   	});
     if (mobilAP.isError(result)) {
         alert(result.error_message);
     }
