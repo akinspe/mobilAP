@@ -230,7 +230,6 @@ MobilAP.DesktopApplicationController = Class.create(MobilAP.ApplicationControlle
         if (homeContent) {
             for (var i=0 ; i<homeContent.length; i++) {
                 if (homeContent[i].id == view) {
-                    this.log("View " + view + ' is index ' + i);
                     return i;
                 }
             }
@@ -259,8 +258,6 @@ MobilAP.DesktopApplicationController = Class.create(MobilAP.ApplicationControlle
             this.viewDidUnload(this.detailStack.getCurrentView().id);
             this.detailStack.setCurrentView(toView, true);
             this.viewDidLoad(toView);
-        } else {
-            this.log("Already at view " + toView);
         }
     },
     homeSelected: function(change, keyPath) {
@@ -608,7 +605,6 @@ MobilAP.DesktopScheduleListController = Class.create(MobilAP.ScheduleListControl
         this.object.reloadData();
     },
     scheduleUpdated: function(change, keyPath) {
-        this.log("ScheduleList scheduleUpdated " + keyPath);
         this.object.reloadData();
     },
 	numberOfRows: function() {
@@ -792,7 +788,6 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
 				try {
 					this.viewControllers[toView][i].viewDidLoad(toView);
 				} catch(e) {
-					this.log("No viewDidLoad for " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -803,7 +798,6 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
 				try {
 					this.viewControllers[toView][i].viewDidUnload(toView);
 				} catch(e) {
-					this.log("No viewDidUnload for " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -817,7 +811,6 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
             this.subViewDidLoad(view);
         } else {
             this.active_view = view
-            this.log("Already at subview " + view);
         }
     },
     setTabIndex: function(tab_index) {
@@ -838,10 +831,7 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
         this.stopReloadTimer();
     },
     viewDidLoad: function(view_id) {
-//        this.setTabID(this.active_tab_id);
         this.subViewDidLoad(this.active_view);
-        this.log('view: ' + view_id);
-        this.log('admin: ' + this.isAdmin());
         MobilAP.setClassName(view_id,'mobilAP_sessionadmin',this.isAdmin());
     },
     addLink: function(link_url, link_title) {
@@ -1141,12 +1131,9 @@ MobilAP.DesktopAdminController = Class.create(MobilAP.AdminController, {
                     try {
                         this.viewControllers[toView][i].viewDidLoad(toView);
                     } catch(e) {
-                        this.log("No viewDidLoad for admin " + toView + ' controller ' + i);
                     }
                 }
             }
-        } else {
-            this.log("Already at view admin" + toView);
         }
     },
     setTabIndex: function(tab_index) {

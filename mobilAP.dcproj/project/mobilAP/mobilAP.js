@@ -223,7 +223,6 @@ MobilAP = {
                     content = iframeId.document.body.innerHTML;
                 }
                 
-                self.log(content);
                 try { 
                     content = eval('('+content+')');
                     if ('object'==typeof content && content.error_message) {
@@ -281,14 +280,12 @@ MobilAP.Controller = Class.create(MobilAP.BaseClass, {
         }
         this.stopReloadTimer();
         this.reloadInterval = reloadInterval;
-        this.log("Starting reload timer of " + this.reloadInterval + " seconds");
         this.reloadTimer = setInterval(this.reloadData.bind(this), this.reloadInterval*1000);
     },
     stopReloadTimer: function() {
         if (!this.reloadTimer) {
             return;
         }
-        this.log('Stopping reload timer');
         clearInterval(this.reloadTimer);
         this.reloadTimer=null;
     },
@@ -371,7 +368,6 @@ MobilAP.ApplicationController = Class.create(MobilAP.Controller, {
 				try {
 					this.viewControllers[toView][i].viewDidLoad(toView);
 				} catch(e) {
-					this.log("No viewDidLoad for app " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -382,7 +378,6 @@ MobilAP.ApplicationController = Class.create(MobilAP.Controller, {
 				try {
 					this.viewControllers[toView][i].viewDidUnload(toView);
 				} catch(e) {
-					this.log("No viewDidUnload for " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -517,7 +512,6 @@ MobilAP.ListController = Class.create(MobilAP.PartController, {
         this.clearSelection();
     },
     reloadData: function() {
-        this.log("Asked to reload data for " + this.id);
         this.object.reloadData();
     },
     setLoop: function(loop) {
@@ -576,7 +570,6 @@ MobilAP.ListController = Class.create(MobilAP.PartController, {
     
     },
     setSelectedObject: function(obj) {
-        this.log("Setting selected object of " + this.id + " to " + obj);
         this.selectedObject = obj;
     },
     rowSelected: function(change, keyPath) {
@@ -592,7 +585,6 @@ MobilAP.ListController = Class.create(MobilAP.PartController, {
         }
     },
     dataUpdated: function(change, keyPath) {
-        this.log(this.id + ' data Updated');
         this.object.viewElement().style.display = this.object.rows.length>0 ? 'block' : 'none';
     },
     constructor: function(part_id, parameters) {
@@ -721,7 +713,6 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
         return this.scheduleTypes.indexOf(schedule_type);
     },
     scheduleType: function() {
-        this.log('scheduleType is ' + this._scheduleType);
         return this._scheduleType;
     },
     scheduleTypeIndex: function() {
@@ -731,7 +722,6 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
         if (this.indexForScheduleType(schedule_type) == -1) {
             throw('Invalid schedule_type ' + schedule_type);
         }
-        this.log("Setting schedule type to " + schedule_type + ". Index: " + this.indexForScheduleType(schedule_type));
         this._scheduleType = schedule_type;
     },
     _flatSchedule:[],
@@ -770,7 +760,6 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
     isFirstDay: function() {
         var index = this.dateIndex();
         if (index == null) {
-            this.log("not first day because dateIndex is null");
             return false;
         }
         return index==0;
@@ -778,7 +767,6 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
     isLastDay: function() {
         var index = this.dateIndex();
         if (index == null) {
-            this.log("not last day because dateIndex is null");
             return false;
         }
         return (index+1) == this.content().length;
@@ -825,7 +813,6 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
         return null;
     },
     closestDateIndexForDate: function(date) {
-        this.log("finding the closest day to " + date);
         var schedule = this.content();
         if (schedule.length==0) {
             return null;
@@ -833,7 +820,6 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
         
         for (var i=0; i< schedule.length;i++) {
             if (date.getTime()<=schedule[i].date.getTime()) {
-                this.log("closest day was " + i + ': ' + schedule[i].date);
                 return i;
             }
         }
@@ -845,7 +831,6 @@ MobilAP.ScheduleController = Class.create(MobilAP.DataSourceController, {
         if (typeof date=='undefined') {
             date = this.firstDate() || new Date();
         }
-        this.log("Setting schedule date to " + date.date());
         this._date = date.date();
         this._dateIndex = this.dateIndexForDate(this._date);
     },
@@ -1376,9 +1361,7 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
         this.post(base_url + 'session.php', params, callback);
     },
     reloadData: function() {
-        this.log("Reloading session data");
         dashcode.getDataSource('session').queryUpdated();
-//        dashcode.getDataSource('sessions').queryUpdated();
     },
     constructor: function(params) {
         this.base(params);
@@ -1679,7 +1662,6 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
         }
     },
     submitQuestion: function(callback) {
-        this.log("submitting question " + this.question.question_id);
         if ( (this.selectedResponses.length<this.question.question_minchoices) || (this.selectedResponses.length>this.question.question_maxchoices)) {
             return new MobilAP.Error(this.question.selectMessage());
         }
@@ -1731,7 +1713,6 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
             return;
         }
         
-        this.log("updating chart");
         var add_zero = this.question.chart_type != 'p';
     	var data = [];
     	var labels = [];
@@ -1764,7 +1745,6 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
         var width = this.getChartWidth();
         var height = this.getChartHeight();
 		if (!canvas) {  
-            this.log("creating canvas");
 			canvas = document.createElement('canvas');
 			canvas.id = 'question_response_canvas';
 			canvas.width=width;
@@ -1860,7 +1840,6 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
         }
     },
     sessionUpdated: function() {
-        this.log("updating question");
         if (this.question_id) {
             var question = this.sessionController.questionById(this.question_id);
             this.setQuestion(question);
@@ -2108,7 +2087,6 @@ MobilAP.DateTimePicker = Class.create(MobilAP.BaseClass, {
         date.setMilliseconds(0);
         date.setMinutes( Math.floor(date.getMinutes() / this.minuteStep) * this.minuteStep );
         this.willChangeValueForKey('date');
-        this.log("Setting date of " + this.container.id + ' to ' + date);
         this._date = date;
         this.didChangeValueForKey('date');
         this._updateControls();

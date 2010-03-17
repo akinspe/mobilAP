@@ -189,8 +189,6 @@ MobilAP.MobileApplicationController= Class.create(MobilAP.ApplicationController,
     },
     userUpdated: function(change,keyPath) {
         this.base(change,keyPath);
-        this.log('mobile user updated');
-//        this.sessionController.tab_bar.reloadData();
         dashcode.getDataSource('homeData').queryUpdated();
         dashcode.getDataSource('session').queryUpdated();
     },
@@ -205,8 +203,6 @@ MobilAP.MobileApplicationController= Class.create(MobilAP.ApplicationController,
         if (this.browser.getCurrentView().id != toView) {
             this.browser.goForward(toView, title, this.browserBackHandler.bind(this));
             this.viewDidLoad(toView);
-        } else {
-            this.log("Already at view " + toView);
         }
     },
     browserBackHandler: function()
@@ -222,7 +218,6 @@ MobilAP.MobileApplicationController= Class.create(MobilAP.ApplicationController,
                 return;
             }
 
-            self.log("Coming from " + prevView);
             self.viewDidUnload(prevView);
             self.viewDidLoad(view);
         }
@@ -317,7 +312,6 @@ MobilAP.MobileScheduleTypeController = Class.create(MobilAP.ListController, {
         }
     },
     setScheduleType: function(scheduleType) {
-        this.log("Setting schedule type to " + scheduleType);
         for (var i=0; i<this.scheduleTypes.length; i++) {
             if (this.scheduleTypes[i].value==scheduleType) {
                 this.object.setSelectionIndexes([i]);
@@ -338,8 +332,6 @@ MobilAP.MobileScheduleTypeController = Class.create(MobilAP.ListController, {
 
 MobilAP.MobileScheduleController = Class.create(MobilAP.ScheduleController, {
     viewDidLoad: function() {
-//        this.setScheduleType(this.scheduleType());
-        this.log("Loading schedule with type " + this.scheduleType());
         this.subViewDidLoad(this.scheduleType());
     },
     viewControllers: {},
@@ -356,7 +348,6 @@ MobilAP.MobileScheduleController = Class.create(MobilAP.ScheduleController, {
 				try {
 					this.viewControllers[toView][i].viewDidLoad(toView);
 				} catch(e) {
-					this.log("No viewDidLoad for " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -367,7 +358,6 @@ MobilAP.MobileScheduleController = Class.create(MobilAP.ScheduleController, {
 				try {
 					this.viewControllers[toView][i].viewDidUnload(toView);
 				} catch(e) {
-					this.log("No viewDidUnload for " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -377,8 +367,6 @@ MobilAP.MobileScheduleController = Class.create(MobilAP.ScheduleController, {
             this.subViewDidUnload(this.stack.getCurrentView().id);
             this.stack.setCurrentView(toView);
             this.subViewDidLoad(toView);
-        } else {
-            this.log("Already at subview " + toView);
         }
     },
     setScheduleType: function(schedule_type) {
@@ -387,7 +375,6 @@ MobilAP.MobileScheduleController = Class.create(MobilAP.ScheduleController, {
     },
     setDate: function(date) {
         this.base(date);
-        this.log("Date index is now " + this.dateIndex());
         if (null === this.dateIndex()) {
             this.daysList.clearSelection();
         } else {
@@ -771,7 +758,6 @@ MobilAP.MobileSessionController = Class.create(MobilAP.SessionController, {
 				try {
 					this.viewControllers[toView][i].viewDidLoad(toView);
 				} catch(e) {
-					this.log("No viewDidLoad for " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -782,7 +768,6 @@ MobilAP.MobileSessionController = Class.create(MobilAP.SessionController, {
 				try {
 					this.viewControllers[toView][i].viewDidUnload(toView);
 				} catch(e) {
-					this.log("No viewDidUnload for " + toView + ' controller ' + i);
 				}
 			}
 		}
@@ -796,7 +781,6 @@ MobilAP.MobileSessionController = Class.create(MobilAP.SessionController, {
             this.subViewDidLoad(view);
         } else {
             this.active_view = view
-            this.log("Already at subview " + view);
         }
     },
     setTabIndex: function(tab_index) {
@@ -818,10 +802,7 @@ MobilAP.MobileSessionController = Class.create(MobilAP.SessionController, {
         this.stopReloadTimer();
     },
     viewDidLoad: function(view_id) {
-//        this.setTabID(this.active_tab_id);
         this.subViewDidLoad(this.active_view);
-        this.log('view: ' + view_id);
-        this.log('admin: ' + this.isAdmin());
         MobilAP.setClassName(view_id,'mobilAP_sessionadmin',this.isAdmin());
     },
     addLink: function(link_url, link_title) {
@@ -1037,7 +1018,6 @@ var schedule_list = {
 function sessionSaveAdmin(event)
 {
     mobilAP.sessionController.setTitle(document.getElementById('sessionAdminTitle').value);
-    mobilAP.sessionController.log("Description: " + document.getElementById('sessionAdminDescription').value);
     mobilAP.sessionController.setDescription(document.getElementById('sessionAdminDescription').value);
     var session_flags = 0;
     var _flags = [ 'Links', 'UserLinks', 'Discussion','Evaluation'];
@@ -1047,7 +1027,6 @@ function sessionSaveAdmin(event)
         }
     }
     mobilAP.sessionController.setFlags(session_flags);
-    mobilAP.sessionController.log("Description: " + mobilAP.sessionController.session.session_description);
 
     var result = mobilAP.sessionController.saveSessionAdmin();
     if (mobilAP.isError(result)) {
