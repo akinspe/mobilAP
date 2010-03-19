@@ -121,6 +121,7 @@ function load()
     mobilAP.profileController = new MobilAP.DesktopProfileController();
 
     mobilAP.directoryController = new MobilAP.DesktopDirectoryController('directoryList',{
+    	listPanel: document.getElementById('directoryListPanel'),
         profilePanel: document.getElementById('directoryProfilePanel'),
         profileController: mobilAP.profileController,
         profileEditButton: document.getElementById('directoryProfileAdminEditButton').object
@@ -1123,6 +1124,7 @@ MobilAP.DesktopDirectoryController = Class.create(MobilAP.DirectoryController, {
     viewDidLoad: function() { 
         this.clearSelection();
         this.profilePanel.style.display = 'none';
+        this.listPanel.style.height = (document.getElementById('detailView').clientHeight-50) + 'px';
     },
     viewDidUnload: function() {
         this.stopReloadTimer();
