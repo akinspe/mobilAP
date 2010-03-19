@@ -84,6 +84,7 @@ class mobilAP_session
      */
 	public function deleteSession($userID)
 	{
+		require_once('mobilAP_schedule.php');
 		// check privilages
 		if (!$user = mobilAP_user::getUserById($userID)) {
 			return mobilAP_Error::throwError("Unauthorized", mobilAP_UserSession::USER_UNAUTHORIZED);
@@ -94,11 +95,18 @@ class mobilAP_session
 		// remove questions
 		$questions = $this->getQuestions();
 		foreach ($questions as $question) {
-			$question->deleteQuestion();
+			$question->deleteQuestion($userID);
 		}
 		
 		// clear out relevant tables
-		$tables = array(mobilAP_session::SESSION_TABLE, mobilAP_session::SESSION_LINK_TABLE, mobilAP_session::SESSION_PRESENTER_TABLE, mobilAP_session::SESSION_EVALUATION_TABLE, mobilAP_session::SESSION_DISCUSSION_TABLE);
+		$tables = array(
+			mobilAP_session::SESSION_LINK_TABLE, 
+			mobilAP_session::SESSION_PRESENTER_TABLE, 
+			mobilAP_session::SESSION_EVALUATION_TABLE, 
+			mobilAP_session::SESSION_DISCUSSION_TABLE,
+			mobilAP_schedule::SCHEDULE_TABLE,
+			mobilAP_session::SESSION_TABLE
+		);
 		$params = array($this->session_id);
 		foreach ($tables as $table) {
 			$sql = sprintf("DELETE FROM %s WHERE session_id=?", $table);
@@ -108,13 +116,10 @@ class mobilAP_session
 			}
 		}
 
-		// unassociate the session from any schedule items
-		$sql = sprintf("UPDATE %s SET session_id=null WHERE session_id=?",
-		mobilAP::SCHEDULE_TABLE);
-		$result = mobilAP::query($sql,$params);
-		mobilAP::setSerialValue('sessions');
 		mobilAP::purgeSerialValue('session_' . $this->session_id);
-		return mobilAP_Error::isError($result) ? $result : true;
+		mobilAP::setSerialValue('sessions');
+		mobilAP::setSerialValue('schedule');
+		return true;
 	}
 
     /**
@@ -1070,7 +1075,7 @@ class mobilAP_session_group
 			}
 		}
 
-		$sql = sprintf("UPDATE %s SET session_group_id=NULL WHERE session_group_id=%d" , mobilAP::SCHEDULE_TABLE,  $this->session_group_id);
+		$sql = sprintf("UPDATE %s SET session_group_id=NULL WHERE session_group_id=%d" , mobilAP_schedule::SCHEDULE_TABLE,  $this->session_group_id);
 		$result = mobilAP::query($sql);
 		if (mobilAP_Error::isError($result)) {
 			return $result;
