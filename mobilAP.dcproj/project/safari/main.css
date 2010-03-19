@@ -251,7 +251,7 @@ body.DC_windowInactive .homeRow_template.selected {
 /*
 #directoryProfileFirstNameEdit {
     color: black;
-    font-family: HelveticaNeue;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 10pt;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
@@ -273,7 +273,7 @@ body.DC_windowInactive .homeRow_template.selected {
 /*
 #directoryProfileLastNameEdit {
     color: black;
-    font-family: HelveticaNeue;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 10pt;
     margin-top: 0px;
     -webkit-margin-top-collapse: separate;
@@ -317,7 +317,7 @@ body.DC_windowInactive .homeRow_template.selected {
 /*
 #directoryProfileOrganizationEdit {
     color: black;
-    font-family: HelveticaNeue;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 10pt;
     margin-top: 0px;
     -webkit-margin-top-collapse: separate;
@@ -477,7 +477,7 @@ body.DC_windowInactive .homeRow_template.selected {
 /*
 #directoryProfileEmailField {
     color: black;
-    font-family: HelveticaNeue;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 10pt;
     margin-top: 0px;
     -webkit-margin-top-collapse: separate;
@@ -521,7 +521,7 @@ body.DC_windowInactive .homeRow_template.selected {
 }
 
 .profileEditLabel {
-    font-family: HelveticaNeue;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 10pt;
 }
 
@@ -2524,7 +2524,7 @@ body.DC_windowInactive .evaluationQuestionResponsesRow_template.selected {
 
 #sessionEvaluationQuestionTextResponse {
     color: black;
-    font-family: HelveticaNeue;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 10pt;
     position: relative;
     display: block;
@@ -3376,7 +3376,7 @@ body.DC_windowInactive .sessionDiscussionListRow_template.selected {
 
 #sessionDiscussionTextField {
     color: black;
-    font-family: HelveticaNeue;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 10pt;
     position: relative;
     display: block;
