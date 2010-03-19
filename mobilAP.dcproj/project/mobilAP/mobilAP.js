@@ -977,6 +977,39 @@ MobilAP.ProfileController = Class.create(MobilAP.DataSourceController, {
     }
 });
 
+MobilAP.SessionsAdminController = Class.create(MobilAP.ListController, {
+	sessions: [],
+	sessionsUpdated: function(change,keyPath) {
+		this.sessions = this._dataSource.content();
+		this.reloadData();
+	},
+    _processXHR: function(json,callback) {
+        var result = this.base(json);
+        if (!this.isError(result)) {
+            dashcode.getDataSource('sessions').queryUpdated();
+        }
+
+        if ("function"==typeof callback) {
+            callback(result);
+        }
+        return result;
+    },
+    deleteSession: function(session,callback) {
+        var params = {
+            post: 'deleteSession',
+            session_id: session.session_id
+        }
+
+        this.post(base_url + 'session.php', params, callback);
+    },
+	constructor: function(part_id, params) {
+        this.base(part_id, params);
+        this._dataSource = dashcode.getDataSource('sessions');
+        this.sessions = this._dataSource.content();
+        this._dataSource.addObserverForKeyPath(this, this.sessionsUpdated, "content");
+    }
+});
+
 MobilAP.SessionAdminController = Class.create(MobilAP.Controller, {
     addSession: function(session,callback) {
         var params = {

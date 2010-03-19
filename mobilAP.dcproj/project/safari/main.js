@@ -52,6 +52,12 @@ function load()
     mobilAP.sessionAdminController = new MobilAP.DesktopSessionAdminController({
     });
     mobilAP.addViewController('newSessionAdmin', mobilAP.sessionAdminController);
+    
+    mobilAP.sessionsAdminController = new MobilAP.DesktopSessionsAdminController('adminSessionsList', {
+         editButton: document.getElementById('adminSessionsEditButton').object
+        }
+    );
+    
 
     mobilAP.scheduleTypeController = new MobilAP.DesktopScheduleTypeController('scheduleTypeList', {
     	 scheduleController: mobilAP.scheduleController}
@@ -521,6 +527,42 @@ MobilAP.DesktopSessionInfoController = Class.create(MobilAP.SessionInfoControlle
         }
 });
 
+
+MobilAP.DesktopSessionsAdminController = Class.create(MobilAP.SessionsAdminController, {
+	numberOfRows: function() {
+        try {
+            return this.sessions.length;
+        } catch(e) {
+            return 0;
+        }
+	},
+    // this method has to be there. For some reason Dashcode framework looks for this method, but actuallly CALLS representationForRow
+    objectForRow: function(rowIndex) {
+    },
+    representationForRow: function(rowIndex) {
+        return this.sessions[rowIndex];
+    },
+	prepareRow: function(rowElement, rowIndex, templateElements) {
+		var session = this.sessions[rowIndex];
+		var self = this;
+		templateElements.adminSessionsTitle.innerHTML = session.session_title;
+		templateElements.adminSessionsDeleteButton.onclick = function() {
+			if (confirm('Are you sure you wish to remove this session? Any schedule items that use it will also be removed.')) {
+				self.deleteSession(session, function(result) {
+					if (mobilAP.isError(result)) {
+						alert(result.error_message);
+					}  else {
+						alert("Session deleted");
+					}
+				});
+			}
+		}
+	},
+    constructor: function(part_id,params) {
+        this.base(part_id,params);
+        this.object.setDataSource(this);
+    }
+});
 MobilAP.DesktopSessionAdminController = Class.create(MobilAP.SessionAdminController, {
     _processXHR: function(json) {
         var result = this.base(json);
@@ -1386,6 +1428,7 @@ var admin_tabs = {
 	_alltabs: [
         {tab_id:"Settings",tab_title:"Settings"},
         {tab_id:"EvaluationQuestions",tab_title:"Evaluation Questions"},
+        {tab_id:"Sessions",tab_title:"Sessions"}
     ],
     tabs: function() {
         var tabs = [];
@@ -1611,6 +1654,7 @@ function directoryAdminAdd(event)
 function scheduleAdminAddSession(event)
 {
     if (mobilAP.isAdmin()) {
+    	mobilAP.sessionAdminController.returnView='scheduleAdmin';
         mobilAP.loadView('newSessionAdmin');
     }
 }
@@ -1634,13 +1678,13 @@ function sessionAdminSave(event)
     if (mobilAP.isError(result)) {
         alert(result.error_message);
     } else {
-        mobilAP.loadView('scheduleAdmin');
+	    mobilAP.loadView(mobilAP.sessionAdminController.returnView);
     }
 }
 
 function sessionAdminCancel(event)
 {
-    mobilAP.loadView('scheduleAdmin');
+    mobilAP.loadView(mobilAP.sessionAdminController.returnView);
 }
 
 function scheduleAdminDelete(event)
@@ -1963,3 +2007,20 @@ function sessionQuestionViewResults(event)
 }
 
 
+
+
+function sessionAdminAddSession(event)
+{
+    if (mobilAP.isAdmin()) {
+    	mobilAP.sessionAdminController.returnView='admin';
+        mobilAP.loadView('newSessionAdmin');
+    }
+}
+
+
+function adminSessionsToggleEdit(event)
+{
+    if (mobilAP.isAdmin()) {
+        mobilAP.sessionsAdminController.toggleEditMode();
+    }
+}

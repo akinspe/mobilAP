@@ -117,7 +117,7 @@ if ($session = mobilAP::getSessionByID($session_id)) {
                         $result = $question->addResponse($response_text);
                         if (mobilAP_Error::isError($result)) {
                             if ($post_action=='addQuestion') {
-                                $question->deleteQuestion();
+                                $question->deleteQuestion($user->getUserID());
                             }
                             $data = $result;
                             break;
@@ -126,6 +126,9 @@ if ($session = mobilAP::getSessionByID($session_id)) {
                 }
             	
             	break;
+            case 'deleteSession':
+            	$data = $session->deleteSession($user->getUserID());
+				break;
             case 'updateSession':
                 $session_title = isset($_POST['session_title']) ? $_POST['session_title'] : $session->session_title;
                 $session_description = isset($_POST['session_description']) ? $_POST['session_description'] : $session->session_description;

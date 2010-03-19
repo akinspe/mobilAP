@@ -367,7 +367,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.269531) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.210938) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -425,7 +425,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.152344) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.09375) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 80px;
@@ -449,7 +449,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.195312) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.136719) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -740,18 +740,18 @@ body.DC_windowInactive .scheduleTypeListTemplate_template.selected {
     overflow: hidden;
     position: relative;
     width: auto;
-    margin-top: 0;
+    margin-top: 0px;
     margin-right: 0px;
     margin-left: 0px;
-    margin-bottom: 0;
+    margin-bottom: 0px;
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     font-weight: bold;
     font-size: 16px;
-    line-height:30px;
+    line-height: 30px;
     padding-left: 9px;
     height: 30px;
-    background-color: rgb(238,238,238);
+    background-color: rgb(238, 238, 238);
 }
 
 #scheduleCalendar {
@@ -953,7 +953,7 @@ body.DC_windowInactive .scheduleListRow_template.selected {
     border-bottom-style: none;
     border-bottom-width: initial;
     border-bottom-color: initial;
-    background-color: rgb(238,238,238);
+    background-color: rgb(238, 238, 238);
 }
 
 #scheduleList.mobilAP_editmode .scheduleStart {
@@ -1515,7 +1515,7 @@ body.DC_windowInactive .sessionQuestionAdminResponsesRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.296875) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.238281) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -1738,8 +1738,8 @@ body.DC_windowInactive .adminTabbarRow_template.selected {
     width: 100%;
     display: none;
     position: relative;
-    min-height: 569px;
     height: auto;
+    min-height: 124px;
 }
 
 #adminSettingsUsers {
@@ -1799,7 +1799,7 @@ body.DC_windowInactive .adminTabbarRow_template.selected {
     width: 100%;
     display: none;
     position: relative;
-    min-height: 353px;
+    min-height: 124px;
 }
 
 #adminEvaluationQuestionsAddButton {
@@ -2044,7 +2044,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.574219) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.515625) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2058,6 +2058,148 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     left: 79px;
     top: 0px;
     width: 70px;
+}
+
+#adminSessions {
+    width: 100%;
+    display: none;
+    position: relative;
+    min-height: 124px;
+}
+
+#adminSessionsButtons {
+    position: absolute;
+    right: 9px;
+    top: 0px;
+}
+
+#adminSessionsAddButton {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.5625) 0px -1px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-dashboard-region: dashboard-region(control rectangle);
+    cursor: default;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    width: 40px;
+    height: 25px;
+}
+
+#adminSessionsEditButton {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.570312) 0px -1px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-dashboard-region: dashboard-region(control rectangle);
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: absolute;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    top: 0px;
+    right: 49px;
+    width: 64px;
+    height: 25px;
+}
+
+#adminSessionsList {
+    overflow: hidden;
+    display: none;
+    padding: 0px;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: relative;
+    width: auto;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    margin-left: 0px;
+}
+
+.adminSessionsRow_template {
+    position: relative;
+    list-style-type: none;
+    height: 24px;
+    overflow: hidden;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(224, 224, 224);
+}
+
+.adminSessionsDeleteButton_template {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.578125) 0px -1px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-dashboard-region: dashboard-region(control rectangle);
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: absolute;
+    right: auto;
+    height: 20px;
+    visibility: hidden;
+    opacity: 0; 
+    -webkit-transition-property: opacity;
+    -webkit-transition-duration: 1s;
+    -webkit-transition-timing-function: initial;
+    -webkit-transition-delay: initial;
+    left: 5px;
+    width: 60px;
+    top: 2px;
+}
+
+.adminSessionsTitle_template {
+    position: absolute;
+    top: 3px;
+    left: 10px;
+    right: 10px;
+    height: 17px;
+    width: auto;
+    font-size: 13px;
+    font-family: Helvetica, Arial, sans-serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    -webkit-transition-property: left;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: initial;
+    -webkit-transition-delay: initial;
+}
+
+.adminSessionsRow_template.selected {
+    background-color: rgb(56, 121, 217);
+}
+
+body:not(.DC_windowInactive) .adminSessionsRow_template.selected .adminSessionsTitle_template {
+    color: white;
+}
+
+body.DC_windowInactive .adminSessionsRow_template.selected {
+    background-color: rgb(212, 212, 212);
+}
+
+#adminSessionsList.mobilAP_editmode .adminSessionsTitle_template {
+    left: 75px;
 }
 
 #session {
@@ -3001,7 +3143,7 @@ body.DC_windowInactive .sessionQuestionAskQuestionResponsesRow_template.selected
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.449219) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.390625) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3125,7 +3267,7 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.421875) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.363281) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3392,7 +3534,7 @@ body.DC_windowInactive .sessionAdminPresentersAddRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.078125) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0195312) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -3412,7 +3554,7 @@ body.DC_windowInactive .sessionAdminPresentersAddRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.109375) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0507812) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -3882,7 +4024,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.261719) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.203125) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3928,7 +4070,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.320312) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.261719) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4058,3 +4200,4 @@ body.DC_windowInactive .announcementsListRow_template.selected {
 #session.mobilAP_sessionadmin .mobilAP_sessionadmin {
     display: block;
 }
+
