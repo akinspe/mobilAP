@@ -663,12 +663,13 @@ class mobilAP_session
 		$question->question_index = $this->getNextQuestionIndex();
 			
 		$sql = sprintf("INSERT INTO %s 
-		(session_id, question_index, question_text, question_minchoices, question_maxchoices, chart_type)
+		(session_id, question_index, question_active, question_text, question_minchoices, question_maxchoices, chart_type)
 		VALUES
-		(?,?,?,?,?,?)", mobilAP_session::POLL_QUESTIONS_TABLE);
+		(?,?,?,?,?,?,?)", mobilAP_session::POLL_QUESTIONS_TABLE);
 		$params = array(
 		$question->session_id,
 		$question->question_index,
+		$question->question_active,
 		$question->question_text,
         $question->question_minchoices,
         $question->question_maxchoices,
