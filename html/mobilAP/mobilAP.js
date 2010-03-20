@@ -1339,6 +1339,7 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
         var params = {
             post: 'updateQuestion',
             session_id: this.session_id,
+            question_active: question.question_active,
             question_id: question.question_id,
             question_text: question.question_text,
             question_minchoices: question.question_minchoices,
@@ -1371,6 +1372,7 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
         var params = {
             post: 'addQuestion',
             session_id: this.session_id,
+            question_active: question.question_active,
             question_text: question.question_text,
             question_minchoices: question.question_minchoices,
             question_maxchoices: question.question_maxchoices        
@@ -1946,7 +1948,7 @@ MobilAP.SessionQuestion =Class.create({
 	question_list_text: '',
 	question_minchoices:0,
 	question_maxchoices:1,
-	question_active: true,
+	question_active: -1,
     selectMessage: function() {
         var message = 'Please select ';
         if (this.question_maxchoices==1) {
@@ -1962,6 +1964,9 @@ MobilAP.SessionQuestion =Class.create({
             message += ' between ' + this.question_minchoices + ' and ' + this.question_maxchoices + ' choices';
         }
         return message;
+    },
+    setQuestionActive: function(question_active) {
+    	this.question_active = question_active ? -1 : 0;
     },
     setQuestionText: function(question_text) {
         this.question_text = question_text;

@@ -152,6 +152,7 @@ function load()
     mobilAP.sessionQuestionAdminController = new MobilAP.DesktopSessionQuestionAdminController({ 
         sessionController: mobilAP.sessionController,
         questionTextField: document.getElementById('sessionQuestionAdminQuestionTextField'),
+        questionActiveSwitch: new MobilAP.Switch('sessionQuestionAdminQuestionActive'),
         questionMinChoices: document.getElementById('sessionQuestionAdminQuestionMinChoices'),
         questionMaxChoices: document.getElementById('sessionQuestionAdminQuestionMaxChoices'),
         questionResponsesList: document.getElementById('sessionQuestionAdminResponsesList').object,
@@ -470,6 +471,7 @@ MobilAP.DesktopSessionQuestionAdminController = Class.create(MobilAP.SessionQues
     },
     setQuestion: function(question) {
         this.question = question;
+        this.questionActiveSwitch.setValue(this.question.question_active);
         this.questionTextField.value = this.question.question_text;
         this.questionMinChoices.selectedIndex = this.question.question_minchoices;
         this.questionMaxChoices.selectedIndex = this.question.question_maxchoices-1;
@@ -983,6 +985,10 @@ MobilAP.DesktopQuestionsController = Class.create(MobilAP.ListController, {
             alert(result.error_message);
         }
     },
+    setEditMode: function(edit_mode) {
+    	this.base(edit_mode);
+    	this.reloadData();
+    },
     viewDidLoad: function() {
         this.setEditMode(false);
         this.reloadData();
@@ -1007,6 +1013,7 @@ MobilAP.DesktopQuestionsController = Class.create(MobilAP.ListController, {
 	prepareRow: function(rowElement, rowIndex, templateElements) {
         var self = this;
         var question = this.representationForRow(rowIndex);
+        MobilAP.setClassName(rowElement,'question_inactive', !question.question_active);
         templateElements.sessionQuestionsListQuestionText.innerHTML = question.question_text;
         templateElements.sessionQuestionsListEditButton.onclick = function() {
             self.sessionQuestionAdminController.setQuestion(self.representationForRow(rowIndex));
@@ -1720,6 +1727,7 @@ function sessionQuestionAdminSave(event)
 {
     var question = mobilAP.sessionQuestionAdminController.question;
     
+    question.setQuestionActive(document.getElementById('sessionQuestionAdminQuestionActive').object.value);
     question.setQuestionText(document.getElementById('sessionQuestionAdminQuestionTextField').value);
     question.setMinimumChoices(document.getElementById('sessionQuestionAdminQuestionMinChoices').options[document.getElementById('sessionQuestionAdminQuestionMinChoices').selectedIndex].value);
     question.setMaximumChoices(document.getElementById('sessionQuestionAdminQuestionMaxChoices').options[document.getElementById('sessionQuestionAdminQuestionMaxChoices').selectedIndex].value);

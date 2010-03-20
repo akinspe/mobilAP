@@ -177,6 +177,7 @@ var dashcodePartSpecs = {
     "sessionQuestionAdminCancelButton": { "initialHeight": 30, "initialWidth": 82, "leftImageWidth": 5, "onclick": "sessionQuestionAdminCancel", "rightImageWidth": 5, "text": "Cancel", "view": "DC.PushButton" },
     "sessionQuestionAdminDeleteButton": { "initialHeight": 30, "initialWidth": 79, "leftImageWidth": 5, "onclick": "sessionQuestionAdminDelete", "rightImageWidth": 5, "text": "Delete", "view": "DC.PushButton" },
     "sessionQuestionAdminHeader": { "text": "Add new Question", "view": "DC.Text" },
+    "sessionQuestionAdminQuestionActiveLabel": { "text": "Active", "view": "DC.Text" },
     "sessionQuestionAdminQuestionMaxChoicesLabel": { "text": "Maximum choices the responder may select", "view": "DC.Text" },
     "sessionQuestionAdminQuestionMinChoicesLabel": { "text": "Minimum choices the responder must select", "view": "DC.Text" },
     "sessionQuestionAdminQuestionTextLabel": { "text": "Question Title", "view": "DC.Text" },
