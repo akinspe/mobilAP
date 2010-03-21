@@ -2086,6 +2086,14 @@ body.desktop {
     margin-top: 16px;
 }
 
+#sessionQuestionsList .question_inactive {
+	display:none;
+}
+
+.mobilAP_sessionadmin #sessionQuestionsList .question_inactive {
+	display:block;
+}
+
 .sessionQuestionsRow_template {
     position: relative;
     list-style-type: none;
@@ -2113,6 +2121,11 @@ body.desktop {
     -webkit-border-bottom-left-radius: 0px 0px;
     -webkit-border-bottom-right-radius: 0px 0px;
 }
+
+.question_inactive .sessionQuestionsText_template {
+	color: rgb(190,190,190);
+}
+
 
 .sessionQuestionsArrow_template {
     position: absolute;

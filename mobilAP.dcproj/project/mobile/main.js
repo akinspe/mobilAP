@@ -596,6 +596,7 @@ MobilAP.MobileAnnouncementController = Class.create(MobilAP.AnnouncementControll
 MobilAP.MobileQuestionsController = Class.create(MobilAP.ListController, {
     viewDidLoad: function() {
         this.clearSelection();
+        this.reloadData();
         this.sessionQuestionsNotice.style.display = this.content().length == 0 ? '' : 'none';
     },
     rowSelected: function(change, keyPath) {
@@ -605,6 +606,26 @@ MobilAP.MobileQuestionsController = Class.create(MobilAP.ListController, {
             mobilAP.questionController.setQuestion(new MobilAP.SessionQuestion(selectedObjects[0]));
             this.sessionController.loadView('question');
         }    
+    },
+    objectForRow: function() {
+    },
+    representationForRow: function(rowIndex) {
+        var question = new MobilAP.SessionQuestion(this.sessionController.session.session_questions[rowIndex]);
+        return question;
+    },
+	prepareRow: function(rowElement, rowIndex, templateElements) {
+        var self = this;
+        var question = this.representationForRow(rowIndex);
+        MobilAP.setClassName(rowElement,'question_inactive', !question.question_active);
+        templateElements.sessionQuestionsText.innerHTML = question.question_text;
+	},
+    numberOfRows: function() {
+        return this.sessionController.session.session_questions.length;
+    },
+    constructor: function(part_id, params) {
+        this.base(part_id, params);
+        this.object.setDataSource(this);
+        this.sessionController.addObserverForKeyPath(this, this.reloadData, "session");
     }
 });
 
