@@ -1,5 +1,5 @@
-mobilAP Version 2.0b7
-March 11, 2010
+mobilAP Version 2.0b8
+March 21, 2010
 
 RELEASE NOTES
 
@@ -14,6 +14,19 @@ REQUIREMENTS AND SETUP
 - Copy the HTML folder to your website. You can either copy the contents of the folder to the root of your website, or into a subfolder. Using a desktop browser, go to the URL of the folder you placed mobilAP in, it will begin the setup process of configuring the database, creating and initial user, and setting some initial options.
 
 - In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder
+
+FIXED Since 2.0b7
+- Added some indexes to improve database performance (not critical for low volume sites, but still useful)
+- Updated serial numbering system to better handle user submitted content (viewed announcements, question answering, etc)
+- Fixed an issue where setup may give errors after selecting MySQL during setup
+- Fixed issues with unauthorized errors when saving data during setup
+- removed some dissolve transitions that could cause the browser to hide content
+- Improved creating and editing evaluation questions
+- Removed some old console logging that is now unnecessary
+- Allow deletion of sessions (which also deletes any schedule items that use the session)
+- Resize the directory window in the desktop version to fit the entire height of the browser window
+- Updated CSS to provide more font alternatives for non-safari browsers
+- Added the ability to make session questions inactive (i.e. users do not see them, but admins do)
 
 FIXED Since 2.0b6
 - Fixed issues that allowed clever people to perform administrative functions without authorization
