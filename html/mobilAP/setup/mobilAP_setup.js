@@ -1,29 +1,37 @@
 MobilAP.SetupController = Class.create(MobilAP.Controller, {
     partSpecs: {
-        "setupStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" },{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" },{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" },{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }], "view": "DC.StackLayout"}
+        "setupStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" },{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" },{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" },{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }], "view": "DC.StackLayout"}
     },
     dbtest: function() {
-        this.log('testing db');
         this.dbvalidated = false;
         document.getElementById('db_test_results').innerHTML = 'Testing...';
-        var params = {
-            post: 'dbtest',
+        var dbparams = {
             db_type: this.db_type,
             db_host: document.getElementById('db_host').value,
             db_username: document.getElementById('db_username').value,
             db_password: document.getElementById('db_password').value,
-            db_database: document.getElementById('db_database').value
+            db_database: document.getElementById('db_database').value,
+            db_folder: document.getElementById('db_folder').value
         }
+        
+        var params = {
+            post: 'dbtest'
+		}
+		
+        for (var param in dbparams) {
+            params['dbconfig[' + param + ']'] = dbparams[param];
+        }
+
         var request = XHR.post(base_url + 'config.php', params);
         var self = this;
         request.addMethods(this._processDBTest.bind(this));
     },
     _processDBTest: function(json) {
         try {
-            var message = 'Test successful';
+            var message = 'Test successful. You may continue to the next step.';
             this.dbvalidated = true;
             if (json.error_message) {
-                message = json.error_message + ' (' + json.userinfo +')';
+                message = json.error_message;
                 this.dbvalidated = false;
             }
             document.getElementById('db_test_results').innerHTML = message;
@@ -39,7 +47,8 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
             db_host: document.getElementById('db_host').value,
             db_username: document.getElementById('db_username').value,
             db_password: document.getElementById('db_password').value,
-            db_database: document.getElementById('db_database').value
+            db_database: document.getElementById('db_database').value,
+            db_folder: document.getElementById('db_folder').value
         }
 
         var params = {
@@ -54,7 +63,6 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         request.addMethods(this._processDBSave.bind(this));
     },
     _processDBSave: function(json) {
-        this.log(json);
         try {
             if (json.error_message) {
                 alert(json.error_message);
@@ -69,21 +77,21 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         }
     },
     setDBType: function(db_type) {
-        this.log("setting db_type to " + db_type);
         this.db_type = db_type;
         switch (db_type)
         {
             case 'mysql':
-                var show_host_info = true;
-                this.dbvalidated = false;
+		        document.getElementById('db_mysql_info').style.display= 'block';
+		        document.getElementById('db_sqlite_info').style.display= 'none';
                 break;
             case 'sqlite':
-                var show_host_info = false;
-                this.dbvalidated = true;
+		        document.getElementById('db_mysql_info').style.display= 'none';
+		        document.getElementById('db_sqlite_info').style.display= 'block';
                 break;
         }
-        document.getElementById('db_host_info').style.display=show_host_info ? 'block' : 'none';
-            
+        
+		document.getElementById('db_test_results').innerHTML = '';
+		document.getElementById('db_validate_info').style.display= 'block';
     },
     scriptDidLoad: function() {
         this._contentDidLoad('script');
@@ -92,7 +100,6 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         this._contentDidLoad('content');
     },
     validateView: function() {
-        this.log('validate_' + this.stackController.getCurrentView().id);
         return this['validate_'+this.stackController.getCurrentView().id]();
     },
     validate_setupOptions: function() {
@@ -131,35 +138,39 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         }
     },
     validate_setupUser: function() {
-        var params = {
-            post: 'addUser',
-            email: document.getElementById('admin_email').value,
-            md5_password: hex_md5(document.getElementById('admin_password').value),
-            FirstName: document.getElementById('admin_FirstName').value,
-            LastName: document.getElementById('admin_LastName').value,
-            admin: -1
-        }
-        
-        if (params.FirstName.length==0 || params.LastName.length==0) {
-            return new MobilAP.Error("Name should not be blank");
-        }
-
-        if (params.email.length==0) {
-            return new MobilAP.Error("Email adddress should not be blank");
-        }
-        
-        if (document.getElementById('admin_password').value != document.getElementById('admin_verify_password').value) {
-            return new MobilAP.Error('Please verify the password');
-        }
-
-        if (document.getElementById('admin_password').value.length == 0) {
-            return new MobilAP.Error('Password should not be blank');
-        }
-
-        this.log(params);
-        
-        var request = XHR.post(base_url + 'user.php', params);
-        request.addMethods(this._processUser.bind(this));
+		var user_configured = parseInt(document.getElementById('user_configured').value);
+		
+		if (!user_configured) {
+			
+			var params = {
+				post: 'addUser',
+				email: document.getElementById('admin_email').value,
+				organization: document.getElementById('admin_organization').value,
+				md5_password: hex_md5(document.getElementById('admin_password').value),
+				FirstName: document.getElementById('admin_FirstName').value,
+				LastName: document.getElementById('admin_LastName').value,
+				admin: -1
+			}
+			
+			if (params.FirstName.length==0 || params.LastName.length==0) {
+				return new MobilAP.Error("Name should not be blank");
+			}
+	
+			if (params.email.length==0) {
+				return new MobilAP.Error("Email adddress should not be blank");
+			}
+			
+			if (document.getElementById('admin_password').value != document.getElementById('admin_verify_password').value) {
+				return new MobilAP.Error('Please verify the password');
+			}
+	
+			if (document.getElementById('admin_password').value.length == 0) {
+				return new MobilAP.Error('Password should not be blank');
+			}
+			
+			var request = XHR.post(base_url + 'user.php', params);
+			request.addMethods(this._processUser.bind(this));
+		}
     },
     _processUser: function(json) {
         try {
@@ -174,11 +185,14 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         }
     },
     validate_setupDB: function() {
-        this.log('validating db');
-        if (!this.dbvalidated) {
+		var db_configured = parseInt(document.getElementById('db_configured').value);
+        if (!this.dbvalidated && !db_configured) {
+        	this.dbtest();
             return new MobilAP.Error('Database connection not validated');
         }
-        this.saveDB();
+        if (!db_configured) {
+			this.saveDB();
+		}
     },
     nextView: function() {
         var result = this.validateView();
@@ -227,7 +241,6 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         this[type+'Loaded'] = true;
 
         if (!this.scriptLoaded || !this.contentLoaded) {
-            this.log('not everything was loaded');
             return;
         }
 

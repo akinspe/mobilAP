@@ -40,12 +40,12 @@ class mobilAP_db_mysql extends mobilAP_db
         return $tables;
     }
 	
-	function __construct($host, $user, $password, $database)
+	function __construct()
 	{
-		$this->host = $host;
-		$this->user = $user;
-		$this->password = $password;
-		$this->database = $database;
+		$this->host = mobilAP::getDBConfig('db_host');
+		$this->user = mobilAP::getDBConfig('db_user');
+		$this->password = mobilAP::getDBConfig('db_password');
+		$this->database = mobilAP::getDBConfig('db_database');
         $this->dsn = sprintf("%s:host=%s;dbname=%s", $this->db_type, $this->host, $this->database);
         $this->error = false;
 
@@ -62,20 +62,27 @@ class mobilAP_db_mysql extends mobilAP_db
         return 'AUTO_INCREMENT';
     }
 	
-	function connect()
+	public static function testConnection($db_config)
 	{
-        Debug::die_here();
-		if (!$this->conn = mysql_connect($this->host, $this->user, $this->password)) {
-			$this->conn = false;
-			return mobilAP_error::throwError(sprintf("Error connecting to database server %s", $this->host), 0, mysql_error());
-		}
-		
-		if (!mysql_select_db($this->database, $this->conn)) {
-			$this->conn = false;
-			return mobilAP_error::throwError(sprintf("Error selecting database %s", $this->database), 0, mysql_error());
-		}
+		$host = isset($db_config['db_host']) ? $db_config['db_host'] :'';
+		$user = isset($db_config['db_user']) ? $db_config['db_user'] :'';
+		$password = isset($db_config['db_password']) ? $db_config['db_password'] :'';
+		$database = isset($db_config['db_database']) ? $db_config['db_database'] :'';
+				
+        $dsn = sprintf("%s:host=%s;dbname=%s", 'mysql', $host, $database);
+        $result = true;
 
-		return $this->conn;
+        try {
+            $result = new PDO($dsn, $user, $password);
+        } catch (Exception $error) {
+            $result = new MobilAP_Error($error->getMessage(), $error->getCode(), $error);
+        }
+
+		if (empty($database) && !mobilAP_error::isError($result)) {
+			$result = new MobilAP_Error("Database cannot be empty");
+		}
+        
+        return $result;
 	}
 
 	function query($sql, $parameters=array())

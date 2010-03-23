@@ -14,10 +14,17 @@ $db_types = mobilAP_db::db_types();
 
 $db_type = mobilAP::getDBConfig('db_type');
 
-if ($db_type != 'default') {
-    $data = mobilAP_db::testConnection(mobilAP::getDBConfig('db_type'), mobilAP::getDBConfig('db_host'), mobilAP::getDBConfig('db_username'), mobilAP::getDBConfig('db_password'), mobilAP::getDBConfig('db_database'));
-    if (!mobilAP_Error::isError($data)) {
-        $result = mobilAP_db::createTables();
+$db_configured = 0;
+$user_configured = 0;
+$db_test = false;
+
+if (array_key_exists($db_type, $db_types)) {
+    $db_test = mobilAP_db::testConnection($_DBCONFIG);
+    if (!mobilAP_Error::isError($db_test)) {
+        $db_test = mobilAP_db::createTables();
+		$db_configured = mobilAP::getConfig('MOBILAP_HASH');
+		$users = mobilAP::getUsers();
+		$user_configured = count($users);
     }
 }
 
@@ -26,54 +33,82 @@ if ($db_type != 'default') {
 <p>Welcome to mobilAP setup. This will lead you through the initial configuration of mobilAP.</p>
 
 <?php
-if (!mobilAP::canSaveDBConfigFile()) { ?>
-    <p><b>Error:</b> The webserver cannot save the database configuration file. You will need to allow the webserver to write to <b><?php echo mobilAP::dbConfigFolder(); ?></b>.</p>
+if (mobilAP_Error::isError($db_test)) { ?>
+    <p><b>Error with database:</b> <?php echo $db_test->getMessage(); ?>. Please check your configuration settings.
+<?php 
+die();
+} elseif (!mobilAP::canSaveDBConfigFile() && !$db_configured) { ?>
+    <p><b>Error:</b> The webserver cannot save the database configuration file. 
+    You will need to allow the webserver to write to <b><?php echo mobilAP::dbConfigFile(); ?></b> or edit this file manually.</p>
 <?php
 die();
 
 }
 ?>
 <div id="setupStack">
-    <div id="setupDB">
+    <div id="setupDB" class="setupStack">
+		<input type="hidden" id="db_configured" value="<?php echo $db_configured; ?>">
         <h2>Step 1: Database configuration</h2>
+<?php if ($db_test) { ?>
+	<p>You have successfully manually configured your database settings. You can continue to the next step</p> 
+<?php } else {?>
         <p>mobilAP uses a database to store its data. It currently supports <?php echo count($db_types); ?> database types:</p>
-        <ul>
+        <ul id="db_type_list">
         <?php 
         foreach ($db_types as $db_type=>$data) { 
-        ?><li><?php if ($data['supported']) { ?><input type="radio" name="db_type" value="<?php echo $db_type; ?>" onclick="mobilAP.setupController.setDBType('<?php echo $db_type; ?>')"><?php } else { ?> - <?php } ?> <b><?php echo $data['title']; ?></b>. <?php echo $data['description']; ?> Availability: <span class="<?php echo $data['supported'] ? 'db_supported' : 'db_notsupported'; ?>"><?php echo $data['supported_message']; ?></span></li>
+        ?><li><?php if ($data['supported']) { ?><input type="radio" name="db_type" value="<?php echo $db_type; ?>"<?php if (mobilAP::getDBConfig('db_type')==$db_type) echo ' checked'; ?> onclick="mobilAP.setupController.setDBType('<?php echo $db_type; ?>')"><?php } else { ?> - <?php } ?> <b><?php echo $data['title']; ?></b>. <?php echo $data['description']; ?> Availability: <span class="<?php echo $data['supported'] ? 'db_supported' : 'db_notsupported'; ?>"><?php echo $data['supported_message']; ?></span></li>
         <?php } ?>
         </ul>
 
-        <div id="db_host_info">
+        <div id="db_mysql_info" class="db_info">
        <p>Please enter your database connection information</p>
             <label>Host:</label>
-            <input type="text" id="db_host" value="<?php echo mobilAP::getDBConfig('db_host'); ?>">
+            <input type="text" size="20" id="db_host" value="<?php echo mobilAP::getDBConfig('db_host'); ?>">
             <label>Username:</label>
-            <input type="text" id="db_username" value="<?php echo mobilAP::getDBConfig('db_username'); ?>">
+            <input type="text" size="20" id="db_username" value="<?php echo mobilAP::getDBConfig('db_username'); ?>">
             <label>Password:</label>
-            <input type="password" id="db_password" value="">
+            <input type="password" size="20" id="db_password" value="">
             <label>Database:</label>
-            <input type="text" id="db_database" value="<?php echo mobilAP::getDBConfig('db_database'); ?>">
-            <div id="db_test_results"></div>
-            <input type="button" id="db_test" onclick="mobilAP.setupController.dbtest()" value="Validate Connection">
+            <input type="text" size="20" id="db_database" value="<?php echo mobilAP::getDBConfig('db_database'); ?>">
+        </div>
+        <div id="db_sqlite_info" class="db_info">
+       <p>By default, the SQLite database will be placed in the mobilAP data folder. If you wish, you can place it in an alternate location</p>
+            <label>Database location (leave blank for default):</label>
+            <input type="text" id="db_folder" size="50" value="<?php echo mobilAP::getDBConfig('db_folder'); ?>">
+
         </div>
 
+        <div id="db_validate_info" class="db_info">
+            <div id="db_test_results"></div>
+            <p>
+            <input type="button" id="db_test" onclick="mobilAP.setupController.dbtest()" value="Validate Connection">
+            </p>
+		</div>
+<?php } ?>
     </div>
-    <div id="setupUser">
+    <div id="setupUser" class="setupStack">
+		<input type="hidden" id="user_configured" value="<?php echo $user_configured; ?>">
         <h2>Step 2: User configuration</h2>
+<?php if ($user_configured) { ?>
+	<p>You have successfully created an administrative user. You can continue to the next step</p>
+<?php } else { ?>        
         <p>Now you need to create an initial administrative user. mobilAP users email addresses to uniquely identify users and requires all administrative users to use a password. Please create an initial account by entering the values below:</p>
 
 
         <label>Name:</label> 
-        <input type="text" id="admin_FirstName"> <input type="text" id="admin_LastName">
+        <input type="text" size="30" id="admin_FirstName"> 
+        <input type="text" size="30" id="admin_LastName">
+        <label>Organization (optional):</label> 
+        <input type="text" size="30" id="admin_organization">
         <label>email address:</label>
-        <input type="text" id="admin_email">
+        <input type="text" size="40" id="admin_email">
         <label>Password:</label>
-        <input type="password" id="admin_password">
+        <input type="password" size="30" id="admin_password">
         <label>Verify Password:</label>
-        <input type="password" id="admin_verify_password">
+        <input type="password" size="30" id="admin_verify_password">
+<?php } ?>        
     </div>
-    <div id="setupOptions">
+    <div id="setupOptions" class="setupStack">
         <h2>Step 3: Options</h2>
         <p>Now it's time to set a few options that affect the behavior of mobilAP. You can change these and other options later using the admin tools.</p>
 
@@ -105,7 +140,7 @@ die();
 <div id="admin_single_session_mode" class="mobilAP_switch"></div>        
         
     </div>
-    <div id="setupFinished">
+    <div id="setupFinished" class="setupStack">
         <h2>Setup completed</h2>
         <p>You have completed the mobilAP setup sucessfully.</p>
         <p><a href="../">Go to site</a></p>

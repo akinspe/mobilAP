@@ -1062,10 +1062,6 @@ ul.mobilAP_editmode .edit_button {
     min-height: 389px;
 }
 
-#setupStack label {
-    display: block;
-}
-
 #scheduleAdmin {
     width: 100%;
     display: none;

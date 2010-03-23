@@ -25,7 +25,7 @@ class mobilAP_db
    		require_once(sprintf("db/mobilAP_db_%s.php", $db_type));
         if (!$mobilAP_db) {
             $object = "mobilAP_db_$db_type";
-            $mobilAP_db = new $object(mobilAP::getDBConfig('db_host'),mobilAP::getDBConfig('db_username'),mobilAP::getDBConfig('db_password'),mobilAP::getDBConfig('db_database'));
+            $mobilAP_db = new $object();
         }
    		return $mobilAP_db;
     }
@@ -33,8 +33,8 @@ class mobilAP_db
     public static function known_db_types()
     {
         return array(
-            'mysql',
-            'sqlite'
+            'sqlite',
+            'mysql'
         );
     }
     
@@ -150,16 +150,17 @@ class mobilAP_db
         return mobilAP_Error::isError($this->error);
     }
     
-    public static function testConnection($db_type, $db_host, $db_username, $db_password, $db_database)
+    public static function testConnection($db_config)
     {
+    	$db_type = isset($db_config['db_type']) ? $db_config['db_type'] : '';
         if (!in_array($db_type, mobilAP_db::known_db_types())) {
-            return mobilAP_Error::throwError("Unknown database type $db_type");
+            return mobilAP_Error::throwError("Unknown database type $db_type",0,$db_config);
         }
         
         require_once(sprintf("db/mobilAP_db_%s.php", $db_type));
-   		$object = "mobilAP_db_$db_type";
-   		$db = new $object($db_host, $db_username, $db_password, $db_database);
-        return $db->isError() ? $db->error : true;
+   		$class = "mobilAP_db_$db_type";
+   		$result = call_user_func(array($class,'testConnection'),$db_config);
+        return $result;
     }
     
     public static function db_types()

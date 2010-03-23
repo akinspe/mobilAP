@@ -1,5 +1,10 @@
-#db_host_info {
+.db_info {
     display: none;
+}
+
+#setup p {
+	margin-left: 9px;
+	margin-right: 9px;
 }
 
 .mobilAP_setupbutton {
@@ -23,12 +28,43 @@
     margin-left: 9px;
 }
 
+#db_type_list {
+	margin: 0;
+	padding: 0;
+}
+#db_type_list li {
+	list-style-type: none;
+	margin-left: 9px;
+	margin-bottom: 9px;
+}
+
 #setupButtons {
     position: relative;
     margin-top: 9px;
     height: 25px;
 }
 
-.mobilAP_label {
+#setupStack label {
+	display: block;
     margin-top: 9px;
+    font-weight:bold;
+}
+
+#setupStack input {
+	font-size: 14px;
+	height: 18px;
+}
+
+.db_supported {
+	color: #00DD00;
+}
+
+.db_notsupported {
+	color: #DD0000;
+}
+
+#db_test_results {
+	margin: .5em 0 .5em 0;
+	color: red;
+	font-weight: bold;
 }

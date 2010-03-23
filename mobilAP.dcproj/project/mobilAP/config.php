@@ -23,7 +23,8 @@ if (isset($_POST['post'])) {
                 }
             }
 
-            $data = mobilAP_db::testConnection(mobilAP::getDBConfig('db_type'), mobilAP::getDBConfig('db_host'), mobilAP::getDBConfig('db_username'), mobilAP::getDBConfig('db_password'), mobilAP::getDBConfig('db_database'));
+            $data = mobilAP_db::testConnection($dbconfig);
+            
             if (!mobilAP_Error::isError($data)) {
                 $data = mobilAP_db::createTables();
             }
@@ -52,13 +53,9 @@ if (isset($_POST['post'])) {
 				break;
 			}
 
-            $db_type = isset($_POST['db_type']) ? $_POST['db_type'] : '';
-            $db_host = isset($_POST['db_host']) ? $_POST['db_host'] : '';
-            $db_username = isset($_POST['db_username']) ? $_POST['db_username'] : '';
-            $db_password = isset($_POST['db_password']) ? $_POST['db_password'] : '';
-            $db_database = isset($_POST['db_database']) ? $_POST['db_database'] : '';
+            $dbconfig = isset($_POST['dbconfig']) ? $_POST['dbconfig'] : array();
 
-            $data = mobilAP_db::testConnection($db_type, $db_host, $db_username, $db_password, $db_database);
+            $data = mobilAP_db::testConnection($dbconfig);
             break;
     }
 } else {
