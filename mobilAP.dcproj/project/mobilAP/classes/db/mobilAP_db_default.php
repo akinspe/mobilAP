@@ -4,7 +4,13 @@ class mobilAP_db_default extends mobilAP_db
 {
     function query($sql, $parameters=array())
     {
-		return new mobilAP_query_default($sql);
+		$result = new mobilAP_query_default($sql);
+        if ($result->isError()) {
+            $errno = $result->getErrno();
+			$result = new mobilAP_Error($result->getError(), $errno, $sql);
+        }
+        
+        return $result;
     }
 }
 
