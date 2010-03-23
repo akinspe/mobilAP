@@ -213,6 +213,7 @@ function load()
     mobilAP.setupController = {
         viewDidLoad: function(viewID)
         {
+		    mobilAP.serialController.stopReloadTimer();
             var script = document.createElement("script");
             script.src = "../mobilAP/setup/mobilAP_setup.js";
             document.body.appendChild(script);
