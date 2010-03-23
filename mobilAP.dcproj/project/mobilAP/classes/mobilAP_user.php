@@ -133,6 +133,9 @@ class mobilAP_User
 
 		$sql = sprintf("SELECT session_id FROM %s", mobilAP_session::SESSION_TABLE);
 		$result = mobilAP::query($sql);		
+		if (mobilAP_Error::isError($result)) {
+			return $result;
+		}
 		while ($row = $result->fetchRow()) {
 			$data['sessions'][$row['session_id']] = $session_data;
 		}
