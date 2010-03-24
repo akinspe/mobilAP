@@ -22,7 +22,7 @@ if (array_key_exists($db_type, $db_types)) {
     $db_test = mobilAP_db::testConnection($_DBCONFIG);
     if (!mobilAP_Error::isError($db_test)) {
         $db_test = mobilAP_db::createTables();
-		$db_configured = mobilAP::getConfig('MOBILAP_HASH');
+		$db_configured = mobilAP::getConfig('MOBILAP_HASH') ? -1 : 0;
 		$users = mobilAP::getUsers();
 		$user_configured = count($users);
     }
