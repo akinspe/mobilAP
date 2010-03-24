@@ -87,7 +87,7 @@ if (isset($_POST['post'])) {
     $data->userData = $data->getUserData();
 }
 
-header("Content-type: $content_type; charset=utf-8");
+header("Content-type: $content_type; charset=" . MOBILAP_CHARSET);
 echo json_encode($data);
 
 ?>
