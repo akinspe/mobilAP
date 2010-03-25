@@ -1,5 +1,5 @@
-mobilAP Version 2.0b8
-March 21, 2010
+mobilAP Version 2.0b9
+March 25, 2010
 
 RELEASE NOTES
 
@@ -13,7 +13,16 @@ REQUIREMENTS AND SETUP
 
 - Copy the HTML folder to your website. You can either copy the contents of the folder to the root of your website, or into a subfolder. Using a desktop browser, go to the URL of the folder you placed mobilAP in, it will begin the setup process of configuring the database, creating and initial user, and setting some initial options.
 
-- In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder
+- In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder OR you must edit the database configuration yourself
+
+FIXED Since 2.0b8
+- If you don't want to allow write access to the data folder, you can easily edit the database configuration yourself - NOTE: without write access you will be unable to save uploaded directory photos
+- You can instruct mobilAP to use a different folder for the SQLite database
+- Situations where you have partially completed setup and return to setup are handled better.
+- You can (and indeed, must) set the event timezone during setup
+- You can change the labels and visibility of the items on the home screen/list (see Home List tab in Admin)
+
+
 
 FIXED Since 2.0b7
 - Added some indexes to improve database performance (not critical for low volume sites, but still useful)
@@ -72,25 +81,17 @@ KNOWN ISSUES/PLANNED UPDATES BEFORE 2.0 final
 
 - Documentation should be better and nicer looking
 
-- You will eventually be able to specify an alternate location of the SQLite database file and other data files
-
-- You must specify the server timezone using the date.timezone php.ini setting. If you do not have access to this file, you can add a date_default_timezone_set() call to html/mobilAP.php.
-
-- It is hoped that timezone selection will eventually be part of the setup process
-
 - When uploading a new directory image, you may have to reload the site to see the updated image.
 
 - Mass import of users is currently non-functional
 
-- Due to a coding flaw in Apple's Dashcode framework code, if you edit the project file and then re-publish the site, the desktop version will not work in Firefox. The template used to program the Stack Layout part calls a method that does not exist in Firefox. In the code that comes with mobilAP, that method is properly handled. If you republish the project it will overwrite that file (html/safari/Parts/parts.js).
+- Due to a coding flaw in Apple's Dashcode framework code, if you edit the project file and then re-publish the site, the desktop version will not work in Firefox (and perhaps other browsers). The template used to program the Stack Layout part calls a method that does not exist in Firefox. In the code that comes with mobilAP, that method is properly handled. If you republish the project it will overwrite that file (html/safari/Parts/parts.js).
 
 - Bar charts have not been programmed
 
 - The mobile site will always say "mobilAP" at the home screen. It is hoped that the final version will use the site title.
 
 - There will eventually be a way to upload an alternate home screen icon. At this time, simply replace html/mobilAP/data/WebClipIcon.png
-
-- You will eventually be able to alter the wording and order of the main menu items
 
 - Additional administration options will become available on the mobile interface, however some things will remain only in the desktop interface.
 
