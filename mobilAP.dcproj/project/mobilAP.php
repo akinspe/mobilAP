@@ -33,4 +33,8 @@ require_once('classes/mobilAP_db.php');
 require_once('classes/mobilAP_user.php');
 require_once('classes/Debug.php');
 
+if ($timezone = mobilAP::getConfig('TIMEZONE')) {
+	date_default_timezone_set($timezone);
+}
+
 ?>

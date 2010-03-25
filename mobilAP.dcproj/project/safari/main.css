@@ -367,7 +367,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.203125) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.1875) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -425,7 +425,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0859375) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0703125) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 80px;
@@ -449,7 +449,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.128906) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.113281) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -1513,7 +1513,7 @@ body.DC_windowInactive .sessionQuestionAdminResponsesRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.230469) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.214844) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -1743,28 +1743,15 @@ body.DC_windowInactive .adminTabbarRow_template.selected {
 #adminSettingsUsers {
     margin-left: 9px;
     margin-right: 9px;
-    -webkit-margin-top-collapse: separate;
-    -webkit-margin-bottom-collapse: separate;
     margin-top: 0px;
     margin-bottom: 9px;
-    width: auto;
-    min-height: 272px;
-    height: auto;
 }
 
 #adminSettingsSchedule {
     margin-left: 9px;
-    -webkit-margin-top-collapse: separate;
-    -webkit-margin-bottom-collapse: separate;
     margin-right: 9px;
     margin-bottom: 9px;
-    margin-top: 0px;
-}
-
-#adminSettingsScheduleLegend {
-    -webkit-margin-top-collapse: separate;
-    -webkit-margin-bottom-collapse: separate;
-    margin-top: -1870px;
+    margin-top: 9px;
 }
 
 #adminSettings .mobilAP_switch {
@@ -1786,11 +1773,9 @@ body.DC_windowInactive .adminTabbarRow_template.selected {
     -webkit-user-select: none;
     -moz-user-select: none;
     position: relative;
-    -webkit-margin-top-collapse: separate;
-    -webkit-margin-bottom-collapse: separate;
     width: 111px;
-    margin-left: 10px;
-    margin-top: 0px;
+    margin-left: 9px;
+    margin-bottom: 9px;
 }
 
 #adminEvaluationQuestions {
@@ -2042,7 +2027,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.507812) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.492188) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2077,7 +2062,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.554688) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.539062) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2099,7 +2084,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.5625) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.546875) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2145,7 +2130,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.570312) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.554688) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2905,13 +2890,12 @@ body.DC_windowInactive .sessionLinksListRow_template.selected {
 }
 
 #sessionQuestionsList .question_inactive {
-	display:none;
+    display: none;
 }
 
 .mobilAP_sessionadmin #sessionQuestionsList .question_inactive {
-	display:block;
+    display: block;
 }
-
 
 .sessionQuestionsListEditButton_template {
     font-family: Helvetica;
@@ -2961,10 +2945,10 @@ body.DC_windowInactive .sessionLinksListRow_template.selected {
 }
 
 .question_inactive .sessionQuestionsListQuestionText_template {
-	color: rgb(190,190,190);
-	background-image: url(Images/inactive.png);
-	background-repeat: no-repeat;
-	padding-left: 65px;
+    color: rgb(190, 190, 190);
+    background-image: url(Images/inactive.png);
+    background-repeat: no-repeat;
+    padding-left: 65px;
 }
 
 .mobilAP_editmode .sessionQuestionsListQuestionText_template {
@@ -3157,7 +3141,7 @@ body.DC_windowInactive .sessionQuestionAskQuestionResponsesRow_template.selected
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.382812) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.367188) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3281,7 +3265,7 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.355469) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.339844) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3548,7 +3532,7 @@ body.DC_windowInactive .sessionAdminPresentersAddRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0117188) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -3568,7 +3552,7 @@ body.DC_windowInactive .sessionAdminPresentersAddRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0429688) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0273438) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -4038,7 +4022,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.195312) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.179688) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4084,7 +4068,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.253906) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.238281) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4106,8 +4090,6 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 9px;
-    -webkit-margin-bottom-collapse: separate;
-    -webkit-margin-top-collapse: separate;
     width: auto;
     min-height: 23px;
     height: auto;
@@ -4120,8 +4102,6 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 9px;
-    -webkit-margin-top-collapse: separate;
-    -webkit-margin-bottom-collapse: separate;
     margin-top: 0px;
 }
 
@@ -4135,8 +4115,6 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     margin-left: 9px;
     margin-bottom: 9px;
     width: 300px;
-    -webkit-margin-top-collapse: separate;
-    -webkit-margin-bottom-collapse: separate;
     margin-top: -9px;
 }
 
@@ -4160,14 +4138,12 @@ body.DC_windowInactive .announcementsListRow_template.selected {
 .mobilAP_explanation {
     font-size: 12px;
     color: rgb(150, 150, 150);
-    -webkit-margin-top-collapse: separate;
-    -webkit-margin-bottom-collapse: separate;
-    margin-top: -9px;
     width: auto;
-    margin-right: -11px;
+    margin-bottom: 9px;
+    margin-right: 11px;
     margin-left: 11px;
-    min-height: 14px;
     height: auto;
+    margin-top: 0px;
 }
 
 .mobilAP_field {
@@ -4188,6 +4164,12 @@ body.DC_windowInactive .announcementsListRow_template.selected {
 .mobilAP_switch {
     margin-left: 9px;
     margin-right: 9px;
+    cursor: pointer;
+    margin-top: 9px;
+}
+
+.mobilAP_switch img {
+    display: block;
 }
 
 .mobilAP_admin {

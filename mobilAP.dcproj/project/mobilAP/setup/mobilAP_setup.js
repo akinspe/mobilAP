@@ -105,7 +105,8 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
     validate_setupOptions: function() {
         var params = {
         	S: {
-				SITE_TITLE: document.getElementById('admin_site_title').value
+				SITE_TITLE: document.getElementById('admin_site_title').value,
+				TIMEZONE: document.getElementById('admin_timezone').value
 			},
 			B: {
 				CONTENT_PRIVATE: document.getElementById('admin_content_private').object.intValue(),
@@ -118,6 +119,10 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         }
         if (params.S.SITE_TITLE.length==0) {
             return new MobilAP.Error("Please enter a site title");
+        }
+
+        if (params.S.TIMEZONE.indexOf('/')==-1) {
+            return new MobilAP.Error("Please select a timezone");
         }
         
         MobilAP.saveConfigs(params, this._processOptions.bind(this));
@@ -237,6 +242,92 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         document.getElementById('setupNextButton').style.display = index<(views.length-1) ? '' : 'none';
         document.getElementById('setupFinishButton').style.display = index==(views.length-1) ? '' : 'none';
     },
+    resetSelect: function(select) {
+    	select.innerHTML = '';
+    	select.options[0] = new Option(select.first,'');
+    },
+	updateTimeZoneAreas: function() {
+		var self = this;
+		var continent = this.timeZoneContinent.options[this.timeZoneContinent.selectedIndex].value;
+		this.resetSelect(this.timeZoneArea);
+		this.resetSelect(this.timeZoneDetail);
+
+		if (continent) {
+			var request = XHR.get(base_url + 'setup/timezones.php?continent=' + continent);
+			request.addMethods(function(json) { self._processTimeZoneData(self.timeZoneArea, json) });
+		}
+        this.updateTimeZone();
+	},
+	_processTimeZoneData: function(select,json) {
+		this.resetSelect(select);
+		for (i=0; i<json.length;i++) {
+			select.options[i+1] = new Option(json[i],json[i]);
+		}
+
+		this.updateTimeZone();
+	},
+	updateTimeZoneDetails: function() {
+		var self = this;
+		var continent = this.timeZoneContinent.options[this.timeZoneContinent.selectedIndex].value;
+		var area = this.timeZoneArea.options[this.timeZoneArea.selectedIndex].value;
+		this.resetSelect(this.timeZoneDetail);
+
+		if (continent && area) {
+			var request = XHR.get(base_url + 'setup/timezones.php?continent=' + continent+'&area='+area);
+			request.addMethods(function(json) { self._processTimeZoneData(self.timeZoneDetail,json)});
+		}
+        this.updateTimeZone();
+	},
+	updateTimeZoneDetail: function() {
+        this.updateTimeZone();
+	},
+	initTimeZone: function() {
+        var self = this;
+        this.timeZoneContinent = document.createElement('select');
+        this.timeZoneContinent.id='admin_timezone_continent';
+        this.timeZoneContinent.onchange = this.updateTimeZoneAreas.bind(this);
+        this.timeZoneContinent.first = '- Continent -';
+        document.getElementById('admin_timezone_container').appendChild(this.timeZoneContinent);
+		this.resetSelect(this.timeZoneContinent,' - Continent -');
+
+        this.timeZoneArea = document.createElement('select');
+        this.timeZoneArea.id='admin_timezone_area';
+        this.timeZoneArea.onchange = this.updateTimeZoneDetails.bind(this);
+        this.timeZoneArea.first = '- Area -';
+		this.resetSelect(this.timeZoneArea);
+        
+        document.getElementById('admin_timezone_container').appendChild(this.timeZoneArea);
+
+        this.timeZoneDetail = document.createElement('select');
+        this.timeZoneDetail.id='admin_timezone_detail';
+        this.timeZoneDetail.onchange = this.updateTimeZoneDetail.bind(this);
+        this.timeZoneDetail.first = '- Detail -';
+        document.getElementById('admin_timezone_container').appendChild(this.timeZoneDetail);
+		this.resetSelect(this.timeZoneDetail);
+
+        var request = XHR.get(base_url + 'setup/timezones.php');
+        request.addMethods(function(json) { self._processTimeZoneData(self.timeZoneContinent,json) });
+        this.updateTimeZone();
+    },
+    updateTimeZone: function() {
+		var continent = this.timeZoneContinent.options[this.timeZoneContinent.selectedIndex].value;
+		var area = this.timeZoneArea.options[this.timeZoneArea.selectedIndex].value;
+		var detail = this.timeZoneDetail.options[this.timeZoneDetail.selectedIndex].value;
+		var timeZone = '';
+		if (continent) {
+			timeZone += continent;
+			if (area) {
+				timeZone += '/' + area;
+				if (detail) {
+					timeZone += '/' + detail;
+				}
+			}
+		}
+		
+		this.timeZoneArea.style.display = this.timeZoneArea.options.length>1 ? '' : 'none';
+		this.timeZoneDetail.style.display = this.timeZoneDetail.options.length>1 ? '' : 'none';
+		document.getElementById('admin_timezone').value = timeZone;
+    },
     _contentDidLoad: function(type) {
         this[type+'Loaded'] = true;
 
@@ -253,6 +344,7 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         new MobilAP.Switch('admin_use_presenter_passwords', true);
         new MobilAP.Switch('admin_allow_self_created_users', false);
         new MobilAP.Switch('admin_single_session_mode', false);
+        this.initTimeZone();
     }
 });
 

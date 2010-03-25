@@ -189,6 +189,7 @@ function load()
     mobilAP.adminController = new MobilAP.DesktopAdminController({
         admin_tabbar: document.getElementById('adminTabbar').object,
         admin_stack: document.getElementById('adminTabs').object,
+        timeZoneContainer: document.getElementById('configTIMEZONE_container'),
         view: document.getElementById('admin')
     });
     mobilAP.addViewController('admin', mobilAP.adminController);
@@ -1210,7 +1211,114 @@ MobilAP.DesktopAdminController = Class.create(MobilAP.AdminController, {
         for (var i=0; i<this.switches.length;i++) {
             document.getElementById('config'+this.switches[i]).object.setValue(this.getConfig(this.switches[i]));
         }
+        this.initTimeZone();
     }, 
+    updateTimeZoneSelect: function() {
+		var select = this;
+		var controller = select.controller;
+		var url = base_url + 'setup/timezones.php?';
+		
+		for (var i=0;i<=select.index;i++) {
+			var value = controller.timeZoneSelects[i].options[controller.timeZoneSelects[i].selectedIndex].value;
+			if (value) {
+				if (i>0) {
+					url += '&';
+				}
+				url+= controller.timeZoneSelects[i].field+'='+value;
+			}
+		}
+
+		if (select.index < controller.timeZoneSelects.length-1) {
+			var request = XHR.get(url);
+			var selectUpdate = controller.timeZoneSelects[select.index+1];
+			request.addMethods(function(json) { controller._processTimeZoneData(selectUpdate, json) });
+		}
+
+    	controller.updateTimeZone();
+    },
+    _processTimeZoneData: function(select,json) {
+		select.reset();
+		for (i=0; i<json.length;i++) {
+			select.options[i+1] = new Option(json[i],json[i]);
+		}
+
+		this.updateTimeZone();
+		if (!this.timeZoneSet) {
+			this.setTimeZone();
+		}
+    },
+    
+    setTimeZone: function() {
+    	timeZoneParts = mobilAP.getConfig('TIMEZONE').split('/');
+    	for (var i=0; i<this.timeZoneSelects.length;i++) {
+    		if (!(i in timeZoneParts)) {
+    			timeZoneParts[i] = '';
+    		}
+    		for (var j=0;j<this.timeZoneSelects[i].options.length; j++) {
+    			if (timeZoneParts[i]==this.timeZoneSelects[i].options[j].value) {
+    				if (j != this.timeZoneSelects[i].selectedIndex) {
+						this.timeZoneSelects[i].selectedIndex = j;
+						this.timeZoneSelects[i].onchange();
+					}
+    				j = this.timeZoneSelects[i].options.length;
+    			}
+    		}
+    	}
+    	
+    	if (mobilAP.getConfig('TIMEZONE')==this.timeZone) {
+    		this.timeZoneSet = true;
+    	}
+    },
+    initTimeZone: function() {
+    	this.timeZoneSet = false;
+    	this.timeZone = '';
+    	if (!this.timeZoneSelects) {
+			this.timeZoneSelects = [];
+			var self = this;
+			var x = [ 'Continent', 'Area', 'Detail'];
+			for (var i=0;i<x.length;i++) {
+				var select = document.createElement('select');
+				select.controller = this;
+				select.index = i;
+				select.onchange = this.updateTimeZoneSelect.bind(select);
+				select.field = x[i].toLowerCase();
+				select.first = '- ' + x[i] + ' -';
+				select.reset = function() {
+					select.innerHTML = '';
+					select.options[0] = new Option(select.first,'');
+				}
+				select.reset();
+				this.timeZoneContainer.appendChild(select);
+				this.timeZoneSelects.push(select);
+			}
+	
+			var request = XHR.get(base_url + 'setup/timezones.php');
+			request.addMethods(function(json) { 
+				self._processTimeZoneData(self.timeZoneSelects[0],json);
+				self.setTimeZone();
+				});
+		} else {
+			this.setTimeZone();
+		}
+	  	this.updateTimeZone();
+    },
+    updateTimeZone: function() {
+    	var timeZone = '';
+    	for (var i=0;i<this.timeZoneSelects.length;i++) {
+    		var value = this.timeZoneSelects[i].options[this.timeZoneSelects[i].selectedIndex].value;
+			if (value) {
+				if (i>0) {
+					timeZone += '/';
+				}
+				timeZone += value;
+			}
+			if (i>0) {
+				this.timeZoneSelects[i].style.display = this.timeZoneSelects[i].options.length>1 ? '' : 'none';
+			}			
+		}
+		this.timeZone = timeZone;
+		document.getElementById('configTIMEZONE').value = timeZone;
+    },
     constructor: function(params) {
         this.base(params);
         this.switches = [];
@@ -1883,7 +1991,8 @@ function adminSettingsSave(event)
 {
     var params = {
         S: {
-        	SITE_TITLE: document.getElementById('configSITE_TITLE').value
+        	SITE_TITLE: document.getElementById('configSITE_TITLE').value,
+        	TIMEZONE: document.getElementById('configTIMEZONE').value
 		},
         B: {
             CONTENT_PRIVATE: document.getElementById('configCONTENT_PRIVATE').object.intValue(),

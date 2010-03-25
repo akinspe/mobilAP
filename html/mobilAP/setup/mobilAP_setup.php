@@ -112,9 +112,15 @@ die();
         <h2>Step 3: Options</h2>
         <p>Now it's time to set a few options that affect the behavior of mobilAP. You can change these and other options later using the admin tools.</p>
 
+<fieldset>
+<legend>Site Metadata</legend>
+
 <div class="mobilAP_label">Site Title</div>
 <input type="text" id="admin_site_title" value="mobilAP" size="50">
+</fieldset>
 
+<fieldset>
+<legend>Users and Passwords</legend>
 <div class="mobilAP_label">Require Login to view content</div>
 <p class="mobilAP_explanation">You can make all the content on the site private and require users to login in order to view the site</p>
 <div id="admin_content_private" class="mobilAP_switch"></div>
@@ -134,10 +140,20 @@ die();
 <div class="mobilAP_label">Allow self-created users</div>
 <p class="mobilAP_explanation">You can allow anyone to create an account in the system by supplying their email address. If off, you must administer all users before they can login.</p>
 <div id="admin_allow_self_created_users" class="mobilAP_switch"></div>        
+</fieldset>
 
-<div class="mobilAP_label">Don't use schedule</div>
+<fieldset>
+<legend>Schedule and Sessions</legend>
+
+<div class="mobilAP_label">Use simple schedule</div>
 <p class="mobilAP_explanation">For simpler events where there is only 1 session, you can turn off the schedule</p>
 <div id="admin_single_session_mode" class="mobilAP_switch"></div>        
+
+<div class="mobilAP_label">Time Zone</div>
+<p class="mobilAP_explanation">Select the time zone to use for this event</p>
+<input type="hidden" id="admin_timezone" value="">
+<div id="admin_timezone_container"></div>
+</fieldset>
         
     </div>
     <div id="setupFinished" class="setupStack">

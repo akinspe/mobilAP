@@ -24,6 +24,7 @@
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     line-height: 25px;
+    cursor: pointer;
     float: left;
     margin-left: 9px;
 }
@@ -67,4 +68,22 @@
 	margin: .5em 0 .5em 0;
 	color: red;
 	font-weight: bold;
+}
+
+#setup fieldset {
+	border: 1px solid rgb(150,150,150);
+	margin-left: 9px;
+	margin-right: 9px;
+	margin-bottom: 9px;
+}
+
+#setup legend {
+	font-weight: bold;
+	font-size: 14px;
+	color: #3771B7;
+}
+
+
+#setup .mobilAP_switch {
+	margin-bottom: 9px;
 }

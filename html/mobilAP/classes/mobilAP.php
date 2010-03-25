@@ -227,7 +227,8 @@ class mobilAP
                 }
                 break;
         }
-        
+
+		mobilAP::getConfigs(true); //refresh configs
         mobilAP::setSerialValue('config');
 		return mobilAP_Error::isError($result) ? $result : true;
 	}
