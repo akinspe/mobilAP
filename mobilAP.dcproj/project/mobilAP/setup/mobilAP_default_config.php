@@ -13,7 +13,15 @@ $GLOBALS['CONFIG'] = array(
     'ALLOW_SELF_CREATED_USERS'=>false,
     'SINGLE_SESSION_MODE'=>false,
     'THUMB_WIDTH'=>100,
-    'THUMB_HEIGHT'=>100
+    'THUMB_HEIGHT'=>100,
+    'HOME_WELCOME'=>'Welcome',
+    'HOME_SHOW_WELCOME'=>true,
+    'HOME_SCHEDULE'=>'Schedule',
+    'HOME_SHOW_SCHEDULE'=>true,
+    'HOME_DIRECTORY'=>'Directory',
+    'HOME_SHOW_DIRECTORY'=>true,
+    'HOME_ANNOUNCEMENTS'=>'Announcements',
+    'HOME_SHOW_ANNOUNCEMENTS'=>true
 );
     
 ?>

@@ -1050,6 +1050,9 @@ MobilAP.AdminController = Class.create(MobilAP.Controller, {
     
 });
 
+MobilAP.HomeAdminController = Class.create(MobilAP.Controller, {
+});
+
 MobilAP.EvaluationQuestionAdminController = Class.create(MobilAP.ListController, {
     response_types: [ 'M', 'T' ],
     deleteQuestion: function(question,callback) {

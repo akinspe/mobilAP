@@ -367,7 +367,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.1875) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0898438) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -425,7 +425,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0703125) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 80px;
@@ -449,7 +449,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.113281) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.015625) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -1513,7 +1513,7 @@ body.DC_windowInactive .sessionQuestionAdminResponsesRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.214844) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.117188) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -1778,6 +1778,55 @@ body.DC_windowInactive .adminTabbarRow_template.selected {
     margin-bottom: 9px;
 }
 
+#adminHome {
+    width: 100%;
+    min-height: 626px;
+    display: none;
+    position: relative;
+}
+
+
+#adminHomeFields .mobilAP_label {
+	clear: both;
+	float: left;
+	width: 140px;
+	height: 15px;
+}
+
+#adminHomeFields input {
+	display: block;
+	float: left;
+}
+
+#adminHomeFields .mobilAP_switch {
+	float: left;
+	margin-top:4px;
+	margin-bottom: 0;
+}
+
+
+#adminHomeSaveButton {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.550781) 0px -1px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 30px;
+    -webkit-dashboard-region: dashboard-region(control rectangle);
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: relative;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    width: 71px;
+    margin-top: 9px;
+    margin-left: 9px;
+}
+
 #adminEvaluationQuestions {
     width: 100%;
     display: none;
@@ -2027,7 +2076,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.492188) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.394531) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2062,7 +2111,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.539062) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.441406) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2084,7 +2133,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.546875) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.449219) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2130,7 +2179,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.554688) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.457031) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -3141,7 +3190,7 @@ body.DC_windowInactive .sessionQuestionAskQuestionResponsesRow_template.selected
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.367188) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.269531) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3265,7 +3314,7 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.339844) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.242188) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3552,7 +3601,7 @@ body.DC_windowInactive .sessionAdminPresentersAddRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0273438) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -4022,7 +4071,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.179688) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0820312) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4068,7 +4117,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.238281) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.140625) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4103,6 +4152,8 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-weight: bold;
     margin-bottom: 9px;
     margin-top: 0px;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
 }
 
 .mobilAP_field {

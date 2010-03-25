@@ -22,7 +22,7 @@
                 <div id="mobilAP_heading" class="homeTitle_template">mobilAP</div>
             </div>
             <ul apple-part="com.apple.Dashcode.part.widgetList" id="homeList" class="">
-                <li id="homeRow" apple-template="true" class="homeRow_template first" style="" onclick="mobilAP.homeSelected(event)">
+                <li id="homeRow" apple-template="true" class="homeRow_template" style="" onclick="mobilAP.homeSelected(event)">
                     <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children homeTitle_template" apple-text-overflow="ellipsis" id="homeTitle"></div>
                 </li>
             </ul>
@@ -467,6 +467,25 @@
                                 <div id="configTIMEZONE_container"></div>
                             </fieldset>
                             <div id="adminSettingsSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </div><div id="adminHome" apple-part-locked="true">
+                            <div id="adminHomeHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_subheader" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                            <div class="mobilAP_explanation">Use this tool to customize the labels and visibility on the mobilAP home screen</div>
+                            <fieldset id="adminHomeFields">
+                                <legend id="adminHomeFieldsLegend">Labels</legend>
+                                <div id="adminHomeWelcomeLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <input id="configHOME_WELCOME" type="text" name="" value="" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.textfield">
+                                <div id="configHOME_SHOW_WELCOME" class="mobilAP_switch"></div>
+                                <div id="adminHomeScheduleLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <input id="configHOME_SCHEDULE" type="text" name="" value="" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.textfield">
+                                <div id="configHOME_SHOW_SCHEDULE" class="mobilAP_switch"></div>
+                                <div id="adminHomeDirectoryLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <input id="configHOME_DIRECTORY" type="text" name="" value="" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.textfield">
+                                <div id="configHOME_SHOW_DIRECTORY" class="mobilAP_switch"></div>
+                                <div id="adminHomeAnnouncementsLabel" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_label" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <input id="configHOME_ANNOUNCEMENTS" type="text" name="" value="" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.textfield">
+                                <div id="configHOME_SHOW_ANNOUNCEMENTS" class="mobilAP_switch"></div>
+                            </fieldset>
+                            <div id="adminHomeSaveButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
                         </div><div id="adminEvaluationQuestions" apple-part-locked="true">
                             <div id="adminEvaluationQuestionsHeader" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_subheader" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
                             <div id="adminEvaluationQuestionsAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>

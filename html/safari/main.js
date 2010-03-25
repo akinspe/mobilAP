@@ -148,7 +148,7 @@ function load()
         evaluationQuestionFinishButton: document.getElementById('sessionEvaluationQuestionFinishButton')
     });
     mobilAP.sessionController.addViewController('evaluation', mobilAP.sessionEvaluationController);
-
+    
     mobilAP.sessionQuestionAdminController = new MobilAP.DesktopSessionQuestionAdminController({ 
         sessionController: mobilAP.sessionController,
         questionTextField: document.getElementById('sessionQuestionAdminQuestionTextField'),
@@ -193,6 +193,11 @@ function load()
         view: document.getElementById('admin')
     });
     mobilAP.addViewController('admin', mobilAP.adminController);
+    
+    mobilAP.homeAdminController = new MobilAP.DesktopHomeAdminController({
+        }
+    );
+    mobilAP.adminController.addViewController('Home', mobilAP.homeAdminController);
 
     mobilAP.evaluationQuestionAdminController = new MobilAP.DesktopEvaluationQuestionAdminController('adminEvaluationQuestionsList', {
        adminController: mobilAP.adminController,
@@ -1334,6 +1339,18 @@ MobilAP.DesktopAdminController = Class.create(MobilAP.AdminController, {
     }
 });
 
+MobilAP.DesktopHomeAdminController = Class.create(MobilAP.HomeAdminController, {
+    viewDidLoad: function() {
+    	document.getElementById('configHOME_WELCOME').value = mobilAP.getConfig('HOME_WELCOME');
+    	document.getElementById('configHOME_SCHEDULE').value = mobilAP.getConfig('HOME_SCHEDULE');
+    	document.getElementById('configHOME_DIRECTORY').value = mobilAP.getConfig('HOME_DIRECTORY');
+    	document.getElementById('configHOME_ANNOUNCEMENTS').value = mobilAP.getConfig('HOME_ANNOUNCEMENTS');
+    },
+    constructor: function(params) {
+        this.base(params);
+    }
+});
+
 MobilAP.DesktopEvaluationQuestionAdminController = Class.create(MobilAP.EvaluationQuestionAdminController, {
     mode: 'add',
     reloadData: function() {
@@ -1545,6 +1562,7 @@ var admin_tabs = {
 	
 	_alltabs: [
         {tab_id:"Settings",tab_title:"Settings"},
+        {tab_id:"Home",tab_title:"Home List"},
         {tab_id:"EvaluationQuestions",tab_title:"Evaluation Questions"},
         {tab_id:"Sessions",tab_title:"Sessions"}
     ],
@@ -2143,4 +2161,31 @@ function adminSessionsToggleEdit(event)
     if (mobilAP.isAdmin()) {
         mobilAP.sessionsAdminController.toggleEditMode();
     }
+}
+
+
+function adminHomeSave(event)
+{
+    var params = {
+        S: {
+        	HOME_WELCOME: document.getElementById('configHOME_WELCOME').value,
+        	HOME_SCHEDULE: document.getElementById('configHOME_SCHEDULE').value,
+        	HOME_DIRECTORY: document.getElementById('configHOME_DIRECTORY').value,
+        	HOME_ANNOUNCEMENTS: document.getElementById('configHOME_ANNOUNCEMENTS').value,
+		},
+        B: {
+            HOME_SHOW_WELCOME: document.getElementById('configHOME_SHOW_WELCOME').object.intValue(),
+            HOME_SHOW_SCHEDULE: document.getElementById('configHOME_SHOW_SCHEDULE').object.intValue(),
+            HOME_SHOW_DIRECTORY: document.getElementById('configHOME_SHOW_DIRECTORY').object.intValue(),
+            HOME_SHOW_ANNOUNCEMENTS: document.getElementById('configHOME_SHOW_ANNOUNCEMENTS').object.intValue(),
+        }
+    }
+    
+    MobilAP.saveConfigs(params, function(json) {
+        if (mobilAP.isError(json)) {
+            alert(json.error_message);
+        } else {
+            alert('Settings Saved');
+        }
+    });
 }
