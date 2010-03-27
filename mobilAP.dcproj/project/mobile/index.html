@@ -39,8 +39,8 @@
                         <ul id="scheduleListList" apple-part="com.apple.Dashcode.part.edgeToEdgeList" class="">
                             <li id="scheduleListRow" apple-template="true" class="scheduleListRow_template first" style="">
                                 <div id="scheduleListTime" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleListTime_template schedule_list_time1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis"></div>
-                                <div id="scheduleListTitle" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleListTitle_template" apple-text-overflow="ellipsis"></div>
-                                <div id="scheduleListDetail" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleListDetail_template schedule_list_detail1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis"></div>
+                                <div id="scheduleListTitle" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleListTitle_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div id="scheduleListDetail" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleListDetail_template schedule_list_detail1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
                                 <div id="scheduleListArrow" apple-part="com.apple.Dashcode.part.box" class="scheduleListArrow_template">
                                 </div>
                             </li>
@@ -54,8 +54,8 @@
                         <ul id="scheduleDayList" apple-part="com.apple.Dashcode.part.roundedRectangleList" class="">
                             <li id="scheduleDayListRow" apple-template="true" class="scheduleDayListRow_template first" style="border-top-width: 0px; ">
                                 <div id="scheduleDayTime" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleDayTime_template schedule_day_time1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis"></div>
-                                <div id="scheduleDayTitle" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleDayTitle_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
-                                <div id="scheduleDayDetail" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleDayDetail_template text1_template text1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                                <div id="scheduleDayTitle" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleDayTitle_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div id="scheduleDayDetail" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleDayDetail_template text1_template text1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
                                 <div id="scheduleDayArrow" apple-part="com.apple.Dashcode.part.box" class="scheduleDayArrow_template">
                                 </div>
                             </li>
@@ -136,8 +136,8 @@
                         <ul id="scheduleMonthList" apple-part="com.apple.Dashcode.part.edgeToEdgeList" class="">
                             <li id="scheduleMonthListRow" apple-template="true" class="scheduleMonthListRow_template first" style="">
                                 <div id="scheduleMonthTime" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleMonthTime_template text1_template text1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis"></div>
-                                <div id="scheduleMonthTitle" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleMonthTitle_template" apple-text-overflow="ellipsis"></div>
-                                <div id="scheduleMonthDetail" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleMonthDetail_template schedule_month_detail1_template schedule_month_detail1_template schedule_month_detail1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                                <div id="scheduleMonthTitle" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleMonthTitle_template" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                                <div id="scheduleMonthDetail" apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children scheduleMonthDetail_template schedule_month_detail1_template schedule_month_detail1_template schedule_month_detail1_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
                                 <div id="scheduleMonthArrow" apple-part="com.apple.Dashcode.part.box" class="scheduleMonthArrow_template">
                                 </div>
                             </li>
@@ -149,6 +149,9 @@
                     </li>
                 </ul>
             </div><div id="directory" apple-part-locked="true">
+                <div id="directorySearchBox">
+                    <input id="directorySearch" type="search" value="" placeholder="filter" results="10" incremental="incremental" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.searchfield" name="" onkeyup="searchDirectory(event)">
+                </div>
                 <ul id="directoryList" apple-part="com.apple.Dashcode.part.edgeToEdgeList" class="">
                     <li id="directoryListRow" apple-template="true" class="directoryListRow_template first" style="">
                         <div id="directoryName" class="directoryName_template">
@@ -331,8 +334,8 @@
                     <div class="mobilAP_label" id="loginUserIDLabel">email</div>
                     <input type="text" id="loginUserID" class="mobilAP_field">
                     <div id="loginPasswordFields">
-                    <div class="mobilAP_label" id="loginUserPasswordLabel">password</div>
-                    <input type="password" id="loginPassword" class="mobilAP_field">
+                        <div class="mobilAP_label" id="loginUserPasswordLabel">password</div>
+                        <input type="password" id="loginPassword" class="mobilAP_field">
                     </div>
                     <div id="loginResult">Logging in...</div>
                     <div id="loginCreateNewUserButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>

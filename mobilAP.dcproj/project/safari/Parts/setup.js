@@ -59,18 +59,18 @@ var dashcodePartSpecs = {
     "configUSE_PRESENTER_PASSWORDS_Label": { "text": "Require password for presenters", "view": "DC.Text" },
     "detailStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }], "view": "DC.StackLayout" },
     "directoryAdminAddButton": { "initialHeight": 25, "initialWidth": 49, "leftImageWidth": 5, "onclick": "directoryAdminAdd", "rightImageWidth": 5, "text": "+", "view": "DC.PushButton" },
-    "directoryFirstName": { "propertyValues": { "textBinding": { "keypath": "*.FirstName" } }, "text": "Item", "view": "DC.Text" },
-    "directoryLastName": { "propertyValues": { "textBinding": { "keypath": "*.LastName" } }, "text": "Text", "view": "DC.Text" },
-    "directoryList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "directoryFirstName", "listStyle": "List.DESKTOP_LIST", "propertyValues": { "dataArrayBinding": { "keypath": "users.content" } }, "sampleRows": 9, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
-    "directoryOrganization": { "propertyValues": { "textBinding": { "keypath": "*.organization" } }, "text": "Text", "view": "DC.Text" },
+    "directoryFirstName": { "text": "Item", "view": "DC.Text" },
+    "directoryLastName": { "text": "Text", "view": "DC.Text" },
+    "directoryList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "MobilAP.DataSourceStub", "labelElementId": "directoryFirstName", "listStyle": "List.DESKTOP_LIST", "sampleRows": 9, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
+    "directoryOrganization": { "text": "Text", "view": "DC.Text" },
     "directoryProfileAdminCancelButton": { "initialHeight": 25, "initialWidth": 80, "leftImageWidth": 5, "onclick": "directoryAdminCancelEdit", "rightImageWidth": 5, "text": "Don't Save", "view": "DC.PushButton" },
     "directoryProfileAdminDeleteButton": { "initialHeight": 25, "initialWidth": 79, "leftImageWidth": 5, "onclick": "directoryAdminDelete", "rightImageWidth": 5, "text": "Delete", "view": "DC.PushButton" },
     "directoryProfileAdminEditButton": { "initialHeight": 25, "initialWidth": 64, "leftImageWidth": 5, "onclick": "directoryAdminToggleEdit", "rightImageWidth": 5, "text": "Edit", "view": "DC.PushButton" },
-    "directoryProfileEmail": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.email" } }, "text": "email", "view": "DC.Text" },
-    "directoryProfileFirstName": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.FirstName" } }, "text": "First Name", "view": "DC.Text" },
-    "directoryProfileImageContainer": { "propertyValues": { "srcBinding": { "keypath": "directoryList.selection.imageThumbURL" } }, "view": "DC.ImageLayout" },
-    "directoryProfileLastName": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.LastName" } }, "text": "Last Name", "view": "DC.Text" },
-    "directoryProfileOrganization": { "propertyValues": { "textBinding": { "keypath": "directoryList.selection.organization" } }, "text": "Organization", "view": "DC.Text" },
+    "directoryProfileEmail": { "text": "email", "view": "DC.Text" },
+    "directoryProfileFirstName": { "text": "First Name", "view": "DC.Text" },
+    "directoryProfileImageContainer": { "view": "DC.ImageLayout" },
+    "directoryProfileLastName": { "text": "Last Name", "view": "DC.Text" },
+    "directoryProfileOrganization": { "text": "Organization", "view": "DC.Text" },
     "directoryProfileResetPasswordButton": { "initialHeight": 25, "initialWidth": 136, "leftImageWidth": 5, "onclick": "directoryAdminResetPassword", "rightImageWidth": 5, "text": "Reset Password", "view": "DC.PushButton" },
     "evaluationQuestionResponsesText": { "text": "Item", "view": "DC.Text" },
     "homeList": { "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "homeTitle", "listStyle": "List.DESKTOP", "propertyValues": { "dataArrayBinding": { "keypath": "homeData.content" } }, "sampleRows": 10, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
@@ -211,6 +211,7 @@ var dashcodePartSpecs = {
     "splitLayout": { "flexibleViewIndex": 1, "initialSize": 728, "initialSplitterSize": 1, "isVertical": true, "splitterPosition": 171, "view": "DC.SplitLayout" },
     "welcomeText": { "text": "Welcome", "view": "DC.Text" }
 };
+
 
 
 

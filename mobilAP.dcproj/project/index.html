@@ -22,7 +22,7 @@
                 <div id="mobilAP_heading" class="homeTitle_template">mobilAP</div>
             </div>
             <ul apple-part="com.apple.Dashcode.part.widgetList" id="homeList" class="">
-                <li id="homeRow" apple-template="true" class="homeRow_template" style="" onclick="mobilAP.homeSelected(event)">
+                <li id="homeRow" apple-template="true" class="homeRow_template first" style="" onclick="mobilAP.homeSelected(event)">
                     <div apple-part="com.apple.Dashcode.part.webtext" class="apple-text apple-no-children homeTitle_template" apple-text-overflow="ellipsis" id="homeTitle"></div>
                 </li>
             </ul>
@@ -70,6 +70,7 @@
                         </div>
                     </div>
                     <div id="directoryListPanel">
+                        <input id="directorySearch" type="search" value="" placeholder="" results="10" incremental="incremental" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.searchfield" onkeyup="searchDirectory(event)">
                         <ul id="directoryList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
                             <li id="directoryRow" apple-template="true" class="directoryRow_template first" style="">
                                 <div id="directoryName" class="directoryName_template">

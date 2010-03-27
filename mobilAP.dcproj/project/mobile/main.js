@@ -81,6 +81,7 @@ function load()
     mobilAP.addViewController('directoryProfile', mobilAP.profileController);
     
     mobilAP.directoryController = new MobilAP.MobileDirectoryController('directoryList',{
+    	directorySearch: document.getElementById('directorySearch'),
         profileController: mobilAP.profileController
     });
     mobilAP.addViewController('directory', mobilAP.directoryController);
@@ -512,18 +513,56 @@ MobilAP.MobileDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCont
 });
 
 MobilAP.MobileDirectoryController = Class.create(MobilAP.DirectoryController, {
-    viewDidUnload: function() {
-  //      this.stopReloadTimer();
-    },
     viewDidLoad: function() {
         this.clearSelection();
+    },
+    content: function() {
+    	return this._content;
+    },
+    reloadData: function() {
+    	this._content = this._dataSource.content();
+    	this.object.reloadData();
     },
     rowSelected: function(change, keyPath) {
     	this.base(change,keyPath);
         if (this.user) {
            mobilAP.loadView('directoryProfile', this.user.getFullName());
         }
-
+ 
+    },
+    objectForRow: function() {
+    },
+    representationForRow: function(rowIndex) {
+        return this.content()[rowIndex];
+    },
+	prepareRow: function(rowElement, rowIndex, templateElements) {
+		var user = this.representationForRow(rowIndex);
+		templateElements.directoryFirstName.innerHTML = user.FirstName;
+		templateElements.directoryLastName.innerHTML = user.LastName;
+		templateElements.directoryOrganization.innerHTML = user.organization;
+	},
+	filter: function(searchValue) {
+		searchValue = searchValue.toLowerCase();
+		for (var i=0; i<this.object.rows.length;i++) {
+			var row = this.object.rows[i];
+            if (this._content[i].FirstName.toLowerCase().match(searchValue) ||
+                this._content[i].LastName.toLowerCase().match(searchValue) ||
+                this._content[i].organization.toLowerCase().match(searchValue)) {
+                row.style.display='';
+            } else {
+                row.style.display='none';
+            }
+		}
+	},
+    numberOfRows: function() {
+		return this.content().length
+    },
+    constructor: function(part_id,params) {
+    	this.base(part_id,params);
+		this._dataSource = dashcode.getDataSource('users');
+		this._content = this._dataSource.content() || [];
+		this._dataSource.addObserverForKeyPath(this, this.reloadData, "content");
+        this.object.setDataSource(this);
     }
 });
 
@@ -1055,7 +1094,6 @@ function sessionSaveAdmin(event)
     }
 }
 
-
 function setScheduleMode(event)
 {
     var selectedObjects = document.getElementById('scheduleTypeList').object.selectedObjects();
@@ -1064,7 +1102,6 @@ function setScheduleMode(event)
         mobilAP.scheduleController.setScheduleType(selectedObjects[0].value);
     }
 }
-
 
 function submit_question(event) {
     mobilAP.questionController.submitQuestion();
@@ -1085,9 +1122,6 @@ function loginSubmit(event)
     mobilAP.loginController.login(userID, password);
 }
 
-
-
-
 function logoutSubmit(event)
 {
     mobilAP.loginController.logout();
@@ -1102,7 +1136,6 @@ function sessionEvaluationFinish(event)
         mobilAP.sessionController.loadView('evaluation_thanks');
     }
 }
-
 
 function sessionEvaluationPrevious(event)
 {
@@ -1175,13 +1208,10 @@ function profileCreateSubmit(event)
     
 }
 
-
 function sessionQuestionViewResults(event)
 {
     mobilAP.questionController.showResults();
 }
-
-
 
 function sessionClearDiscussion(event)
 {
@@ -1190,10 +1220,15 @@ function sessionClearDiscussion(event)
     }
 }
 
-
 function clearQuestionAnswers(event)
 {
     if (confirm('Are you sure you want to clear the question results?')) {
         mobilAP.questionController.clearAnswers();
     }
+}
+
+function searchDirectory(event)
+{
+    var searchContent = document.getElementById('directorySearch').value;
+    mobilAP.directoryController.filter(searchContent);
 }

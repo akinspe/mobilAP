@@ -12,16 +12,17 @@ var dashcodePartSpecs = {
     "back_button": { "initialHeight": 30, "initialWidth": 50, "leftImageWidth": 16, "rightImageWidth": 5, "text": "Back", "view": "DC.PushButton" },
     "browser": { "clearSelectionOnBack": true, "view": "DC.Browser" },
     "dicussion_text": { "text": "Text", "view": "DC.Text" },
-    "directoryFirstName": { "propertyValues": { "textBinding": { "keypath": "*.FirstName" } }, "text": "First", "view": "DC.Text" },
-    "directoryLastName": { "propertyValues": { "textBinding": { "keypath": "*.LastName" } }, "text": "Last", "view": "DC.Text" },
-    "directoryList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "directoryLastName", "listStyle": "List.EDGE_TO_EDGE", "propertyValues": { "dataArrayBinding": { "keypath": "users.content" } }, "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
-    "directoryOrganization": { "propertyValues": { "textBinding": { "keypath": "*.organization" } }, "text": "Organization", "view": "DC.Text" },
+    "directoryFirstName": { "text": "First", "view": "DC.Text" },
+    "directoryLastName": { "text": "Last", "view": "DC.Text" },
+    "directoryList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "MobilAP.DataSourceStub", "labelElementId": "directoryLastName", "listStyle": "List.EDGE_TO_EDGE", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
+    "directoryOrganization": { "text": "Organization", "view": "DC.Text" },
     "directoryProfileFirstName": { "propertyValues": { "textBinding": { "keypath": "profile.content.FirstName" } }, "text": "John", "view": "DC.Text" },
     "directoryProfileImage": { "view": "DC.ImageLayout" },
     "directoryProfileLabel": { "text": "label", "view": "DC.Text" },
     "directoryProfileLastName": { "propertyValues": { "textBinding": { "keypath": "profile.content.LastName" } }, "text": "Appleseed", "view": "DC.Text" },
     "directoryProfileList": { "allowsEmptySelection": true, "dataArray": ["organization", "department", "phone"], "labelElementId": "directoryProfileLabel", "listStyle": "List.ROUNDED_RECTANGLE", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "directoryProfileValue": { "text": "Item", "view": "DC.Text" },
+    "directorySearch": { "view": "DC.SearchField" },
     "evaluationQuestionFinishButton": { "initialHeight": 30, "initialWidth": 76, "leftImageWidth": 5, "onclick": "sessionEvaluationFinish", "rightImageWidth": 5, "text": "Finish", "view": "DC.PushButton" },
     "evaluationQuestionNextButton": { "initialHeight": 30, "initialWidth": 60, "leftImageWidth": 5, "onclick": "sessionEvaluationNext", "rightImageWidth": 16, "text": "Next", "view": "DC.PushButton" },
     "evaluationQuestionPreviousButton": { "initialHeight": 30, "initialWidth": 60, "leftImageWidth": 16, "onclick": "sessionEvaluationPrevious", "rightImageWidth": 5, "text": "Back", "view": "DC.PushButton" },
@@ -121,6 +122,8 @@ var dashcodePartSpecs = {
     "setupLoading": { "text": "Please run mobilAP Setup from a desktop browser.", "view": "DC.Text" },
     "stackLayout": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }], "view": "DC.StackLayout" }
 };
+
+
 
 
 
