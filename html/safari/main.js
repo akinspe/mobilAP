@@ -136,12 +136,14 @@ function load()
 
     mobilAP.directoryAdminController = new MobilAP.DesktopDirectoryAdminController({
         directoryController: mobilAP.directoryController,
+        profileImage: document.getElementById('directoryProfileImage').object,
         profileFirstNameField: document.getElementById('directoryProfileFirstNameField'),
         profileLastNameField: document.getElementById('directoryProfileLastNameField'),
         profileOrganizationField: document.getElementById('directoryProfileOrganizationField'),
         profileEmailField: document.getElementById('directoryProfileEmailField'),
         profileAdminSwitch: new MobilAP.Switch('directoryProfileAdminSwitch'),
-        profileUploadForm: document.getElementById('directoryProfileUploadForm')
+        profileUploadForm: document.getElementById('directoryProfileUploadForm'),
+        profileImageFile: document.getElementById('directoryProfileImageFile')
     });
     
     mobilAP.sessionEvaluationController = new MobilAP.DesktopSessionEvaluationController({
@@ -1075,6 +1077,7 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
         this.profileOrganizationField.value = this.user.organization;
         this.profileEmailField.value = this.user.email;
         this.profileAdminSwitch.setValue(this.user.admin);
+        this.profileImageFile.value = '';
     },
     userDidChange: function(change,keyPath) {
         if (change.newValue) {
@@ -1087,6 +1090,9 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
     processImageUpload: function(data) {
         if (this.isError(data)) {
             alert("Error uploading image: "+ data.error_message);
+        } else {
+        	var now = new Date();
+        	this.profileImage.setSrc(this.user.imageThumbURL + '?t=' + now.getTime());
         }
     },
     saveUser: function(user, callback) {

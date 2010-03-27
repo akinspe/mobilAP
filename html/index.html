@@ -39,10 +39,6 @@
                     <div id="directoryProfilePanel">
                         <div id="directoryProfileImageContainer">
                             <img id="directoryProfileImage" src="Images/profile_placeholder.png">
-                            <div id="directoryProfileImageUpload" class="profileUpdateField"><form method="POST" action="../mobilAP/user.php" id="directoryProfileUploadForm" enctype="multipart/form-data">
-                                    <input id="directoryProfileImageFile" type="file" name="directoryProfileImageFile">
-                                </form>
-                            </div>
                         </div>
                         <div id="directoryProfileFirstNameEdit" class="profileEditField">first
                             <input id="directoryProfileFirstNameField" type="text" name="" value="" class="mobilAP_adminfield">
@@ -62,6 +58,8 @@
                         <div id="directoryProfileEmail" class="profileEditLabel" onclick="mailto(event)"></div>
                         <div id="directoryProfileAdminSwitchEdit" class="profileEditField">admin
                             <div id="directoryProfileAdminSwitch"></div></div>
+                        <div id="directoryProfileImageUpload" class="profileEditField"><form method="POST" action="../mobilAP/user.php" id="directoryProfileUploadForm" enctype="multipart/form-data">image<input id="directoryProfileImageFile" type="file" name="directoryProfileImageFile" class="mobilAP_adminfield">
+                            </form></div>
                         <div id="directoryProfileResetPasswordButton" class="profileEditField profileUpdateField"></div>
                         <div id="directoryProfileAdminPanelButtons" class="mobilAP_admin">
                             <div id="directoryProfileAdminEditButton"></div>
