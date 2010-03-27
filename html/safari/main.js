@@ -118,7 +118,13 @@ function load()
     );
     mobilAP.addViewController('announcements', mobilAP.announcementsController);
 
-    mobilAP.profileController = new MobilAP.DesktopProfileController();
+    mobilAP.profileController = new MobilAP.DesktopProfileController({
+        profileImage: document.getElementById('directoryProfileImage').object,
+        profileFirstName: document.getElementById('directoryProfileFirstName'),
+        profileLastName: document.getElementById('directoryProfileLastName'),
+        profileOrganization: document.getElementById('directoryProfileOrganization'),
+        profileEmail: document.getElementById('directoryProfileEmail')
+	});
 
     mobilAP.directoryController = new MobilAP.DesktopDirectoryController('directoryList',{
     	listPanel: document.getElementById('directoryListPanel'),
@@ -1038,6 +1044,17 @@ MobilAP.DesktopQuestionsController = Class.create(MobilAP.ListController, {
 });
 
 MobilAP.DesktopProfileController = Class.create(MobilAP.ProfileController, {
+    setUser: function(user) {
+    	this.base(user);
+		this.profileFirstName.innerHTML = this.user.FirstName;
+		this.profileLastName.innerHTML = this.user.LastName;
+		this.profileOrganization.innerHTML = this.user.organization;
+		this.profileEmail.innerHTML = this.user.email;
+		this.profileEmail.onclick = function() {
+			window.open('mailto:' + user.email);
+		}
+		this.profileImage.setSrc(this.user.imageThumbURL);
+    }
 });
 
 MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminController, {

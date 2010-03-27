@@ -958,22 +958,12 @@ MobilAP.ScheduleListController = Class.create(MobilAP.ListController, {
     }
 });
 
-MobilAP.ProfileController = Class.create(MobilAP.DataSourceController, {
-    setUser: function(userID) {
-        dashcode.getDataSource('profile').parameters.userID=userID;
-        dashcode.getDataSource('profile').queryUpdated();
-    },
-    profile: function() {
-        return this.content();
-    },
-    profileUpdated: function() {
-    },
-    dataSourceUpdated: function(change, keyPath) {
-        this.base(change, keyPath);
-        this.profileUpdated();  
+MobilAP.ProfileController = Class.create(MobilAP.Controller, {
+    setUser: function(user) {
+    	this.user = user;
     },
     constructor: function(params) {
-        this.base('profile', params);
+        this.base(params);
     }
 });
 
@@ -1556,7 +1546,7 @@ MobilAP.DirectoryController = Class.create(MobilAP.ListController, {
     setSelectedObject: function(object) {
         if (object) {
             this.user = new MobilAP.User(object);
-            this.profileController.setUser(this.user.getUserID());
+            this.profileController.setUser(this.user);
         } else {
             this.user = null;
         }

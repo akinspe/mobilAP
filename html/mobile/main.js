@@ -77,7 +77,10 @@ function load()
     });
 
     mobilAP.profileController = new MobilAP.MobileProfileController({
-        profileList: document.getElementById('directoryProfileList').object
+        profileList: document.getElementById('directoryProfileList').object,
+        profileImage: document.getElementById('directoryProfileImage').object,
+        profileFirstName: document.getElementById('directoryProfileFirstName'),
+        profileLastName: document.getElementById('directoryProfileLastName')
     });
     mobilAP.addViewController('directoryProfile', mobilAP.profileController);
     
@@ -277,24 +280,28 @@ MobilAP.MobileProfileController = Class.create(MobilAP.ProfileController, {
     viewDidLoad: function() {
         this.profileList.clearSelection();
     },
-    profileUpdated: function() {
+    setUser: function(user) {
+    	this.base(user);
         this._profileLabels = [];
         for (var i=0; i<this._labels.length; i++) {
-            if (this.profile()[this._labels[i]]) {
+            if (this.user[this._labels[i]]) {
                 this._profileLabels.push(this._labels[i]);
             }
         }
 
+		this.profileFirstName.innerHTML = this.user.FirstName;
+		this.profileLastName.innerHTML = this.user.LastName;
+		this.profileImage.setSrc(this.user.imageThumbURL);
         this.profileList.reloadData();
     },
 	prepareRow: function(rowElement, rowIndex, templateElements) {
         templateElements.directoryProfileLabel.innerHTML = this._profileLabels[rowIndex];
-        templateElements.directoryProfileValue.innerHTML = this.profile()[this._profileLabels[rowIndex]];
+        templateElements.directoryProfileValue.innerHTML = this.user[this._profileLabels[rowIndex]];
         switch (this._profileLabels[rowIndex])
         {
             case 'email':
                 rowElement.onclick = function() {
-                    window.open('mailto:' + templateElements.profileValue.innerHTML);
+                    window.open('mailto:' + templateElements.directoryProfileValue.innerHTML);
                 }
         }
 	},
@@ -625,7 +632,6 @@ MobilAP.MobileLoginController= Class.create(MobilAP.LoginController, {
 MobilAP.MobileUserProfileController = Class.create(MobilAP.UserProfileController, {
     setUser: function(user) {
         this.base(user);
-        
     },
     viewDidLoad: function() {
         this.passwordField.value='';
