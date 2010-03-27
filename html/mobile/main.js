@@ -13,6 +13,7 @@ function load()
     //instantiate controllers    
     window.mobilAP = new MobilAP.MobileApplicationController({
         browser: document.getElementById('browser').object,
+        header: document.getElementById('header').object,
         homeList: document.getElementById('homeList').object
     });
 
@@ -179,6 +180,17 @@ MobilAP.MobileApplicationController= Class.create(MobilAP.ApplicationController,
     },
     logout: function() {
         return mobilAP.loginController.logout();
+    },
+    configUpdated: function(change,keyPath) {
+    	this.base(change,keyPath);
+    	this.updateHeader();
+    },
+    updateHeader: function() {
+    	/* this may have to be changed if the private header part changes */
+    	var stack = this.header._stack;
+    	stack[0].title = mobilAP.getConfig('SITE_TITLE');
+    	stack[0].titleElement.innerHTML = mobilAP.getConfig('SITE_TITLE');
+    	this.header._sizeChanged();
     },
     openURL: function(url) {
         //load youtube and maps urls inside the window to launch the iPhone apps
