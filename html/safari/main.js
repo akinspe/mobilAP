@@ -209,6 +209,7 @@ function load()
 
     mobilAP.evaluationQuestionAdminController = new MobilAP.DesktopEvaluationQuestionAdminController('adminEvaluationQuestionsList', {
        adminController: mobilAP.adminController,
+       questionNotice: document.getElementById('adminEvaluationQuestionNotice'),
        questionTextField : document.getElementById('adminEvaluationQuestionsQuestionText'),
        questionResponseTypeField : document.getElementById('adminEvaluationQuestionsQuestionResponseType'),
        questionResponses : document.getElementById('adminEvaluationQuestionsQuestionResponses'),
@@ -1427,6 +1428,11 @@ MobilAP.DesktopEvaluationQuestionAdminController = Class.create(MobilAP.Evaluati
         document.getElementById('adminEvaluationQuestionsQuestion').style.display = 'none';
     },
     viewDidLoad: function() {
+    	if (dashcode.getDataSource('evaluation').content().length) {
+	    	this.questionNotice.innerHTML = '';
+    	} else {
+	    	this.questionNotice.innerHTML = 'No questions have been added';
+    	}
         this.reset();
     },
     _processXHR: function(json) {
