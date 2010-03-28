@@ -5,6 +5,10 @@
  code generator otherwise the changes will be lost.
  */
 var dashcodePartSpecs = {
+    "adminContentHeader": { "text": "Content", "view": "DC.Text" },
+    "adminContentWebClipIconImage": { "view": "DC.ImageLayout" },
+    "adminContentWebclipIconLabel": { "text": "Mobile home screen icon:", "view": "DC.Text" },
+    "adminContentWebClipUpload": { "initialHeight": 30, "initialWidth": 82, "leftImageWidth": 5, "onclick": "adminWebclipIconUpload", "rightImageWidth": 5, "text": "Upload", "view": "DC.PushButton" },
     "adminEvaluationQuestionsAddButton": { "initialHeight": 30, "initialWidth": 121, "leftImageWidth": 5, "onclick": "evaluationQuestionAddQuestion", "rightImageWidth": 5, "text": "New Question", "view": "DC.PushButton" },
     "adminEvaluationQuestionsCancel": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionCancel", "rightImageWidth": 5, "text": "Cancel", "view": "DC.PushButton" },
     "adminEvaluationQuestionsDelete": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionDelete", "rightImageWidth": 5, "text": "Delete", "view": "DC.PushButton" },
@@ -32,7 +36,7 @@ var dashcodePartSpecs = {
     "adminSettingsHeader": { "text": "Settings", "view": "DC.Text" },
     "adminSettingsSaveButton": { "initialHeight": 30, "initialWidth": 111, "leftImageWidth": 5, "onclick": "adminSettingsSave", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
     "adminTabbar": { "allowsEmptySelection": true, "dataArray": [["Settings", "settings"], ["Evaluation Questions", "evaluation_questions"], ["Something", "something"]], "dataSourceName": "admin_tabs", "labelElementId": "adminTabTitle", "listStyle": "List.DESKTOP_LIST", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
-    "adminTabs": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }], "view": "DC.StackLayout" },
+    "adminTabs": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }], "view": "DC.StackLayout" },
     "adminTabTitle": { "text": "Item", "view": "DC.Text" },
     "announcementAdminCancelButton": { "initialHeight": 30, "initialWidth": 82, "leftImageWidth": 5, "onclick": "announcementAdminCancel", "rightImageWidth": 5, "text": "Cancel", "view": "DC.PushButton" },
     "announcementAdminSaveButton": { "initialHeight": 30, "initialWidth": 71, "leftImageWidth": 5, "onclick": "announcementSave", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
@@ -211,6 +215,8 @@ var dashcodePartSpecs = {
     "splitLayout": { "flexibleViewIndex": 1, "initialSize": 728, "initialSplitterSize": 1, "isVertical": true, "splitterPosition": 171, "view": "DC.SplitLayout" },
     "welcomeText": { "text": "Welcome", "view": "DC.Text" }
 };
+
+
 
 
 

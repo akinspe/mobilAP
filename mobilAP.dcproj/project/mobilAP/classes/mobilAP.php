@@ -408,6 +408,41 @@ class mobilAP
     {
         return mobilAP_user::getUsers();
     }
+    
+    function uploadWebClipIcon($file) {
+		$file_keys = array('name','type','tmp_name','error','size');
+
+		$target = sprintf('%s%smobilAP%sdata%sWebClipIcon.png', MOBILAP_BASE, DIRECTORY_SEPARATOR,DIRECTORY_SEPARATOR,DIRECTORY_SEPARATOR);
+		
+        
+		if (!is_writable($target)) {
+			return mobilAP_Error::throwError("Cannot write to $target");
+		}
+		
+        //make sure the array is a valid php upload array
+        if (isset($file['tmp_name']) && isset($file['type'])) {
+
+			if (is_uploaded_file($file['tmp_name'])) {
+				if ($file['type'] != 'image/png') {
+					return mobilAP_Error::throwError("Image must be PNG");
+				}
+				
+				$imagesize = getimagesize($file['tmp_name']);
+				if ($imagesize[0] != 57 || $imagesize[1] != 57) {
+					return mobilAP_Error::throwError("Image must be 57 x 57 pixels");
+				}
+				
+				if (!move_uploaded_file($file['tmp_name'], $target)) {
+					return mobilAP_Error::throwError("Error saving file");
+				}
+				
+				return true;
+	
+			}
+		}
+        
+        return new mobilAP_Error("No file uploaded");
+    }
 
 }
 

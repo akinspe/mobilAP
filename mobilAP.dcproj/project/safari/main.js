@@ -201,6 +201,12 @@ function load()
         view: document.getElementById('admin')
     });
     mobilAP.addViewController('admin', mobilAP.adminController);
+
+    mobilAP.contentAdminController = new MobilAP.DesktopContentAdminController({
+        webclipUploadForm: document.getElementById('adminContentUploadForm'),
+        webclipImage: document.getElementById('adminContentWebClipIconImage').object,
+        webclipUploadFile: document.getElementById('adminContentWebclipIcon')
+    });
     
     mobilAP.homeAdminController = new MobilAP.DesktopHomeAdminController({
         }
@@ -1404,6 +1410,30 @@ MobilAP.DesktopAdminController = Class.create(MobilAP.AdminController, {
     }
 });
 
+MobilAP.DesktopContentAdminController = Class.create(MobilAP.ContentAdminController, {
+    uploadWebClipIcon:function() {
+        var self = this;
+        var params = {
+            post: 'updateIcon'
+        }
+        
+        this.uploadFile(this.webclipUploadForm, params, function(data) {
+            if (self.isError(data)) {
+                alert("Error uploading image: "+ data.error_message);
+            } else {
+                var now = new Date();
+                self.webclipImage.setSrc(self.webclipURL + '?t=' + now.getTime());
+                self.webclipUploadFile.value = '';
+                alert("Icon updated");
+            }
+        });
+    },
+    constructor: function(params) {
+        this.base(params);
+        this.webclipURL = this.webclipImage.src();
+    }
+})
+
 MobilAP.DesktopHomeAdminController = Class.create(MobilAP.HomeAdminController, {
     viewDidLoad: function() {
     	document.getElementById('configHOME_WELCOME').value = mobilAP.getConfig('HOME_WELCOME');
@@ -1634,7 +1664,8 @@ var admin_tabs = {
         {tab_id:"Settings",tab_title:"Settings"},
         {tab_id:"Home",tab_title:"Home List"},
         {tab_id:"EvaluationQuestions",tab_title:"Evaluation Questions"},
-        {tab_id:"Sessions",tab_title:"Sessions"}
+        {tab_id:"Sessions",tab_title:"Sessions"},
+        {tab_id:"Content",tab_title:"Content"}
     ],
     tabs: function() {
         var tabs = [];
@@ -2265,4 +2296,10 @@ function searchDirectory(event)
 {
     var searchContent = document.getElementById('directorySearch').value;
     mobilAP.directoryController.filter(searchContent);
+}
+
+
+function adminWebclipIconUpload(event)
+{
+    mobilAP.contentAdminController.uploadWebClipIcon();
 }
