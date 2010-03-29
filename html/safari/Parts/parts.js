@@ -15,7 +15,6 @@ if(!window.dashcode){dashcode=new Object()}dashcode.setupParts=function(){if(das
 var dashcodePartSpecs = {
     "adminContentHeader": { "text": "Content", "view": "DC.Text" },
     "adminContentWebClipIconImage": { "view": "DC.ImageLayout" },
-    "adminContentWebclipIconLabel": { "text": "Mobile home screen icon:", "view": "DC.Text" },
     "adminContentWebClipUpload": { "initialHeight": 30, "initialWidth": 82, "leftImageWidth": 5, "onclick": "adminWebclipIconUpload", "rightImageWidth": 5, "text": "Upload", "view": "DC.PushButton" },
     "adminEvaluationQuestionsAddButton": { "initialHeight": 30, "initialWidth": 121, "leftImageWidth": 5, "onclick": "evaluationQuestionAddQuestion", "rightImageWidth": 5, "text": "New Question", "view": "DC.PushButton" },
     "adminEvaluationQuestionsCancel": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionCancel", "rightImageWidth": 5, "text": "Cancel", "view": "DC.PushButton" },
@@ -223,6 +222,7 @@ var dashcodePartSpecs = {
     "splitLayout": { "flexibleViewIndex": 1, "initialSize": 728, "initialSplitterSize": 1, "isVertical": true, "splitterPosition": 171, "view": "DC.SplitLayout" },
     "welcomeText": { "text": "Welcome", "view": "DC.Text" }
 };
+
 
 
 

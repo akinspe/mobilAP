@@ -532,14 +532,16 @@
                             </ul>
                         </div><div id="adminContent">
                             <div id="adminContentHeader" class="mobilAP_subheader"></div>
-                            <div id="adminContentWebclipIconLabel" class="mobilAP_label"></div>
-                            <form method="POST" action="../mobilAP/admin.php" id="adminContentUploadForm" enctype="multipart/form-data">
-                                <div id="adminContentWebClipIconImage">
-                                    <img id="adminContentWebClipIconImage_img" class="" src="../mobilAP/data/WebClipIcon.png">
-                                </div>
-                                <input id="adminContentWebclipIcon" type="file" name="adminContentWebclipIcon">
-                                <div id="adminContentWebClipUpload"></div>
-                            </form>
+                            <fieldset id="adminContentWebClip">
+                                <legend id="adminContentWebClipLegend">Mobile home screen icon</legend>
+                                <form method="POST" action="../mobilAP/admin.php" id="adminContentUploadForm" enctype="multipart/form-data">
+                                    <div id="adminContentWebClipIconImage">
+                                        <img id="adminContentWebClipIconImage_img" src="../mobilAP/data/WebClipIcon.png">
+                                    </div>
+                                    <input id="adminContentWebclipIcon" type="file" name="adminContentWebclipIcon">
+                                    <div id="adminContentWebClipUpload"></div>
+                                </form>
+                            </fieldset>
                         </div></div>
                 </div><div id="announcements">
                     <div id="annoucementsHeader" class="mobilAP_header">Announcements</div>

@@ -370,7 +370,7 @@ body.DC_windowInactive .homeRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0390625) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.03125) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -1524,7 +1524,7 @@ body.DC_windowInactive .sessionQuestionAdminResponsesRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0664062) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0585938) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -1820,7 +1820,7 @@ body.DC_windowInactive .adminTabbarRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.5) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.492188) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -2090,7 +2090,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.34375) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.335938) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2125,7 +2125,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.390625) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.382812) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2147,7 +2147,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.398438) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.390625) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2193,7 +2193,7 @@ body.DC_windowInactive .adminEvaluationQuestionsQuestionResponsesRow_template.se
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.40625) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.398438) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     -webkit-dashboard-region: dashboard-region(control rectangle);
@@ -2261,7 +2261,7 @@ body.DC_windowInactive .adminSessionsRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.574219) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.566406) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -2284,7 +2284,6 @@ body.DC_windowInactive .adminSessionsRow_template.selected {
     margin-right: 438px;
     margin-left: 9px;
 }
-
 
 #session {
     width: 100%;
@@ -3241,7 +3240,7 @@ body.DC_windowInactive .sessionQuestionAskQuestionResponsesRow_template.selected
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.21875) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.210938) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -3365,7 +3364,7 @@ body.DC_windowInactive .sessionQuestionResultsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.191406) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.183594) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4122,7 +4121,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.03125) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0234375) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -4168,7 +4167,7 @@ body.DC_windowInactive .announcementsListRow_template.selected {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.0898438) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.0820312) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
