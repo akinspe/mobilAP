@@ -35,6 +35,7 @@
                     <div id="directoryHeader" class="mobilAP_header">Directory</div>
                     <div id="directoryAdminButtons" class="mobilAP_admin">
                         <div id="directoryAdminAddButton"></div>
+                        <div id="directoryAdminImportButton"></div>
                     </div>
                     <div id="directoryProfilePanel">
                         <div id="directoryProfileImageContainer">
@@ -68,7 +69,7 @@
                         </div>
                     </div>
                     <div id="directoryListPanel">
-                        <input id="directorySearch" type="search" value="" placeholder="" results="10" incremental="incremental" onkeyup="searchDirectory(event)">
+                        <input id="directorySearch" type="search" value="" placeholder="" results="10" incremental="incremental" onkeyup="searchDirectory(event)" onchange="searchDirectory(event)" onsearch="searchDirectory(event)">
                         <ul id="directoryList" class="mobilAP_list">
                             <li id="directoryRow" class="directoryRow_template first" style="">
                                 <div id="directoryName" class="directoryName_template">
@@ -79,6 +80,29 @@
                             </li>
                         </ul>
                     </div>
+                </div><div id="directoryImport"><div id="directoryImportHeader" class="mobilAP_header">Directory Import</div>
+                    <div id="directoryImportExplain" class="mobilAP_explanation"></div>
+                    <fieldset id="directoryImportUpload">
+                        <legend id="directoryImportUpload_Legend">Upload file</legend>
+                        <form method="POST" action="../mobilAP/user.php" id="directoryImportUploadForm" enctype="multipart/form-data">
+                            <label id="directoryImportUploadLabel" class="mobilAP_label">Select File</label>
+                            <input id="directoryImportFile" type="file" name="directoryImportFile">
+                            <div id="directoryImportUploadButton"></div>
+                        </form>
+                    </fieldset>
+                    <div id="directoryImportActions">
+                        <div id="directoryImportAddAllButton"></div>
+                        <div id="directoryImportNote"></div>
+                    </div>
+                    <ul id="directoryImportList">
+                        <li id="directoryImportRow" class="directoryImportRow_template first" style="">
+                            <div id="importFirstName" class="importFirstName_template"></div>
+                            <div id="importLastName" class="importLastName_template"></div>
+                            <div id="importEmail" class="importEmail_template"></div>
+                            <div id="importOrganization" class="importOrganization_template"></div>
+                            <div id="importAddButton" class="importAddButton_template"></div>
+                        </li>
+                    </ul>
                 </div><div id="schedule">
                     <div id="scheduleHeader" class="mobilAP_header">Schedule</div>
                     <ul id="scheduleTypeList" class="mobilAP_list">

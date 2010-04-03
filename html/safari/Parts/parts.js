@@ -68,9 +68,15 @@ var dashcodePartSpecs = {
     "configUSE_ADMIN_PASSWORDS_Label": { "text": "Require Password for admins", "view": "DC.Text" },
     "configUSE_PASSWORDS_Label": { "text": "Use Passwords", "view": "DC.Text" },
     "configUSE_PRESENTER_PASSWORDS_Label": { "text": "Require password for presenters", "view": "DC.Text" },
-    "detailStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }], "view": "DC.StackLayout" },
+    "detailStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "dissolve" }], "view": "DC.StackLayout" },
     "directoryAdminAddButton": { "initialHeight": 25, "initialWidth": 49, "leftImageWidth": 5, "onclick": "directoryAdminAdd", "rightImageWidth": 5, "text": "+", "view": "DC.PushButton" },
+    "directoryAdminImportButton": { "initialHeight": 25, "initialWidth": 80, "leftImageWidth": 5, "onclick": "directoryAdminImport", "rightImageWidth": 5, "text": "Import", "view": "DC.PushButton" },
     "directoryFirstName": { "text": "Item", "view": "DC.Text" },
+    "directoryImportAddAllButton": { "initialHeight": 25, "initialWidth": 83, "leftImageWidth": 5, "onclick": "directoryImportAddAll", "rightImageWidth": 5, "text": "Add All", "view": "DC.PushButton" },
+    "directoryImportExplain": { "text": "Use this utility to import users using a tab-delimited file", "view": "DC.Text" },
+    "directoryImportList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "MobilAP.DataSourceStub", "labelElementId": "importFirstName", "listStyle": "List.DESKTOP_LIST", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
+    "directoryImportNote": { "text": "Text", "view": "DC.Text" },
+    "directoryImportUploadButton": { "initialHeight": 30, "initialWidth": 82, "leftImageWidth": 5, "onclick": "directoryImportUpload", "rightImageWidth": 5, "text": "Upload", "view": "DC.PushButton" },
     "directoryLastName": { "text": "Text", "view": "DC.Text" },
     "directoryList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "MobilAP.DataSourceStub", "labelElementId": "directoryFirstName", "listStyle": "List.DESKTOP_LIST", "sampleRows": 9, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "directoryOrganization": { "text": "Text", "view": "DC.Text" },
@@ -86,6 +92,11 @@ var dashcodePartSpecs = {
     "evaluationQuestionResponsesText": { "text": "Item", "view": "DC.Text" },
     "homeList": { "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "homeTitle", "listStyle": "List.DESKTOP", "propertyValues": { "dataArrayBinding": { "keypath": "homeData.content" } }, "sampleRows": 10, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "homeTitle": { "propertyValues": { "textBinding": { "keypath": "*.title" } }, "text": "Title", "view": "DC.Text" },
+    "importAddButton": { "initialHeight": 20, "initialWidth": 65, "leftImageWidth": 5, "rightImageWidth": 5, "text": "Add", "view": "DC.PushButton" },
+    "importEmail": { "text": "Email", "view": "DC.Text" },
+    "importFirstName": { "text": "FirstName", "view": "DC.Text" },
+    "importLastName": { "text": "LastName", "view": "DC.Text" },
+    "importOrganization": { "text": "Organization", "view": "DC.Text" },
     "login_pword_label": { "text": "password", "view": "DC.Text" },
     "login_userID_label": { "text": "email", "view": "DC.Text" },
     "loginCreateNewUserButton": { "initialHeight": 30, "initialWidth": 149, "leftImageWidth": 5, "onclick": "createNewUser", "rightImageWidth": 5, "text": "Create an Account", "view": "DC.PushButton" },
@@ -222,6 +233,9 @@ var dashcodePartSpecs = {
     "splitLayout": { "flexibleViewIndex": 1, "initialSize": 728, "initialSplitterSize": 1, "isVertical": true, "splitterPosition": 171, "view": "DC.SplitLayout" },
     "welcomeText": { "text": "Welcome", "view": "DC.Text" }
 };
+
+
+
 
 
 

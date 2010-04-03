@@ -195,7 +195,42 @@ class mobilAP_User
 
 		return $data;
 	}
-	
+
+    function uploadImportFile($file)
+    {
+		ini_set('auto_detect_line_endings', 1);
+		$file_keys = array('name','type','tmp_name','error','size');
+		$fileName = isset($file['tmp_name']) ? $file['tmp_name'] : '';
+		$delimiter = "\t";
+        
+        if (is_uploaded_file($fileName)) {
+			$field_count = 4;
+			$users = array();
+
+			if (!$handle = fopen($fileName, "r")) {
+				return mobilAP_Error::throwError("Error reading $fileName");
+			}
+			
+			while ( ($line = fgetcsv($handle, 0, $delimiter)) !== FALSE)
+			{
+				if (count($line)==$field_count) {
+                    $user = new mobilAP_User();
+                    $user->setName($line[0], $line[1]);
+                    $user->setEmail($line[2]);
+                    $user->setOrganization($line[3]);
+                    if ($user->validUser() && !mobilAP_user::getUserIDFromEmail($user->email)) {
+                        $users[] = $user;
+                    }
+				}
+			}
+			
+			fclose($handle);	
+			return $users;
+		}
+        
+        return new mobilAP_Error("File not uploaded");
+    }
+    
     public function loadFromSession()
     {
     	$userSession = new mobilAP_UserSession();
@@ -209,6 +244,17 @@ class mobilAP_User
 				return mobilAP_Error::throwError("User $userID not found");
 			}
 		}
+    }
+    
+    public function validUser()
+    {
+		if (!mobilAP_utils::is_validEmail($this->email)) {
+			return false;
+		} elseif (strlen($this->FirstName)==0 || strlen($this->LastName)==0) {
+			return false;
+        }
+        
+        return true;
     }
 
     public function addUser($admin_userID)

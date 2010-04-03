@@ -146,6 +146,16 @@ function load()
         profileImageFile: document.getElementById('directoryProfileImageFile')
     });
     
+    mobilAP.directoryImportController = new MobilAP.DesktopDirectoryImportController({
+        directoryImportForm: document.getElementById('directoryImportUploadForm'),
+        directoryImportFile: document.getElementById('directoryImportFile'),
+        directoryImportList: document.getElementById('directoryImportList').object,
+        directoryImportActions: document.getElementById('directoryImportActions'),
+        directoryImportAddAllButton: document.getElementById('directoryImportAddAllButton').object,
+        directoryImportNote: document.getElementById('directoryImportNote')
+    });
+    mobilAP.addViewController('directoryImport', mobilAP.directoryImportController);
+    
     mobilAP.sessionEvaluationController = new MobilAP.DesktopSessionEvaluationController({
         sessionController: mobilAP.sessionController,
         evaluationQuestionText: document.getElementById('sessionEvaluationQuestionText'),
@@ -1062,7 +1072,9 @@ MobilAP.DesktopProfileController = Class.create(MobilAP.ProfileController, {
 		this.profileEmail.onclick = function() {
 			window.open('mailto:' + user.email);
 		}
-		this.profileImage.setSrc(this.user.imageThumbURL);
+		
+		var imageURL = this.user.imageThumbURL ? this.user.imageThumbURL : 'Images/profile_placeholder.png';
+		this.profileImage.setSrc(imageURL);
     }
 });
 
@@ -1132,6 +1144,99 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
     constructor: function(params) {
         this.base(params);
         this.directoryController.addObserverForKeyPath(this, this.userDidChange, "user");
+    }
+});
+
+MobilAP.DesktopDirectoryImportController = Class.create(MobilAP.DirectoryImportController, {
+    importList: [],
+    numberOfRows: function() {
+        return (this.importList.length>0) ? this.importList.length+1 : 0;
+    },
+    objectForRow: function(rowIndex) {
+    },
+    representationForRow: function(rowIndex) {
+        return this.importList[rowIndex];
+    },
+    addUserCallback: function(data) {
+        if (!mobilAP.isError(data)) {
+        	alert('User created');
+        }
+    },
+    addUser: function(user,callback) {
+    	mobilAP.directoryAdminController.saveUser(user,callback);
+    },
+    addAll: function() {
+    	for (var i=0;i<this.importList.length;i++) {
+    		this.addUser(this.importList[i]);
+    	}
+		this.processImportFile([]);
+    },
+	prepareRow: function(rowElement, rowIndex, templateElements) {
+		var self = this;
+        if (rowIndex==0) {
+        	templateElements.importAddButton.style.display='none';
+            templateElements.importFirstName.innerHTML = 'First Name';
+            templateElements.importLastName.innerHTML = 'Last Name';
+            templateElements.importEmail.innerHTML = 'email';
+            templateElements.importOrganization.innerHTML = 'organization';
+            rowElement.onclick = function() {
+            	self.directoryImportList.clearSelection();
+            }
+        } else {
+            var user = this.importList[rowIndex-1];
+            rowElement.user = user;
+        	templateElements.importAddButton.style.display='';
+            templateElements.importFirstName.innerHTML = user.FirstName;
+            templateElements.importLastName.innerHTML = user.LastName;
+            templateElements.importEmail.innerHTML = user.email;
+            templateElements.importOrganization.innerHTML = user.organization;
+            templateElements.importAddButton.onclick = function() {
+            	if (confirm("Are you sure you want to add this user?")) {
+					self.addUser(rowElement.user,self.addUserCallback.bind(self));
+				}
+            }
+            rowElement.onclick = function() {
+            	self.directoryImportList.clearSelection();
+            }
+        }
+	},
+    viewDidLoad: function() { 
+    	this.directoryImportFile.value='';
+        this.processImportFile([]);
+		this.directoryImportActions.style.display='none';
+    },
+    
+    uploadImportFile: function() {
+        var params = {
+            post: 'uploadImportFile'
+        }
+        this.uploadFile(this.directoryImportForm, params, this.processImportFile.bind(this));
+    },
+    processImportFile: function(data) {
+        if (this.isError(data)) {
+            alert("Error uploading file: "+ data.error_message);
+            this.directoryImportActions.style.display='none';
+        } else {
+            this.directoryImportActions.style.display='block';
+            this.importList = [];
+            for (var i=0; i<data.length;i++) {
+                this.importList.push(new MobilAP.User(data[i]));
+            }
+
+            if (data.length==0) {
+            	this.directoryImportAddAllButton.setEnabled(false);
+            	this.directoryImportNote.innerHTML = 'No valid users found';
+            } else {
+            	this.directoryImportAddAllButton.setEnabled(true)
+            	this.directoryImportNote.innerHTML = 'Found ' + data.length + ' user' + (data.length==1 ? '' : 's') + '.';
+            }
+            
+            this.directoryImportList.reloadData();
+        }
+    },
+    constructor: function(params) {
+        this.base(params);
+        this.directoryImportList.setDataSource(this);
     }
 });
 
@@ -2302,4 +2407,27 @@ function searchDirectory(event)
 function adminWebclipIconUpload(event)
 {
     mobilAP.contentAdminController.uploadWebClipIcon();
+}
+
+
+function directoryAdminImport(event)
+{
+    if (mobilAP.isAdmin()) {
+        mobilAP.loadView('directoryImport');
+    }
+}
+
+function directoryImportUpload(event)
+{
+    mobilAP.directoryImportController.uploadImportFile();
+}
+
+function directoryImportAddAll(event)
+{
+    var num = mobilAP.directoryImportController.numberOfRows()-1;
+    if (num>0) {
+        if (confirm('This will add ' + num + ' user' + (num==1 ? '' : 's') + '. Are you sure?')) {
+            mobilAP.directoryImportController.addAll();
+        }
+    }
 }

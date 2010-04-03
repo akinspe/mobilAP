@@ -35,6 +35,7 @@
                     <div id="directoryHeader" class="mobilAP_header">Directory</div>
                     <div id="directoryAdminButtons" class="mobilAP_admin">
                         <div id="directoryAdminAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="directoryAdminImportButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
                     </div>
                     <div id="directoryProfilePanel">
                         <div id="directoryProfileImageContainer" apple-part="com.apple.Dashcode.part.imageLayout" apple-group="image">
@@ -68,7 +69,7 @@
                         </div>
                     </div>
                     <div id="directoryListPanel">
-                        <input id="directorySearch" type="search" value="" placeholder="" results="10" incremental="incremental" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.searchfield" onkeyup="searchDirectory(event)">
+                        <input id="directorySearch" type="search" value="" placeholder="" results="10" incremental="incremental" class="apple-textfield apple-no-children" apple-part="com.apple.Dashcode.part.searchfield" onkeyup="searchDirectory(event)" onchange="searchDirectory(event)" onsearch="searchDirectory(event)">
                         <ul id="directoryList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">
                             <li id="directoryRow" apple-template="true" class="directoryRow_template first" style="">
                                 <div id="directoryName" class="directoryName_template">
@@ -79,6 +80,29 @@
                             </li>
                         </ul>
                     </div>
+                </div><div id="directoryImport" apple-part-locked="true"><div id="directoryImportHeader" class="mobilAP_header">Directory Import</div>
+                    <div id="directoryImportExplain" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children mobilAP_explanation" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;part-width-dependent: true;"></div>
+                    <fieldset id="directoryImportUpload">
+                        <legend id="directoryImportUpload_Legend">Upload file</legend>
+                        <form method="POST" action="../mobilAP/user.php" id="directoryImportUploadForm" enctype="multipart/form-data">
+                            <label id="directoryImportUploadLabel" class="mobilAP_label">Select File</label>
+                            <input id="directoryImportFile" type="file" name="directoryImportFile">
+                            <div id="directoryImportUploadButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </form>
+                    </fieldset>
+                    <div id="directoryImportActions">
+                        <div id="directoryImportAddAllButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        <div id="directoryImportNote" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                    </div>
+                    <ul id="directoryImportList" apple-part="com.apple.Dashcode.part.widgetList" class="">
+                        <li id="directoryImportRow" apple-template="true" class="directoryImportRow_template first" style="">
+                            <div id="importFirstName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children importFirstName_template" apple-text-overflow="ellipsis"></div>
+                            <div id="importLastName" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children importLastName_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis"></div>
+                            <div id="importEmail" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children importEmail_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis"></div>
+                            <div id="importOrganization" apple-part="com.apple.Dashcode.part.text" class="apple-text apple-no-children importOrganization_template" apple-default-image-visibility="hidden" apple-text-overflow="ellipsis" apple-style="part-height-dependent: true;"></div>
+                            <div id="importAddButton" apple-part="com.apple.Dashcode.part.pushbutton" class="apple-no-children importAddButton_template" apple-text-overflow="ellipsis" apple-style="image-theme: 0; image-shape: 3; image-button-type: 0; image-opacity: 1.00; image-top-color: 0.290196091,0.423529416,0.607843161,1; image-bottom-color: 1,1,1,1; image-radius: 5,5,5,5; image-border: 1; image-border-color: 0,0,0,0.2; image-border-width: 1; shine-on: 1; shine-strength: 0.17; shine-alpha-level: 0.04; shine-height: 0.50; glass-arc-height: 0.00; embossed-on: 1; embossed-depth: 1; embossed-shadow: 0.68; embossed-highlight: 0.3; shadow-include-shadow: 0;"></div>
+                        </li>
+                    </ul>
                 </div><div id="schedule" apple-part-locked="true">
                     <div id="scheduleHeader" class="mobilAP_header">Schedule</div>
                     <ul id="scheduleTypeList" apple-part="com.apple.Dashcode.part.widgetList" class="mobilAP_list">

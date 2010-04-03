@@ -1603,7 +1603,7 @@ MobilAP.DirectoryAdminController = Class.create(MobilAP.Controller, {
             LastName: user.LastName,
             organization: user.organization,
             email: user.email,
-            admin: user.admin
+            admin: user.admin ? -1 : 0
         }
         
         if (mode=='addUser') {
@@ -1626,6 +1626,11 @@ MobilAP.DirectoryAdminController = Class.create(MobilAP.Controller, {
         return result;
     }
 });
+
+MobilAP.DirectoryImportController = Class.create(MobilAP.Controller, {
+
+});
+
 
 MobilAP.SessionPresentersAdminController = Class.create(MobilAP.Controller, {
     foundUsers: [],

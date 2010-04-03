@@ -51,7 +51,11 @@ if (isset($_POST['post'])) {
                 $data = mobilAP_Error::throwError("Unable to find user for userID " . $userID,-2, $userID);
                 break;
             }
-            
+        case 'uploadImportFile':
+			$file = isset($_FILES['directoryImportFile']) ? $_FILES['directoryImportFile'] : array();
+			$data = mobilAP_User::uploadImportFile($file);
+            $content_type = 'text/html';
+        	break;
         case 'addUser':
             if ($post_action == 'addUser') {
                 $user = new mobilAP_user();
