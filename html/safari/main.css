@@ -3523,6 +3523,13 @@ body.DC_windowInactive .sessionQuestionAskQuestionResponsesRow_template.selected
     position: absolute;
 }
 
+.chart_type_b .chart_label {
+    color: black;
+    text-shadow: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
 #sessionQuestionResultsChart {
     position: relative;
     width: 400px;

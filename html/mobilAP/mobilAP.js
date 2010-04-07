@@ -1745,6 +1745,10 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
         });
     },
 	codeMap: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	toggleChartType: function() {
+		this.question.toggleChartType();
+		this.updateChart();
+	},
     updateChart: function() {
         if (!this.question) {
             return;
@@ -1755,13 +1759,18 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
     	var labels = [];
 		var colors = [];
     	var indexes = [];
+    	var max_value = 0;
 		var r = 0;
 		var g = 0;
 		var b = 255;
 
         for (var i=0; i<this.question.responses.length; i++) {
             if (this.question.answers[this.question.responses[i].response_value]>0 || add_zero) {
-                data.push(this.question.answers[this.question.responses[i].response_value]);
+            	var answer = this.question.answers[this.question.responses[i].response_value];
+                data.push(answer);
+                if (answer>max_value) {
+                	max_value = answer;
+                }
                 labels.push(escape(this.question.responses[i].response_text));
                 indexes.push(i);
                 colors.push("#" + RGBtoHEX(r,g,b));
@@ -1771,6 +1780,7 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
             }
         }
                 
+		this.results_chart.className = 'chart_type_' + this.question.chart_type;
 		var canvas =  document.getElementById('question_response_canvas');
         if (this.question.answers.total==0) {
             if (canvas) {
@@ -1786,6 +1796,7 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
 			canvas.id = 'question_response_canvas';
 			canvas.width=width;
 			canvas.height=height;
+			canvas.onclick = this.toggleChartType.bind(this);
 			this.results_chart.appendChild(canvas);
 			if (!canvas.getContext) G_vmlCanvasManager.initElement(canvas);
 		} 
@@ -1871,8 +1882,31 @@ MobilAP.QuestionController = Class.create(MobilAP.Controller, {
 	
 				break;
 						
-            case 'bhs':
-            	alert('still working on bar charts');
+            case 'b':
+				g.strokeStyle = '#7F7F7F';
+            	var minRowHeight = 10;
+            	var maxRowHeight = 100;
+            	var barChartXStart = 30;
+            	var maxWidth = width - barChartXStart;
+            	var rowSpacing = 5;
+            	var rowheight = Math.floor(height / data.length);
+            	
+            	for (var i=0; i<data.length;i++) {
+					// draw the label
+					var label = document.createElement('div');
+					label.className = 'chart_label';
+					label.innerHTML = this.codeMap.charAt(indexes[i]);
+					label_container.appendChild(label);
+					label.style.left = 0;
+					label.style.top = rowheight * i + 'px';
+
+					if (data[i]>0) {					
+						g.fillStyle = colors[i];    // Set wedge color
+						g.fillRect(barChartXStart, rowheight * i, (data[i]/max_value)*maxWidth, rowheight- rowSpacing);
+						g.strokeRect(barChartXStart, rowheight * i, (data[i]/max_value)*maxWidth, rowheight- rowSpacing);
+					}						
+            	}
+            	
                 break;
         }
     },
@@ -1944,13 +1978,14 @@ MobilAP.EvaluationQuestion =Class.create({
     }
 });
 
-MobilAP.SessionQuestion =Class.create({
+MobilAP.SessionQuestion = Class.create({
     question_id: null,
 	question_text: '',
 	question_list_text: '',
 	question_minchoices:0,
 	question_maxchoices:1,
 	question_active: -1,
+	chart_type: 'p',
     selectMessage: function() {
         var message = 'Please select ';
         if (this.question_maxchoices==1) {
@@ -1994,6 +2029,12 @@ MobilAP.SessionQuestion =Class.create({
             response_text: response_text});
         this.responses.push(response);
         this._addedResponses.push(response);
+    },
+    toggleChartType: function() {
+    	this.setChartType(this.chart_type=='p' ? 'b' : 'p');
+    },
+    setChartType: function(chart_type) {
+    	this.chart_type = chart_type;
     },
     constructor: function(params) {
         this.responses = [];

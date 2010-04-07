@@ -1680,7 +1680,7 @@ MobilAP.DesktopQuestionController = Class.create(MobilAP.QuestionController, {
         return 250;
     },
     getChartWidth: function() {
-        return 400;
+        return 500;
     },
     selectResponse: function(response_index) {
         this.base(response_index);

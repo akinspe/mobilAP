@@ -2397,12 +2397,24 @@ body.desktop {
     min-height: 253px;
 }
 
+#sessionQuestionResultsChart {
+    position: relative;
+    width: 300px;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+}
+
 .chart_label {
     color: white;
     font-weight: bold;
     text-shadow: rgb(0, 0, 0) 1px 1px 0px;
     font-size: 16px;
     position: absolute;
+}
+
+.chart_type_b .chart_label {
 }
 
 #sessionQuestionResultsList {
