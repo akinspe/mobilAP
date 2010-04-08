@@ -1,5 +1,5 @@
-mobilAP Version 2.0b9
-March 25, 2010
+mobilAP Version 2.0b10
+April 8, 2010
 
 RELEASE NOTES
 
@@ -15,14 +15,21 @@ REQUIREMENTS AND SETUP
 
 - In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder OR you must edit the database configuration yourself
 
+FIXED Since 2.0b9
+- You can now search the directory. Searches filter by name or organization
+- The mobile "header" now reflects the site title as specified
+- After uploading a picture for a user, the image updates properly
+- You can now upload a webclip icon using the admin interface.
+- You can now import users using a tab delimited file. See the included example_import files for field order
+- Bar charts are now available. Simply click/tap the chart to switch between bar and pie charts. Hopefully some
+interepid designer can help make these look more snazzy.
+
 FIXED Since 2.0b8
 - If you don't want to allow write access to the data folder, you can easily edit the database configuration yourself - NOTE: without write access you will be unable to save uploaded directory photos
 - You can instruct mobilAP to use a different folder for the SQLite database
 - Situations where you have partially completed setup and return to setup are handled better.
 - You can (and indeed, must) set the event timezone during setup
 - You can change the labels and visibility of the items on the home screen/list (see Home List tab in Admin)
-
-
 
 FIXED Since 2.0b7
 - Added some indexes to improve database performance (not critical for low volume sites, but still useful)
@@ -81,17 +88,7 @@ KNOWN ISSUES/PLANNED UPDATES BEFORE 2.0 final
 
 - Documentation should be better and nicer looking
 
-- When uploading a new directory image, you may have to reload the site to see the updated image.
-
-- Mass import of users is currently non-functional
-
 - Due to a coding flaw in Apple's Dashcode framework code, if you edit the project file and then re-publish the site, the desktop version will not work in Firefox (and perhaps other browsers). The template used to program the Stack Layout part calls a method that does not exist in Firefox. In the code that comes with mobilAP, that method is properly handled. If you republish the project it will overwrite that file (html/safari/Parts/parts.js).
-
-- Bar charts have not been programmed
-
-- The mobile site will always say "mobilAP" at the home screen. It is hoped that the final version will use the site title.
-
-- There will eventually be a way to upload an alternate home screen icon. At this time, simply replace html/mobilAP/data/WebClipIcon.png
 
 - Additional administration options will become available on the mobile interface, however some things will remain only in the desktop interface.
 
