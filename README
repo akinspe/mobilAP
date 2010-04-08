@@ -22,7 +22,7 @@ FIXED Since 2.0b9
 - You can now upload a webclip icon using the admin interface.
 - You can now import users using a tab delimited file. See the included example_import files for field order
 - Bar charts are now available. Simply click/tap the chart to switch between bar and pie charts. Hopefully some
-interepid designer can help make these look more snazzy.
+intrepid designer can help make these look more snazzy.
 
 FIXED Since 2.0b8
 - If you don't want to allow write access to the data folder, you can easily edit the database configuration yourself - NOTE: without write access you will be unable to save uploaded directory photos
