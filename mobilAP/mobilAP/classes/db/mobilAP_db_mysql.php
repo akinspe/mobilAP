@@ -20,7 +20,7 @@ class mobilAP_db_mysql extends mobilAP_db
         if (!class_exists('PDO')) {
             $info['supported']=false;
             $info['supported_message']="Not Supported. PHP Data Objects (PDO) class is not available on this server's PHP installation";
-        } elseif (!in_array('sqlite', PDO::getAvailableDrivers())) {
+        } elseif (!in_array('mysql', PDO::getAvailableDrivers())) {
             $info['supported']=false;
             $info['supported_message']="Not Supported. The MySQL PDO driver is not available on this server's PHP installation";
         }
