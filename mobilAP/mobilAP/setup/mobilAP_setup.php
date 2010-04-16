@@ -126,7 +126,7 @@ die();
 <div id="admin_content_private" class="mobilAP_switch"></div>
 
 <div class="mobilAP_label">Use Passwords</div>
-<p class="mobilAP_explanation">You can require attendees to enter a password when logging in. You assign passwords either at import or by editing the user in the attendee administration.</p>
+<p class="mobilAP_explanation">You can require attendees to enter a password when logging in. You assign passwords by editing the user in the attendee administration. By default, a user's password is their email address</p>
 <div id="admin_use_passwords" class="mobilAP_switch"></div>
 
 <div class="mobilAP_label">Require Password for admins</div>

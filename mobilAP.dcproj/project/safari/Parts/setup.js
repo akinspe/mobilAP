@@ -179,7 +179,7 @@ var dashcodePartSpecs = {
     "sessionInfoStart": { "text": "12:00", "view": "DC.Text" },
     "sessionInfoTimeDash": { "text": "-", "view": "DC.Text" },
     "sessionLinksAddButton": { "initialHeight": 30, "initialWidth": 100, "leftImageWidth": 5, "onclick": "sessionLinkButton", "rightImageWidth": 5, "text": "Add Link", "view": "DC.PushButton" },
-    "sessionLinksAddSubmitButton": { "initialHeight": 30, "initialWidth": 100, "leftImageWidth": 5, "onclick": "sessionAddLink", "rightImageWidth": 5, "text": "Add Link", "view": "DC.PushButton" },
+    "sessionLinksAddSubmitButton": { "initialHeight": 30, "initialWidth": 100, "leftImageWidth": 5, "onclick": "sessionAddLink", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
     "sessionLinksAddTitleLabel": { "text": "Title:", "view": "DC.Text" },
     "sessionLinksAddURLLabel": { "text": "URL:", "view": "DC.Text" },
     "sessionLinksList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "sessionLinksListTitle", "listStyle": "List.DESKTOP_LIST", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },

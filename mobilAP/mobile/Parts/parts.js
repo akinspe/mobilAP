@@ -101,7 +101,7 @@ var dashcodePartSpecs = {
     "sessionInfoRoom": { "text": "Room", "view": "DC.Text" },
     "sessionInfoStart": { "text": "12:00a", "view": "DC.Text" },
     "sessionLinksAddButton": { "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 15, "onclick": "sessionLinkButton", "rightImageWidth": 15, "text": "Add Link", "view": "DC.PushButton" },
-    "sessionLinksAddSubmitButton": { "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 15, "onclick": "sessionAddLink", "rightImageWidth": 15, "text": "Add Link", "view": "DC.PushButton" },
+    "sessionLinksAddSubmitButton": { "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 15, "onclick": "sessionAddLink", "rightImageWidth": 15, "text": "Save", "view": "DC.PushButton" },
     "sessionLinksAddTitleLabel": { "text": "Title:", "view": "DC.Text" },
     "sessionLinksAddURLLabel": { "text": "URL:", "view": "DC.Text" },
     "sessionLinksList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "sessionLinksTitle", "listStyle": "List.ROUNDED_RECTANGLE", "propertyValues": { "dataArrayBinding": { "keypath": "session.content.session_links" } }, "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
