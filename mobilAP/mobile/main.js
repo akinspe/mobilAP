@@ -126,7 +126,10 @@ function load()
     });
     mobilAP.sessionController.addViewController('discussion', mobilAP.sessionDiscussionController);
 
-    mobilAP.announcementsController = new MobilAP.MobileAnnouncementController('announcementsList');
+    mobilAP.announcementsController = new MobilAP.MobileAnnouncementController('announcementsList',{
+        announcementPosted: document.getElementById('announcementPosted')
+        }
+    );
     mobilAP.addViewController('announcements', mobilAP.announcementsController);
     
     mobilAP.sessionEvaluationController = new MobilAP.MobileSessionEvaluationController({
@@ -641,10 +644,16 @@ MobilAP.MobileUserProfileController = Class.create(MobilAP.UserProfileController
 
 
 MobilAP.MobileAnnouncementController = Class.create(MobilAP.AnnouncementController, {
+    setAnnouncement: function(announcement) {
+        this.base(announcement);
+        var transformer = new shortDateTransformer();
+        this.announcementPosted.innerHTML = 'Posted by ' + announcement.user.getFullName() + ' on ' + transformer.transformedValue(announcement.announcement_date);
+    },
     rowSelected: function(change, keyPath) {
         this.base(change, keyPath);
         var selectedObjects = this.object.selectedObjects();
         if (selectedObjects && (1 == selectedObjects.length)){
+            this.setAnnouncement(new MobilAP.Announcement(selectedObjects[0]));
             mobilAP.loadView('announcement', selectedObjects[0].valueForKey('announcement_title'));
         }    
     }

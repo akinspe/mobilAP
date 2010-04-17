@@ -1272,6 +1272,27 @@ body.desktop {
     font-weight: bold;
 }
 
+#announcementPosted {
+    font-family: Helvetica;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    width: auto;
+    min-height: 20px;
+    height: auto;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    margin-left: 9px;
+    margin-right: 9px;
+    text-align: center;
+    color: rgb(107, 107, 107);
+    font-size: 14px;
+}
+
+.selected #announcementPosted {
+    color: white;
+}
+
 #announcementBox {
     border-width: 1px;
     border-style: solid;
@@ -2372,7 +2393,7 @@ body.desktop {
     font-weight: bold;
     font-size: 12px;
     color: rgb(255, 255, 255);
-    text-shadow: rgba(0, 0, 0, 0.546875) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.539062) 0px -1px 0px;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2520,7 +2541,7 @@ body.desktop {
     font-weight: bold;
     font-size: 12px;
     color: rgb(255, 255, 255);
-    text-shadow: rgba(0, 0, 0, 0.554688) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.546875) 0px -1px 0px;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2691,7 +2712,7 @@ body.desktop {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.5625) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.554688) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -2805,7 +2826,7 @@ body.desktop {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.542969) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.535156) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -2901,7 +2922,7 @@ body.desktop {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.507812) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
@@ -2947,7 +2968,7 @@ body.desktop {
     font-size: 12px;
     color: rgb(255, 255, 255);
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.453125) 0px -1px 0px;
+    text-shadow: rgba(0, 0, 0, 0.445312) 0px -1px 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 30px;
