@@ -179,6 +179,15 @@ MobilAP = {
                 return new MobilAP.Error('There was an server error with the request', -1, e);
             }
         },
+		getUser: function(userID) {
+			var users = dashcode.getDataSource('users').content();
+			for (var i=0; i< users.length; i++) {
+				if (users[i].userID==userID) {
+					return new MobilAP.User(users[i]);
+				}
+			}
+			return false;
+		},
         uploadFile: function(form, params, callback)
         {
             // Create the iframe...
@@ -2068,6 +2077,8 @@ MobilAP.Announcement =Class.create({
     },
     constructor: function(params) {
         Object.extend(this,params);
+        this.user = mobilAP.getUser(params.userID);
+        this.announcement_date = new Date(params.announcement_date);
     }
 });
 

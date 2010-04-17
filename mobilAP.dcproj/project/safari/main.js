@@ -113,7 +113,8 @@ function load()
 
     mobilAP.announcementsController = new MobilAP.DesktopAnnouncementController('announcementsList', {
         announcementPanel: document.getElementById('announcementsPanel'),
-        announcementsNotice: document.getElementById('announcementsNotice')
+        announcementsNotice: document.getElementById('announcementsNotice'),
+        announcementPosted: document.getElementById('announcementPosted')
         }
     );
     mobilAP.addViewController('announcements', mobilAP.announcementsController);
@@ -965,6 +966,11 @@ MobilAP.DesktopAnnouncementController = Class.create(MobilAP.AnnouncementControl
         this.announcementPanel.style.display = 'none';
         this.announcementsNotice.style.display = this.content().length == 0 ? '' : 'none';
         MobilAP.setClassName(this.announcementPanel, 'mobilAP_admin', mobilAP.isAdmin());
+    },
+    setAnnouncement: function(announcement) {
+        this.base(announcement);
+        var transformer = new shortDateTransformer();
+        this.announcementPosted.innerHTML = 'Posted by ' + announcement.user.getFullName() + ' on ' + transformer.transformedValue(announcement.announcement_date);
     },
     rowSelected: function(change, keyPath) {
         this.base(change, keyPath);

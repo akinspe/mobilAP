@@ -72,13 +72,7 @@ if (isset($_POST['post'])) {
 	if (mobilAP::getConfig('CONTENT_PRIVATE') && !$user_session->loggedIn()) {
 		$data = array();
 	} else {
-
 		$data = mobilAP::getAnnouncements();
-		foreach ($data as $idx=>$announcement) {
-			$data[$idx]->readUserID = $user->getUserID();
-			$data[$idx]->read = $announcement->hasRead($user->getUserID());
-			$data[$idx]->user = mobilAP_user::getUserById($announcement->userID);
-		}
 	}
 }
 
