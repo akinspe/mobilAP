@@ -1,110 +1,24 @@
-mobilAP Version 2.0b10
-April 8, 2010
+mobilAP Version 2.0b11
+April 19, 2010
 
 RELEASE NOTES
 
-This version of mobilAP is not intended for production use. Most of the important features are functional, however, there are still unresolved issues, as well as a high probability of unknown bugs that need to be discovered and resolved.
+This is (hopefully) the final Beta version of mobilAP 2.0! Please see the CHANGELOG file for changes.
 
-We would appreciate you using this in a non-critical setting and providing feedback to mobilAP@daap.uc.edu
+It is now considered appropriate for production use. Most of the important features are functional, however, there may still be some unresolved issues. We would appreciate you using this in a non-critical setting and providing feedback to mobilAP@daap.uc.edu. 
 
 REQUIREMENTS AND SETUP
 
-- mobilAP requires a web server running PHP 5.2. It _may_ run under 5.1 with the included JSON emulation functions, however it is likely that performance will suffer. It also requires the PDO (PHP data objects) extension for database abstraction. 
-
-- Copy the HTML folder to your website. You can either copy the contents of the folder to the root of your website, or into a subfolder. Using a desktop browser, go to the URL of the folder you placed mobilAP in, it will begin the setup process of configuring the database, creating and initial user, and setting some initial options.
-
-- In order to successfully complete the setup, the web server must be able to write to the html/mobilAP/data folder OR you must edit the database configuration yourself
-
-FIXED Since 2.0b9
-- You can now search the directory. Searches filter by name or organization
-- The mobile "header" now reflects the site title as specified
-- After uploading a picture for a user, the image updates properly
-- You can now upload a webclip icon using the admin interface.
-- You can now import users using a tab delimited file. See the included example_import files for field order
-- Bar charts are now available. Simply click/tap the chart to switch between bar and pie charts. Hopefully some
-intrepid designer can help make these look more snazzy.
-
-FIXED Since 2.0b8
-- If you don't want to allow write access to the data folder, you can easily edit the database configuration yourself - NOTE: without write access you will be unable to save uploaded directory photos
-- You can instruct mobilAP to use a different folder for the SQLite database
-- Situations where you have partially completed setup and return to setup are handled better.
-- You can (and indeed, must) set the event timezone during setup
-- You can change the labels and visibility of the items on the home screen/list (see Home List tab in Admin)
-
-FIXED Since 2.0b7
-- Added some indexes to improve database performance (not critical for low volume sites, but still useful)
-- Updated serial numbering system to better handle user submitted content (viewed announcements, question answering, etc)
-- Fixed an issue where setup may give errors after selecting MySQL during setup
-- Fixed issues with unauthorized errors when saving data during setup
-- removed some dissolve transitions that could cause the browser to hide content
-- Improved creating and editing evaluation questions
-- Removed some old console logging that is now unnecessary
-- Allow deletion of sessions (which also deletes any schedule items that use the session)
-- Resize the directory window in the desktop version to fit the entire height of the browser window
-- Updated CSS to provide more font alternatives for non-safari browsers
-- Added the ability to make session questions inactive (i.e. users do not see them, but admins do)
-
-FIXED Since 2.0b6
-- Fixed issues that allowed clever people to perform administrative functions without authorization
-- Fixed an issue with editing evaluation questions
-- Properly handled sites with private content
-
-FIXED Since 2.0b5
-- ADDITION: Implemented the serial numbering system that dramatically reduces network reloads by detecting whether a given set of data has been updated. This is crucial on the iPhone version since parsing and then updating the UI can be very expensive depending on the data set. This allows more frequent updates (5 sec) but will only pull down and parse data if it's new. 
-
-FIXED Since 2.0b4
-- Fixed an issue that would appear when mobilAP was placed on a case sensitive file system
-- Some JSON values should be returned as numbers rather than strings
-- Added announcement read/unread methods (not fully implemented)
-- Added framework to enable updating of data only when it has been changed saving bandwidth and processing time. This has not been fully implemented yet
-- Fixed an issue when an error was given if a user was updated but no picture was uploaded (admin)
-- updated discussion formatting (desktop)
-- Discussion is now sorted ascending (i.e. most recent at the bottom)
-- Fixed formatting issue when editing announcements
-- Optimized some unnecessary data loads
-- removed dissolve when changing session "tabs" behaves more like native app
-- fixed formatting issue with long titles/detail in schedule (mobile)
-- changed session reload timer to 15 seconds (will eventually altered to only reload when data has changed)
-
-FIXED Since 2.0b3
-- Fixed an issue that would prevent the mobilAP setup from working when short_open_tags was not enabled
-- Added character encoding to output.
-
-FIXED Since 2.0b2
-- Fixed an issue that would prevent mobilAP from working in PHP versions less than 5.3
-
-FIXED Since 2.0b1
-
-- Evaluation questions can be added by admins and answered by users
-- Config files and welcome content have been moved to html/mobilAP/data. This was done so you only have to open up 1 folder that must be writable.
-- Setup files were rearranged.
-- Directory and Announcements are refreshed every 60 seconds
-- Administrators can upload directory photos
-- EXIF orientation is removed to account for the difference in how browsers handle it. In order for this to work requires PHP's EXIF and GD functions. If those functions aren't available, you will need to rotate the images manually.
-- If passwords are optional the password box will not show
-- The content private setting now works as expected
+- Please read the Documentation for system requirements and setup information. Open up index.html in the Documentation folder of this archive.
 
 KNOWN ISSUES/PLANNED UPDATES BEFORE 2.0 final
 
-- Documentation should be better and nicer looking
-
 - Due to a coding flaw in Apple's Dashcode framework code, if you edit the project file and then re-publish the site, the desktop version will not work in Firefox (and perhaps other browsers). The template used to program the Stack Layout part calls a method that does not exist in Firefox. In the code that comes with mobilAP, that method is properly handled. If you republish the project it will overwrite that file (html/safari/Parts/parts.js).
-
-- Additional administration options will become available on the mobile interface, however some things will remain only in the desktop interface.
-
-
-NOTES ABOUT THE DASHCODE PROJECT FILE
-
-A Dashcode project file has been included to aid in customization. You will need to use the Dashcode that comes with OS X 10.6 Snow Leopard. 
-
-Keep in mind that Dashcode does not handle CSS classes perfectly especially when renaming, so beware as you add and remove elements that it does not do unintentional things to the CSS file (it will!). Simply copying and pasting the original main.css file into the dashcode editor will typically reset things.
-
-Due to how Dashcode does it's work, it is not possible to completely test software inside Dashcode. Because the data calls require PHP, and the dashcode "server" does not understand it, none of the data can be loaded. In order to test your changes you will have to deploy the site and run it from a server that has PHP.
 
 Please contact mobilap@daap.uc.edu if you have any questions, bug submissions or requests. We make no guarantee, however, with respect to future releases.
 
-Please note that technical support cannot be given, although paid consultation for conference help is available.
+Please note that technical support cannot be given, although paid consultation for help is available.
 
-Monitor http://daap.uc.edu/mobilap for future updates.
+Monitor http://daap.uc.edu/mobilap or @mobilAP on twitter for future updates.
 
 The license is a very liberal BSD Style license. You may alter this as you need as long as you continue to give original attribution to the University of Cincinnati. See the LICENSE file for more information
