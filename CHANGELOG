@@ -1,0 +1,78 @@
+2.0b11 (April 19, 2010)
+- Documentation has been included, load the index.html file in the Documentation folder. Please provide feedback on the documentation
+- Renamed "root" folder to mobilAP
+- Moved import files to import folder
+- Announcement posted information will now show properly
+- Other minor fixes discovered while writing documentation
+
+2.0b10 (April 8, 2010)
+- You can now search the directory. Searches filter by name or organization
+- The mobile "header" now reflects the site title as specified
+- After uploading a picture for a user, the image updates properly
+- You can now upload a webclip icon using the admin interface.
+- You can now import users using a tab delimited file. See the included example_import files for field order
+- Bar charts are now available. Simply click/tap the chart to switch between bar and pie charts. Hopefully some
+intrepid designer can help make these look more snazzy.
+
+
+2.0b9 (March 25, 2010)
+- If you don't want to allow write access to the data folder, you can easily edit the database configuration yourself - NOTE: without write access you will be unable to save uploaded directory photos
+- You can instruct mobilAP to use a different folder for the SQLite database
+- Situations where you have partially completed setup and return to setup are handled better.
+- You can (and indeed, must) set the event timezone during setup
+- You can change the labels and visibility of the items on the home screen/list (see Home List tab in Admin)
+
+2.0b8 (March 21, 2010)
+- Added some indexes to improve database performance (not critical for low volume sites, but still useful)
+- Updated serial numbering system to better handle user submitted content (viewed announcements, question answering, etc)
+- Fixed an issue where setup may give errors after selecting MySQL during setup
+- Fixed issues with unauthorized errors when saving data during setup
+- removed some dissolve transitions that could cause the browser to hide content
+- Improved creating and editing evaluation questions
+- Removed some old console logging that is now unnecessary
+- Allow deletion of sessions (which also deletes any schedule items that use the session)
+- Resize the directory window in the desktop version to fit the entire height of the browser window
+- Updated CSS to provide more font alternatives for non-safari browsers
+- Added the ability to make session questions inactive (i.e. users do not see them, but admins do)
+
+2.0b7 (March 11, 2010)
+- Fixed issues that allowed clever people to perform administrative functions without authorization
+- Fixed an issue with editing evaluation questions
+- Properly handled sites with private content
+
+2.0b6 (March 2, 2010)
+- ADDITION: Implemented the serial numbering system that dramatically reduces network reloads by detecting whether a given set of data has been updated. This is crucial on the iPhone version since parsing and then updating the UI can be very expensive depending on the data set. This allows more frequent updates (5 sec) but will only pull down and parse data if it's new. 
+
+2.0b5 (March 1, 2010)
+- Fixed an issue that would appear when mobilAP was placed on a case sensitive file system
+- Some JSON values should be returned as numbers rather than strings
+- Added announcement read/unread methods (not fully implemented)
+- Added framework to enable updating of data only when it has been changed saving bandwidth and processing time. This has not been fully implemented yet
+- Fixed an issue when an error was given if a user was updated but no picture was uploaded (admin)
+- updated discussion formatting (desktop)
+- Discussion is now sorted ascending (i.e. most recent at the bottom)
+- Fixed formatting issue when editing announcements
+- Optimized some unnecessary data loads
+- removed dissolve when changing session "tabs" behaves more like native app
+- fixed formatting issue with long titles/detail in schedule (mobile)
+- changed session reload timer to 15 seconds (will eventually altered to only reload when data has changed)
+
+2.0b4 (February 2, 2010)
+- Fixed an issue that would prevent the mobilAP setup from working when short_open_tags was not enabled
+- Added character encoding to output.
+
+2.0b3 (November 25, 2009)
+- Fixed an issue that would prevent mobilAP from working in PHP versions less than 5.3
+
+2.0b2 (November 18, 2009)
+- Evaluation questions can be added by admins and answered by users
+- Config files and welcome content have been moved to html/mobilAP/data. This was done so you only have to open up 1 folder that must be writable.
+- Setup files were rearranged.
+- Directory and Announcements are refreshed every 60 seconds
+- Administrators can upload directory photos
+- EXIF orientation is removed to account for the difference in how browsers handle it. In order for this to work requires PHP's EXIF and GD functions. If those functions aren't available, you will need to rotate the images manually.
+- If passwords are optional the password box will not show
+- The content private setting now works as expected
+
+2.0b1 (November 4, 2009)
+- Initial Release
