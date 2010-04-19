@@ -8,7 +8,7 @@ var dashcodePartSpecs = {
     "adminContentHeader": { "text": "Content", "view": "DC.Text" },
     "adminContentWebClipIconImage": { "view": "DC.ImageLayout" },
     "adminContentWebClipUpload": { "initialHeight": 30, "initialWidth": 82, "leftImageWidth": 5, "onclick": "adminWebclipIconUpload", "rightImageWidth": 5, "text": "Upload", "view": "DC.PushButton" },
-    "adminEvaluationQuestionsAddButton": { "initialHeight": 30, "initialWidth": 121, "leftImageWidth": 5, "onclick": "evaluationQuestionAddQuestion", "rightImageWidth": 5, "text": "New Question", "view": "DC.PushButton" },
+    "adminEvaluationQuestionsAddButton": { "initialHeight": 30, "initialWidth": 121, "leftImageWidth": 5, "onclick": "evaluationQuestionAddQuestion", "rightImageWidth": 5, "text": "Add Question", "view": "DC.PushButton" },
     "adminEvaluationQuestionsCancel": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionCancel", "rightImageWidth": 5, "text": "Cancel", "view": "DC.PushButton" },
     "adminEvaluationQuestionsDelete": { "initialHeight": 25, "initialWidth": 70, "leftImageWidth": 5, "onclick": "evaluationQuestionDelete", "rightImageWidth": 5, "text": "Delete", "view": "DC.PushButton" },
     "adminEvaluationQuestionsHeader": { "text": "Evaluation Questions", "view": "DC.Text" },
