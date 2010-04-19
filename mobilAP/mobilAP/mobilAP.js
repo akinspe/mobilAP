@@ -2083,8 +2083,13 @@ MobilAP.Announcement =Class.create({
     },
     constructor: function(params) {
         Object.extend(this,params);
-        this.user = mobilAP.getUser(params.userID);
-        this.announcement_date = new Date(params.announcement_date);
+        if (params) {
+			this.user = mobilAP.getUser(params.userID);
+			this.announcement_date = new Date(params.announcement_date);
+		} else {
+			this.user = new MobilAP.User();
+			this.announcement_date = new Date();
+		}
     }
 });
 

@@ -2383,13 +2383,13 @@ function adminHomeSave(event)
         	HOME_WELCOME: document.getElementById('configHOME_WELCOME').value,
         	HOME_SCHEDULE: document.getElementById('configHOME_SCHEDULE').value,
         	HOME_DIRECTORY: document.getElementById('configHOME_DIRECTORY').value,
-        	HOME_ANNOUNCEMENTS: document.getElementById('configHOME_ANNOUNCEMENTS').value,
+        	HOME_ANNOUNCEMENTS: document.getElementById('configHOME_ANNOUNCEMENTS').value
 		},
         B: {
             HOME_SHOW_WELCOME: document.getElementById('configHOME_SHOW_WELCOME').object.intValue(),
             HOME_SHOW_SCHEDULE: document.getElementById('configHOME_SHOW_SCHEDULE').object.intValue(),
             HOME_SHOW_DIRECTORY: document.getElementById('configHOME_SHOW_DIRECTORY').object.intValue(),
-            HOME_SHOW_ANNOUNCEMENTS: document.getElementById('configHOME_SHOW_ANNOUNCEMENTS').object.intValue(),
+            HOME_SHOW_ANNOUNCEMENTS: document.getElementById('configHOME_SHOW_ANNOUNCEMENTS').object.intValue()
         }
     }
     
