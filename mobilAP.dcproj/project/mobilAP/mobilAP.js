@@ -181,10 +181,13 @@ MobilAP = {
         },
 		getUser: function(userID) {
 			var users = dashcode.getDataSource('users').content();
-			for (var i=0; i< users.length; i++) {
-				if (users[i].userID==userID) {
-					return new MobilAP.User(users[i]);
+			try {
+				for (var i=0; i< users.length; i++) {
+					if (users[i].userID==userID) {
+						return new MobilAP.User(users[i]);
+					}
 				}
+			} catch (e) {
 			}
 			return false;
 		},
@@ -1193,7 +1196,10 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
     sessionUpdated: function(change, keyPath) {
         if (change.newValue) {
             this.session = change.newValue;
-            mobilAP.serialController.setSerial('session_' + this.session_id, this.session.serial);
+            try {
+				mobilAP.serialController.setSerial('session_' + this.session_id, this.session.serial);
+			} catch (e) {
+			}
         }
     },
     questionById: function(question_id) {
