@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>mobilAP Documentation - Choosing a Database</title>
+	<link rel="stylesheet" href="documentation.css" type="text/css">
+</head>
+<body>
+<h1>mobilAP Documentation - Choosing a Database</h1>
+
+<p>mobilAP uses a database to store all the data used by the site. Version 2.0 supports using either SQLite or MySQL based databases. Each of these systems has its own strengths and weaknesses.</p>
+
+<h2>SQLite (recommended for most installations)</h2>
+<p>SQLite is a high performance embedded database system. Instead of using a dedicated server, SQLite stores its data in a single file and operations read this file directly. It is incredibly simple and fast and requires zero configuration or maintenance. The only requirement it has for mobilAP is that the web server must be able to write to the folder the database file is located. By default this is the mobilAP/data folder. You have the option to store this file in another location if you wish, as long as the web server can write to that folder. The default folder is located inside the mobilAP web tree. This would allow anyone, by default, to download the SQLite file and view it. If this is a concern, you should place the file in an alternate location outside your site's web tree (this is fully supported by the mobilAP database configuration). Because of its simplicity, it is the recommended option for most mobilAP installations. </p>
+
+<h3>Advantages</h3>
+<ul>
+<li>Simplicity - Requires no server setup or software</li>
+<li>Portable - entire mobilAP data exists as a single file that can be easily backed-up or copied.</li>
+</ul>
+<h3>Disadvantages</h3>
+<ul>
+<li>Requires permissions changes that may not be possible.</li>
+<li>Cannot be queried remotely</li>
+<li>Default installation places it in a folder where anyone can download the data</li>
+</ul>
+
+<h2>MySQL</h2>
+<p>MySQL is a client/server database system. Using MySQL requires an existing server setup with MySQL (although it certainly could be the same server as your web server). Because it exists as a server process, it can be accessed remotely and use a variety of tools to query, update and analyze the data. Access and security can be controlled using standard MySQL administration methods and many hosts and other installations already have existing MySQL servers available. All that is needed is to create a database that has CREATE, SELECT, INSERT, UPDATE and DELETE privileges for the user you are given. Note that setup and configuration of MySQL is beyond the scope of this document.</p> 
+
+<h3>Advantages</h3>
+<ul>
+<li>Many hosting providers and institutions have MySQL servers available</li>
+<li>Does not require changing any web server privileges</li>
+<li>Easier to access remotely</li>
+</ul>
+<h3>Disadvantages</h3>
+<ul>
+<li>May require setup and configuration</li>
+<li>Backup/Transfer of data is slightly more complicated</li>
+</ul>
+
+<div id="footer">
+mobilAP 2.0 <a href="index.html">Documentation</a>
+</div>
+
+</body>
+</html>

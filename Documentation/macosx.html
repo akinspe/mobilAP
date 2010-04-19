@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>mobilAP Documentation - Using Mac OS X</title>
+	<link rel="stylesheet" href="documentation.css" type="text/css">
+</head>
+<body>
+<h1>mobilAP Documentation - Using Mac OS X</h1>
+
+<p>Since Mac OS X is a very common platform for mobilAP and is used by people who may not be web server administrators, this page has been created to assist those with setting up their Mac OS X environment.</p>
+
+<p>Every Mac OS X system from 10.5 (Leopard) and above has everything you need to deploy mobilAP. The instructions to configure the service, however, are different based on whether you are using Mac OS X Client or Server.</p>
+
+<ul>
+	<li><a href="#server">Mac OS X Server</a></li>
+	<li><a href="#client">Mac OS X Client (i.e. not server)</a></li>
+</ul>
+
+<a name="server"></a>
+<h2>Mac OS X Server (10.5 and 10.6)</h2>
+<p><a href="http://www.apple.com/server/macosx/">Mac OS X Server</a> includes many services ready for use. It is important to note, however, that this document does not address key aspects of web server administration including maintenance and security that are critical to running a public web server. Since Mac OS X server includes <a href="http://httpd.apache.org/">Apache</a>, the world's most popular web server, there are many resources available that are applicable to this setup.</p>
+<p>Enabling Apache and PHP on Mac OS X server is incredibly simple. You will need to use <b>Server Admin</b>, part of the Server Administration tools to connect to your server. If you have never used these tools, please consult the <a href="http://www.apple.com/server/macosx/resources/documentation.html">Mac OS X Server Documentation</a>.
+<ol>
+	<li>Connect to your server using Server Admin. This can be done either on the server or remotely. You will need an administrative username and password.</li>
+	<li>Click on your server in the Servers list on the left</li>
+	<li>Click Settings in the toolbar</li>
+	<li>Click Services in tab bar.</li>
+	<li>Ensure that <b>Web</b> is selected and click save</li>
+	<li>Click on the web service in the server list underneath your server</li>
+	<li>Click Settings in toolbar</li>
+	<li>Click Modules in the tab bar</li>
+	<li>Ensure that the <b>php5_module</b> is checked and click save</li>
+	<li>If it is not already started, click Start Web at the bottom of server admin to start the web service</li>
+</ol>
+
+<p>If all is well you should be able to view your web server using its address. You can now continue with the rest of the <a href="installation.html#saving">installation instructions</a>. You will typically want to place your files in the <b>/Library/WebServer/Documents</b> folder.</p>
+
+<a name="clientr"></a>
+<h2>Mac OS X Client (10.5 and 10.6)</h2>
+<p>When we say "client" we are talking about the non server version of Mac OS X that comes with any Apple system. Your desktop, your laptop, etc. Even these systems include a version of Apache and PHP suitable for mobilAP use. You simply have to enable them. 
+
+<b>Note:</b> Enabling PHP requires editing a system file. You will need to use a text editor capable of editing protected documents and an administrator name and password. One excellent free text editor that makes editing system files easy is <a href="http://barebones.com/products/textwrangler/">TextWranger</a> from BareBones software. Note that TextEdit does not currently include such a feature.</p>
+
+<p>An alternative is to use a prebuilt package that automatically handles this configuration for you. <a href="http://www.entropy.ch/software/macosx/php/">Marc Liyanage</a> provides such a package.</p>
+
+<p>The following instructions assume you will be doing this yourself and not using any prebuilt packages. It also assumes that you have made no modifications to your existing Apache or PHP setup.</p>
+
+<h3>Enabling PHP</h3>
+
+<ol>
+<li>Open <b>/etc/apache2/httpd.conf</b> in a text editor (since the /etc folder is normally hidden you can use the "Go to folder" shortcut (Shift-Cmd-G) and type in <i>/etc/apache2</i> to see this folder)</li>
+<li>Use the find feature of your editor (typically Cmd-F) and find a line that contains <b>LoadModule php5_module</b></li>
+<li>If present, remove the hash symbol (#, called a pound sign in other contexts) from the beginning of the line found in the previous step</li>
+<li>Save the file. You will likely need to type in an administrator name and password.</li>
+</ol>
+
+<h3>Starting Apache</h3>
+<ol>
+	<li>Open System Preferences</li>
+	<li>Click on Sharing</li>
+	<li>Click the box next to <b>Web Sharing</b></li>
+</ol>
+
+<p>If all is well you can open up <a href="http://localhost">http://localhost</a> and view your site. You can now continue with the rest of the <a href="installation.html#saving">installation instructions</a>. You will typically want to place your files in the <b>/Library/WebServer/Documents</b> folder. <b>Note:</b> You should turn off Apache by unchecking the checkbox in the Sharing panel of System Preferences if you are done testing. Unless you are planning on doing full time web development, keeping the web server running will use up system resources and could be a security risk as well.</p>
+
+<div id="footer">
+mobilAP 2.0 <a href="index.html">Documentation</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>mobilAP Documentation - Site Administration</title>
+	<link rel="stylesheet" href="documentation.css" type="text/css">
+</head>
+<body>
+<h1>mobilAP Documentation - Site Administration</h1>
+
+<p>
+There are many important site options you can configure in mobilAP. Some of these settings include:
+</p>
+<ul>
+	<li><a href="#settings">General Settings</a> - Such as title, password and schedule options</li>
+	<li><a href="#menu">Menu List</a> - For configuring the main menu labeling and visibility</li>
+	<li><a href="#evaluationquestions">Evaluation Questions</a> - Configuring the questions used for session evaluations</li>
+	<li><a href="#sessions">Sessions</a> - For administering and removing sessions</li>
+	<li><a href="#content">Content</a> - For updating and uploading content for certain pages and images</li>
+</ul>
+
+<p>Note that all the actions below assume you are logged in as an administrative user</p>
+
+<a name="settings"></a>
+<h2>General Settings</h2>
+
+<p>There are several settings that affect the behavior of mobilAP. To edit this settings:</p>
+<ol>
+	<li>Click on the <i>Admin</i> menu</li>
+	<li>Click on the <i>Settings</i> submenu</li>
+	<li>Update settings as needed</li>
+	<li>Click <i>Save</i> to commit your changes</li>
+</ol>
+
+<p>The following settings can be updated:</p>
+<dl>
+<dt>Site Title</dt>
+<dd>Enter the title of your site. It is used in the header of the site. Because of the limited space on the mobile site, you may wish to make this short or abbreviated.</dd>
+
+<dt>Require Login to view content</dt>
+<dd>You can make all the content on the site private and require users to login in order to view the site</dd>
+
+<dt>Use Passwords</dt>
+<dd>You can require attendees to enter a password when logging in. You assign passwords by editing the user in the attendee administration. By default, a user's password is their email address.</dd>
+
+<dt>Require Password for admins</dt>
+<dd>You can require admins to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</dd>
+
+<dt>Require Password for presenters</dt>
+<dd>You can require presenters to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</dd>
+
+<dt>Allow self-created users</dt>
+<dd>You can allow anyone to create an account in the system by supplying their email address. If off, you must administer all users before they can login. This is very useful for events where the attendees are not known in advance.</dd>
+
+<dt>Use simple schedule</dt>
+<dd>For simpler events where there is only 1 session, you can turn off the schedule. This will create a single session with a single set of links, questions and discussion.</dd>
+
+<dt>Time Zone</dt>
+<dd>Select the time zone to use for this event.</dd>
+</dl>
+
+
+
+<a name="menu"></a>
+<h2>Menu List</h2>
+<p>You can customize the menu of mobilAP to meet the needs of your event. This includes changing the labels of menu items as well as changing the visibility of certain menu items. You can customize the following areas:</p>
+<ul>
+	<li>Welcome</li>
+	<li>Schedule</li>
+	<li>Directory</li>
+	<li>Announcements</li>
+</ul>	
+
+<h3>Updating the menu</h3>
+<ol>
+	<li>Click on the <i>Admin</i> menu</li>
+	<li>Click on the <i>Home List</i> submenu</li>
+	<li>Next to each item is a text box, update the label as necessary</li>
+	<li>To turn off a menu item, click the switch so it reads <i>Off</i></li>
+	<li>Click <i>Save</i> to commit your changes</li>
+</ol>
+
+<p>At this time you cannot change the order of the menu items.</p>
+
+<a name="evaluationquestions"></a>
+<h2>Evaluation Questions</h2>
+<p>If you wish, you can create a series of evaluation questions for each session. This allows users to rate their experience with each session and give their feedback. Questions can be multiple choice or free response. Although all sessions will use the same set of questions, you can <a href="admin_session.html#admin">turn off</a> evaluations for certain sessions if you wish.</p>
+
+<h3>Adding an Evaluation Question</h3>
+<ol>
+	<li>Click on the admin menu</li>
+	<li>Click on <i>Evaluation Questions</i> in the tab bar</li>
+	<li>Click <i>Add Question</i></li>
+	<li>Enter the question text</li>
+	<li>Choose the question type
+	<ul>
+		<li>Multiple Choice questions allow the user to pick 1 of several possible responses</li>
+		<li>Free Response questions will be presented with a text box where users' can type in their response (suitable for comments)</li>
+	</ul>
+	</li>
+	<li>For multiple-choice questions, type in a response and click <i>Add</i> for each possible response.</li>
+	<li>Click <i>Save</i> to add the question</li>
+</ol>
+
+<h3>Removing an Evaluation Question</h3>
+<ol>
+	<li>Click on the admin menu</li>
+	<li>Click on <i>Evaluation Questions</i> in the tab bar</li>
+	<li>Choose an existing question from the list</li>
+	<li>Click <i>Delete</i> to remove the question</li>
+</ol>
+
+<p>Note: it is not recommended to add or remove evaluation questions after the event has begun and evaluations have already been submitted. This can lead to misleading results</p>
+
+<a name="sessions"></a>
+<h2>Sessions</h2>
+
+<p>Each schedule item must contain a session, but a session can occur at several different points in the schedule. It is even possible to completely remove a session from the schedule. </p>
+<h3>Removing a session</h3>
+<p><b>Note:</b> removing a session will completely delete all of its data including links, questions, evaluations and discussion. It will also remove it from any portion of the schedule it may be assigned to. This <i>cannot</i> be undone so take care when using this feature</p>
+<ol>
+	<li>Click on the admin menu</li>
+	<li>Click on <i>Sessions</i> in the tab bar</li>
+	<li>Click the <i>Edit</i> button</li>
+	<li>Click <i>Delete</i> next to the session you with to remove</li>
+</ol>
+
+<a name="content"></a>
+<h2>Content</h2>
+
+<p>There is some content you can update using the administration interface. Since this involves editing files in place it requires that the web server can write to the <i>mobilAP/data</i> folder. If this is not possible, then you can manually update the files as needed.</p>
+
+<h3>Updating the mobile home screen icon</h3>
+<p>The iPhone OS supports bookmarking sites by <a href="http://www.apple.com/iphone/how-to/#safari.web-clips">adding them to the home screen</a>. You can customize the icon the appears on the home screen by uploading a new image. This image must be:</p>
+<ul>
+	<li>A PNG image file</li>
+	<li>57 x 57 pixels</li>
+</ul>
+
+<p>To upload a new image:</p>
+<ol>
+	<li>Click on the admin menu</li>
+	<li>Click on <i>Content</i> in the tab bar</li>
+	<li>In the mobile home screen icon area, browse to find the file you wish to upload</li>
+	<li>Click the <i>Upload</i> button</li>
+</ol>
+
+<p>You should receive appropriate feedback on success or failure</p>
+
+
+
+<p>Return to <a href="admin.html">Administration</a></p>
+
+<div id="footer">
+mobilAP 2.0 <a href="index.html">Documentation</a>
+</div>
+
+
+</body>
+</html>

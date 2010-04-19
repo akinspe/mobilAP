@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>mobilAP Documentation - Installation</title>
+	<link rel="stylesheet" href="documentation.css" type="text/css">
+</head>
+<body>
+<h1>mobilAP Documentation - Installation</h1>
+
+<p>Installing mobilAP is very straight forward. In most circumstances you can simply copy the appropriate files to your web server and load them in your browser to run the setup routine. Each step is outlined below including possible problems that could occur along the way.
+</p>
+
+<ul>
+	<li><a href="#sysreq">System Requirements</a></li>
+	<li><a href="#assumptions">Assumptions</a></li>
+	<li><a href="#saving">Saving the files</a></li>
+	<li><a href="#permissions">Updating permissions</a></li>
+	<li><a href="#setup">Running the setup routine</a></li>
+	<li><a href="#uninstall">Uninstalling/Resetting mobilAP</a></li>
+</ul>
+
+<a name="sysreq"></a>
+<h2>Server System Requirements</h2>
+<ul>
+	<li>Any HTTP (web) server capable of running PHP. Currently, mobilAP is only tested on Apache, however others should work. Other users have indicated success with IIS.</li>
+	<li>PHP 5.2 or higher*. Support for the following modules/functions is required:
+		<ul>
+			<li><a href="http://www.php.net/pdo">PHP Data Objects (PDO)</a></li>
+			<li><a href="http://www.php.net/manual/en/ref.json.php">JSON Functions</a>
+		</ul>
+		* It may be possible to run on PHP 5.0 or 5.1, but PDO functions must be present (there is a JSON compatibility library included, but performance may suffer). No testing or validation is done on versions prior to 5.2
+	</li>
+	<li>In order to run the automated setup routine, the web process must have write access to the mobilAP/data folder.</li>
+	<li>In order to update certain content (directory images, the webclip image, welcome page) the web process must have write access to the mobilAP/data folder.</li>
+</ul>
+
+<h2>Client System Requirements</h2>
+<p>mobilAP is a browser based application. For the most part it will work with any modern browser. Since it is based on an external framework, some of the compatibility issues may not be related to mobilAP. It has been <i>tested</i> to work in the following browsers:</p>
+
+<ul>
+	<li>Safari - 4.x </li>
+	<li>MobileSafari - iPhone OS 2.x, iPhone OS 3.x</li>
+	<li>Firefox 3.x</li>
+</ul>
+
+<p>Note that due to difficulties in testing older versions, this does not represent an exhaustive list. It may (and certainly will) work with other browsers. If you have difficulty with a particular browser or version, please <a href="mailto:mobilAP@daap.uc.edu">let us know</a>. Since mobilAP is changing rapidly, there is also the possibility that certain edge cases fail on the above browsers, please report these problems so they can be fixed. Currently Internet Explorer is not officially supported.</p>
+
+<a name="assumptions"></a>
+<h2>Assumptions</h2>
+<p>In the interest of conciseness, this document makes the following assumptions:
+<ul>
+	<li>You are familiar with downloading files and expanding ZIP archives</li>
+	<li>You are familiar with copying, renaming files and folders on the operating system(s) you will be using.</li>
+	<li>You are familiar with changing file permissions. (In some cases this is not necessary, or can be done by a site administrator) </li>
+	<li>You are familiar with how to create and assign privileges to MySQL databases or have access to an administrator who does (this does not apply if you are using SQLite)</li>
+</ul>
+If any of these assumptions is false, you may wish to enlist the help of the administrator of your web server for assistance. 
+<h3>Using Mac OS X</h3>
+<p>mobilAP has been demonstrated at several events attended by Mac OS X users. As such there are likely users who wish to try it out on their system. <b>Every</b> Mac OS X system since OS X 10.5 has included a version of Apache and PHP that is suitable for mobilAP. See <a href="macosx.html">Enabling Apache/PHP on Mac OS X</a> for more information.</p>
+
+
+<a name="saving"></a>
+<h2>Step 1 - Saving the files</h2>
+<p>After downloading and expanding the ZIP archive you should see a few files and folders:
+<ul>
+	<li>LICENSE - the BSD style license for mobilAP. Please read this to understand your rights and obligations. </li>
+	<li>README - includes release notes and quick instructions
+	<li>mobilAP - This folder represents the "root" of mobilAP</li>
+	<li>mobilAP.dcproj - A <a href="http://developer.apple.com/tools/dashcode/">Dashcode</a> project file suitable for editing certain parts of mobilAP</li>
+	<li>import - A folder with example user import templates (See <a href="admin_user.html">User Administration</a> for more information)</li>
+</ul>
+<p>The first step is to copy the contents of the <b>mobilAP</b> folder to an appropriate folder on your web server. mobilAP can live either at the root of your website, or in a subfolder. You can rename this folder to any name if you wish. Keep in mind, however, that some file systems operate in a case-sensitive manner so <i>mobilAP</i> may not be the same as <i>mobilap</i>. If you are placing mobilAP on a case-sensitive file system, we recommend you make the folder name all lower case for the benefit of your users.</p>
+
+<p>If you are trying this out on your Mac OS X machine, the root of the webserver is <b>/Library/WebServer/Documents</b>. Keep in mind this is at the root of your hard drive, not in your home folder. You will need to have administrative access to update this folder. If you have no existing content on your machine, you can safely remove any contents of the "Documents" folder (but keep the folder). Most (but not all) Mac OS X file systems are configured to be <i>not</i> case sensitive so capitalization is typically not critical.</p>
+
+<a name="permissions"></a>
+<h2>Step 2 - Updating Permissions</h2>
+
+<p>Certain tasks require that the web server be able to write to the mobilAP folder. These tasks include:</p>
+<ul>
+	<li>Configuring the database parameters using the setup routine (requires writing to mobilAP/data/mobilAP_dbconfig.php)</li>
+	<li>Using SQLite in its default location (mobilAP/data/mobilAP.sqlite)</li>
+	<li>Uploading directory profile images (mobilAP/data/directory)</li>
+	<li>Uploading a new webclip icon or changing the welcome page using the admin interface. (mobilAP/data)</li>
+</ul>
+
+You (or a site administrator) will need to give the web server user write access to these files/folders. The simplest way to accomplish
+this is to give the web server write access to the <b>mobilAP/data</b> folder. This can be done by one of the following:
+<ul>
+<li>Making the web user (may be <i>www</i> (Mac OS X), <i>apache</i> (Some Linux) or IUSR_xxx (IIS) the owner of the folder</li>
+<li>Changing the group (GID) of the folder to www/apache and allowing group write access (775)</li>
+<li>Allowing <i>everybody/world</i> write access (777). This should be avoided if possible</li>
+<li>Create an access control list entry to allow the www/apache/ISUR_ user write access</li>
+</ul>
+
+<p>In all cases, this will require administrative access. If you are using a hosting provider and use FTP to upload your files, it is likely that you will not need to do this as most hosts have these permissions already set. On a basic Mac OS X machine, assuming you have placed the mobilAP folder in <b>/Library/WebServer/Documents/mobilAP</b>, you could run the following commands in Terminal:</p>
+<ol>
+	<li><code>sudo chgrp -R www /Library/WebServer/Documents/mobilAP/mobilAP/data</code></li>
+	<li><code>sudo chmod -R g+w /Library/WebServer/Documents/mobilAP/mobilAP/data</code></li>
+</ol>	
+<p>Copy and paste the first command into the Terminal application and hit return. You will be prompted for your password. As you type your password it will not be shown. Copy and paste the second command and hit return, this time you will not be prompted for your password. If you placed the mobilAP installation in a different location you will need to substitute the proper location.</p>
+
+<h3>What if I am unable change the permissions?</h3>
+<p>It is not strictly necessary to change theses permissions. You will simply have to configure parts of mobilAP manually. Please read <a href="database_config.html">configuring the database manually</a> before continuing.</p>
+
+<a name="setup"></a>
+<h2>Step 3 - Running the setup routine</h2>
+
+<p>Once your files are in place you should open up your web browser, and browse to the folder you placed the files. Keep in mind that you can't simply open the files directly. You MUST use the http protocol to access mobilAP. For example, if you placed the files in a folder named <i>mobilAP</i> you would enter:
+<code>http://servername/mobilAP</code>
+This should begin the web-based setup routine. There are 3 steps in this process: Database configuration, admin user, and options. Each is outlined below.
+</p>
+
+<h3>Database configuration</h3>
+<p>The first step is to configure the database setup for mobilAP. Presuming the web server is able to write to the configuration file you will be presented with a choice of database types. <a href="database_choice.html">What if I don't know which one to choose?</a></p>
+<p>Each type has a set of options and the values must be validated before continue. Choose the appropriate database type and enter any applicable options and click the <b>validate</b> button. The application should indicate if there are any errors. If there are no errors you can click <b>next</b> to move on to the next part.</p>
+
+<p>If the web server was unable to write to the configuration file you should <a href="#permissinons">check your permissions</a>, or you may need to <a href="database_config.html">configure the database manually</a>.</p>
+
+<h3>Admin User</h3>
+<p>Presuming you received no error messages, it is time to create an admin user. All users in mobilAP login using their email address. The administrative user has complete control over all aspects of mobilAP including scheduling, users, announcements and configuration. In version 2.0 any number of users can be designated as administrators and there is no particular designation for the initial user. In fact, another administrator could remove the administrative abilities of the initial user. mobilAP currently provides no <i>back door</i> aside from manually editing the database tables.</p>
+<p>Enter your first and last name, your organization (optional), your email address, and a password. It is <b>highly</b> recommended that you require passwords for administrators. Otherwise it would be fairly trivial for another user to pose as an administrator and alter the site significantly.</p>
+
+<h3>Options</h3>
+<p>There are several options that should be examined before completing. All of these options can be changed later using the <a href="admin_admin.html#settings">administration</a> section of mobilAP</p>
+
+<dl>
+<dt>Site Title</dt>
+<dd>Enter the title of your site. It is used in the header of the site. Because of the limited space on the mobile site, you may wish to make this short or abbreviated.</dd>
+
+<dt>Require Login to view content</dt>
+<dd>You can make all the content on the site private and require users to login in order to view the site</dd>
+
+<dt>Use Passwords</dt>
+<dd>You can require attendees to enter a password when logging in. You assign passwords by editing the user in the attendee administration. By default, a user's password is their email address.</dd>
+
+<dt>Require Password for admins</dt>
+<dd>You can require admins to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</dd>
+
+<dt>Require Password for presenters</dt>
+<dd>You can require presenters to enter a password when logging in. This will allow attendees to login without a password, but prevent unauthorized administration without a password.</dd>
+
+<dt>Allow self-created users</dt>
+<dd>You can allow anyone to create an account in the system by supplying their email address. If off, you must administer all users before they can login. This is very useful for events where the attendees are not known in advance.</dd>
+
+<dt>Use simple schedule</dt>
+<dd>For simpler events where there is only 1 session, you can turn off the schedule. This will create a single session with a single set of links, questions and discussion.</dd>
+
+<dt>Time Zone</dt>
+<dd>Select the time zone to use for this event.</dd>
+</dl>
+
+<a name="uninstall"></a>
+<h2>Uninstalling/Resetting mobilAP</h2>
+<p>If you want to uninstall mobilAP, simply remove the folder from your web server. If you are using MySQL you may want to <i>DROP</i> the database you were using.</p>
+
+<p>Next - <a href="admin.html">Admin</a> 
+
+
+
+<div id="footer">
+mobilAP 2.0 <a href="index.html">Documentation</a>
+</div>
+
+</body>
+</html>

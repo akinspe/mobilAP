@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>mobilAP Documentation - Manual Database Configuration</title>
+	<link rel="stylesheet" href="documentation.css" type="text/css">
+</head>
+<body>
+<h1>mobilAP Documentation - Manual Database Configuration</h1>
+
+<p>Like most web applications, mobilAP uses a configuration file to configure its connection to its database. mobilAP supports both MySQL and SQLite for database storage. If you are unsure of which to choose, please read <a href="database_choice.html">choosing a database</a> for more information.</p>
+
+<p>mobilAP attempts to use the setup routine to configure the database parameters. This requires write access to the <b>mobilAP/data/mobilAP_dbconfig.php</b> file. If this file cannot be written by the web server then you will need to configure it manually.</p>
+
+<ol>
+<li>Open up <b>mobilAP/data/mobilAP_dbconfig.php</b> in a text editor such as TextEdit.</li>
+<li>Find the line with <b>db_type</b>. Inside the single quote marks, enter either 'mysql' or 'sqlite', correctly done it should look similar to this:<br>
+<code>'db_type'=&gt;'sqlite', // should be either 'mysql' or 'sqlite'</code><br>
+Make sure that the comma is still present at the end of the line (the double slashes indicate a comment and can remain or be removed)
+</li>
+<li>If you are using SQLite then the only parameter you will use is <b>db_folder</b>. This folder <b>must</b> be writable by the webserver. You should enter the full path of the folder where you wish to place the SQLite database (in SQLite the entire database exists as a single file, however the server needs write access to the folder as well for temporary files). Note that the setup routine will attempt to create the database.</li>
+<li>If you are using MySQL then enter the host, user, password and database similarly in lines after db_type. It is not necessary to alter the db_folder parameter.</li>
+</ol>
+<p>Take care to only enter in data between the quote marks. Do not add or remove any characters outside of this or you could render the site unusable.</p>
+<div id="footer">
+mobilAP 2.0 <a href="index.html">Documentation</a>
+</div>
+
+</body>
+</html>

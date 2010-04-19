@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>mobilAP Documentation - User/Directory Administration</title>
+	<link rel="stylesheet" href="documentation.css" type="text/css">
+</head>
+<body>
+<h1>mobilAP Documentation - User/Directory Administration</h1>
+
+<h2>Managing Users and the Directory</h2>
+<p>The user directory shows all the users who have been added to the mobilAP user account system. Administrators can manage this list, assign privileges and upload photos as needed. You have several options for creating users:</p>
+
+<ul>
+	<li>Adding users manually</li>
+	<li>Importing users using a tab-delimited file</li>
+	<li>Allowing users to self-register and create their own account</li>
+</ul>
+
+<p>Note all the steps assume you have logged in as a site administrator. Most of these activities must be done using the desktop interface rather than the mobile interface.</p>
+
+<a name="adduser"></a>
+<h2>Adding users manually</h2>
+<ol>
+	<li>Click on Directory in the menu</li>
+	<li>Click the <i>+</i> icon. The detail pane should appear on the right.</li>
+	<li>Enter the user's first and last names and email (these are required fields)
+	<li>Optionally enter the user's organization. Because this field is not actually labeled (besides this form), you can use it however you like. In other words, it doesn't necessary have to represent <i>organization</i>.</li>
+	<li>The admin switch will make or revoke the user's ability to administer the site. Obviously this should only be for user's you completely trust. There is no distinction between administrators. All administrators have the same abilities. This is NOT necessary if you simply want to make a user a <a href="admin_session.html#presenters">presenter</a></li>
+	<li>Optionally upload a <a href="#photos">photo</a></li>
+	<li>Click <i>Save</i></li>	
+</ol>
+
+<p><b>Note:</b> the user's default password will be their email address. For sites where you require passwords for admins or presenters, you should strongly encourage user's to change their password if security is a concern. Use the <a href="admin_admin.html">Setting Administration</a> to change password settings.</p>
+
+<a name="importusers"></a>
+<h2>Importing Users</h2>
+<p>If you have many users to add, you can create a simple tab-delimited file and import the users more quickly. You should begin by viewing the <i>example_import.xls</i> file in the <i>import</i> directory of the mobilAP download archive.
+
+<h3>Editing the example_import.xls file</h3>
+<ol>
+	<li>Open the spreadsheet file (any spreadsheet program capable of reading MS Excel files and exporting tab-delimited files should work)</li>
+	<li>The first row contains the field names and order. There are example rows that you can remove</li>
+	<li>Save/Export the file to <i>tab-delimited</i> format. Please note that <i>comma delimited</i> format is not currently supported. The name of the file is not important, but keep track of where you save the file on your computer.</li>
+</ol>
+<p>Alternatively, you can create a tab-delimited file manually using the <i>example_import.tab</i> file as a guide. Once you have this file, you can upload it to your site</p>
+
+<h3>Importing the file</h3>
+<ol>
+	<li>Click on Directory in the menu</li>
+	<li>Click the <i>Import</i> button</li>
+	<li>Browse and select the file on your computer. This file must be tab-delimited</li>
+	<li>Click <i>Upload</i> to upload the file. Any errors should be shown</li>
+	<li>Only users with valid values will be shown, if there seems to be a missing row, check that the values are valid (i.e. First and last name and valid email address)</li>
+	<li>Verify that the field order is correct. If you need to make corrections you will need to reimport the file</li>
+	<li>Click <i>Add All</i> to import all the visible users</li>
+	<li>Optionally you can click <i>Add</i> next to individual users to add a subset of users.</li>
+</ol>
+
+<p><b>Note:</b> the user's default password will be their email address. For sites where you require passwords for admins or presenters, you should strongly encourage user's to change their password if security is a concern. Use the <a href="admin_admin.html">Setting Administration</a> to change password settings.</p>
+
+
+<a name="edituser"></a>
+<h2>Editing a user</h2>
+<ol>
+	<li>Click on Directory in the menu</li>
+	<li>Click the user you wish to edit in the directory list. The detail panel should appear on the right.</li>
+	<li>Click the edit button in the detail pane</li>
+	<li>Update the users's first and last names and email as necessary (these are required fields)
+	<li>Optionally update the user's organization. Because this field is not actually labeled (besides this form), you can use it however you like. In other words, it doesn't necessary have to represent <i>organization</i>.</li>
+	<li>The admin switch will make or revoke the user's ability to administer the site. Obviously this should only be for user's you completely trust. There is no distinction between administrators. All administrators have the same abilities. This is NOT necessary if you simply want to make a user a <a href="admin_session.html#presenters">presenter</a></li>
+	<li>Optionally upload a <a href="#photos">photo</a></li>
+	<li>Click <i>Reset Password</i> to reset their password to their email address</li>
+	<li>Click <i>Save</i> to update the data</li>	
+	<li>Click <i>Don't Save</i> to cancel your changes</li>
+	<li>Click <i>Delete</i> to remove this user completely. This cannot be undone.</li>
+</ol>
+
+<a name="photos"></a>
+<h2>Directory Photos</h2>
+<p>mobilAP supports attaching photos to user's directory entries. This is useful to help people put names with faces and vice versa. Because of the specific nature of photo uploading and processing there are some additional requirements for using the photo upload system in mobilAP:</p>
+<ul>
+	<li>The web server (www user in Mac OS X) must have write access to the <b>mobilAP/data/directory folder</b></li>
+	<li>File uploads must be enabled in PHP (this is typically not a problem)</li>
+	<li>Either SIPS or GD to process thumbnails (see below)</li>
+</ul>
+
+<p>Uploaded pictures must be JPEG format. After uploading the system will attempt to create a thumbnail it will use one of the following methods:</p>
+<ul>
+	<li>The Scriptable Image Processing System (SIPS), part of Mac OS X</li>
+	<li>The <a href="http://www.php.net/manual/en/book.image.php">GD Image Library</a> functions (Included on some but not all PHP installations)</li>
+</ul>
+<p>If neither of those facilities are available, the operation will fail.</p>
+
+
+
+<h3>A word about orientation</h3>
+<p>Some digital cameras support a mode where the orientation of the camera is recorded with the photo and it will rotate the image. Since there are some web browsers that do not recognize this data, mobilAP will attempt to reorient files so their canvas matches their orientation. Support for this feature requires:
+	<ul>
+		<li>The <a href="http://www.php.net/manual/en/book.exif.php">Exif functions</a> PHP module (typically enabled on many PHP installations)</li>
+		<li>The <a href="http://www.php.net/manual/en/book.image.php">GD Image Library</a> functions (Included on some but not all PHP installations)</li>
+	</ul>
+<p>Presuming those requirements are met, mobilAP should be able to automatically fix orientation problems. Otherwise, you will need to use an image processing program to re-save the files without this data. Using Adobe Photoshop's <i>Save for Web</i> function is a good example.</p>
+
+<p><a href="admin_announcements.html">Announcements</a> - Return to <a href="admin.html">Administration</a></p>
+
+<div id="footer">
+mobilAP 2.0 <a href="index.html">Documentation</a>
+</div>
+
+</body>
+</html>
