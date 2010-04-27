@@ -1,6 +1,8 @@
 2.0b12 (April 26, 2010)
 - Fixed regression when attempting to manually add/edit user
 - Make sure that only admins can clear question results
+- Fixed regression where placeholder image would not show in mobile site
+- Fixed issue where presenters don't display on mobile site
 
 2.0b11 (April 19, 2010)
 - Documentation has been included, load the index.html file in the Documentation folder. Please provide feedback on the documentation
