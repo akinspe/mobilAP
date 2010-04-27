@@ -1104,11 +1104,6 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
         this.profileAdminSwitch.setValue(this.user.admin);
         this.profileImageFile.value = '';
     },
-    userDidChange: function(change,keyPath) {
-        if (change.newValue) {
-            this.setUser(change.newValue);
-        }
-    },
     deleteUser: function() {
         return this.base(this.user.userID);
     },
@@ -1149,7 +1144,7 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
     },
     constructor: function(params) {
         this.base(params);
-        this.directoryController.addObserverForKeyPath(this, this.userDidChange, "user");
+        this.directoryController.directoryAdminController = this;
     }
 });
 
@@ -1263,15 +1258,22 @@ MobilAP.DesktopDirectoryController = Class.create(MobilAP.DirectoryController, {
     setAddMode: function(addMode) {
         this.addMode = addMode ? true : false;
     },
+    clearSelection: function() {
+    	this.base();
+    	this.user = new MobilAP.User();
+        this.profilePanel.style.display = 'none';
+    },
     rowSelected: function(change, keyPath) {
         this.setEditMode(false);
         this.setAddMode(false);
         this.base(change, keyPath);
+        this.directoryAdminController.setUser(this.user);
         this.profilePanel.style.display = this.object.selectionIndexes().length > 0 ? '' : 'none';
     },
     addUser: function() {
         this.clearSelection();
         this.user = new MobilAP.User();
+        this.directoryAdminController.setUser(this.user);
         this.profilePanel.style.display = '';
         this.setAddMode(true);
         this.setEditMode(true);

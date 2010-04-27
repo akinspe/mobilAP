@@ -45,17 +45,17 @@ if (isset($_POST['post'])) {
             
             $content_type = 'text/html';
             break;
+        case 'uploadImportFile':
+			$file = isset($_FILES['directoryImportFile']) ? $_FILES['directoryImportFile'] : array();
+			$data = mobilAP_User::uploadImportFile($file);
+            $content_type = 'text/html';
+        	break;
         case 'updateUser':
             $userID = isset($_POST['userID']) ? $_POST['userID'] : '';
             if (!$user = mobilAP_User::getUserByID($userID)) {
                 $data = mobilAP_Error::throwError("Unable to find user for userID " . $userID,-2, $userID);
                 break;
             }
-        case 'uploadImportFile':
-			$file = isset($_FILES['directoryImportFile']) ? $_FILES['directoryImportFile'] : array();
-			$data = mobilAP_User::uploadImportFile($file);
-            $content_type = 'text/html';
-        	break;
         case 'addUser':
             if ($post_action == 'addUser') {
                 $user = new mobilAP_user();

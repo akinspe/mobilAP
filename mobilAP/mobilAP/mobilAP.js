@@ -1567,7 +1567,7 @@ MobilAP.DirectoryController = Class.create(MobilAP.ListController, {
             this.user = new MobilAP.User(object);
             this.profileController.setUser(this.user);
         } else {
-            this.user = null;
+            this.user = new MobilAP.User();
         }
     }
 });
