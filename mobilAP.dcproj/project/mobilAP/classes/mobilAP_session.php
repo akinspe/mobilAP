@@ -1278,6 +1278,15 @@ class mobilAP_session_question
 		return mobilAP_session::getSessionByID($this->session_id);
 	}
 	
+	function isAdmin($userID)
+	{
+		if ($session = $this->getSession()) {
+			return $session->isAdmin($userID);
+		}
+		
+		return false;
+	}
+	
 	function setQuestionActive($active)
 	{
 		$this->question_active = $active ? -1 : 0;
@@ -1526,8 +1535,12 @@ class mobilAP_session_question
 		return true;
 	}
 	
-	function clearAnswers($userID)
+	function clearAnswers($admin_userID)
 	{
+        if (!$this->isAdmin($admin_userID)) {
+            return new mobilAP_Error('Unauthorized', mobilAP_UserSession::USER_UNAUTHORIZED);
+        }
+
 		//find out who answered the question so we can update their serial
 		$sql = sprintf("SELECT response_userID FROM %s WHERE question_id=?",mobilAP_session::POLL_ANSWERS_TABLE);
 		$params = array($this->question_id);
