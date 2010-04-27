@@ -77,7 +77,7 @@ var dashcodePartSpecs = {
     "sessionAdminDescription": { "propertyValues": { "valueBinding": { "keypath": "session.content.session_description" } }, "view": "DC.TextField" },
     "sessionAdminSaveButton": { "initialHeight": 30, "initialWidth": 300, "leftImageWidth": 5, "onclick": "sessionSaveAdmin", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
     "sessionAdminTitle": { "propertyValues": { "valueBinding": { "keypath": "session.content.session_title" } }, "view": "DC.TextField" },
-    "sessionDiscussionClearButton": { "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 5, "onclick": "sessionClearDiscussion", "rightImageWidth": 5, "text": "Ckear Discussion", "view": "DC.PushButton" },
+    "sessionDiscussionClearButton": { "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 5, "onclick": "sessionClearDiscussion", "rightImageWidth": 5, "text": "Clear Discussion", "view": "DC.PushButton" },
     "sessionDiscussionList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "sessionDiscussionListText", "listStyle": "List.ROUNDED_RECTANGLE", "propertyValues": { "dataArrayBinding": { "keypath": "session.content.session_discussion" } }, "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "sessionDiscussionListText": { "propertyValues": { "textBinding": { "keypath": "*.post_text" } }, "text": "Text", "view": "DC.Text" },
     "sessionDiscussionListTime": { "propertyValues": { "textBinding": { "keypath": "*.post_timestamp", "transformer": "timestampTransformer" } }, "text": "Time", "view": "DC.Text" },
