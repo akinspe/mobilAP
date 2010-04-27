@@ -553,7 +553,7 @@ MobilAP.MobileDirectoryController = Class.create(MobilAP.DirectoryController, {
     },
     rowSelected: function(change, keyPath) {
     	this.base(change,keyPath);
-        if (this.user) {
+        if (this.object.selectionIndexes().length > 0) {
            mobilAP.loadView('directoryProfile', this.user.getFullName());
         }
  
