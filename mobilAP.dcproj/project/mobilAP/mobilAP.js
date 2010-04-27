@@ -129,7 +129,7 @@ MobilAP = {
         ERROR_REQUIRES_PASSWORD: -4,
         CREATE_NEW_USER: -6,
         UNAUTHORIZED: -7,
-		LOGGING: true,
+		LOGGING: false,
 		log: function(msg) {
 			if (!this.LOGGING) return;
 			try { console.log(msg); } catch (e) {}		

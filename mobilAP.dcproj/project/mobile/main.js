@@ -86,6 +86,9 @@ function load()
     
     mobilAP.directoryController = new MobilAP.MobileDirectoryController('directoryList',{
     	directorySearch: document.getElementById('directorySearch'),
+    	firstNameElement:'directoryFirstName',
+    	lastNameElement:'directoryLastName',
+    	organizationElement:'directoryOrganization',
         profileController: mobilAP.profileController
     });
     mobilAP.addViewController('directory', mobilAP.directoryController);
@@ -93,6 +96,9 @@ function load()
     mobilAP.presenterController = new MobilAP.MobileDirectoryController('sessionInfoPresentersList', {
         sessionController: mobilAP.sessionController,
         profileController: mobilAP.profileController,
+    	firstNameElement:'sessionInfoPresentersFirstName',
+    	lastNameElement:'sessionInfoPresentersLastName',
+    	organizationElement:'sessionInfoPresentersOrganization',
         viewDidLoad: function() {
             this.object.clearSelection();
             this.object.viewElement().style.display = this.object.rows.length>0 ? 'block' : 'none';
@@ -559,9 +565,9 @@ MobilAP.MobileDirectoryController = Class.create(MobilAP.DirectoryController, {
     },
 	prepareRow: function(rowElement, rowIndex, templateElements) {
 		var user = this.representationForRow(rowIndex);
-		templateElements.directoryFirstName.innerHTML = user.FirstName;
-		templateElements.directoryLastName.innerHTML = user.LastName;
-		templateElements.directoryOrganization.innerHTML = user.organization;
+		templateElements[this.firstNameElement].innerHTML = user.FirstName;
+		templateElements[this.lastNameElement].innerHTML = user.LastName;
+		templateElements[this.organizationElement].innerHTML = user.organization;
 	},
 	filter: function(searchValue) {
 		searchValue = searchValue.toLowerCase();
