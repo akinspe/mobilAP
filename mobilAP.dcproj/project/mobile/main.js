@@ -300,7 +300,9 @@ MobilAP.MobileProfileController = Class.create(MobilAP.ProfileController, {
 
 		this.profileFirstName.innerHTML = this.user.FirstName;
 		this.profileLastName.innerHTML = this.user.LastName;
-		this.profileImage.setSrc(this.user.imageThumbURL);
+
+		var imageURL = this.user.imageThumbURL ? this.user.imageThumbURL : 'Images/profile_placeholder.png';
+		this.profileImage.setSrc(imageURL);
         this.profileList.reloadData();
     },
 	prepareRow: function(rowElement, rowIndex, templateElements) {
