@@ -1104,8 +1104,8 @@ MobilAP.DesktopDirectoryAdminController = Class.create(MobilAP.DirectoryAdminCon
         this.profileAdminSwitch.setValue(this.user.admin);
         this.profileImageFile.value = '';
     },
-    deleteUser: function() {
-        return this.base(this.user.userID);
+    deleteUser: function(callback) {
+        return this.base(this.user.userID, callback);
     },
     processImageUpload: function(data) {
         if (this.isError(data)) {
@@ -2272,7 +2272,7 @@ function directoryAdminDelete(event)
 {
     if (confirm('Are you sure you want to remove this user?')) {
         mobilAP.directoryAdminController.deleteUser();
-        mobilAP.directoryController.setEditMode(false);    
+	    mobilAP.directoryController.clearSelection();
     }
 }
 
