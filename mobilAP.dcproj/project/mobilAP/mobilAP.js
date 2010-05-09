@@ -1429,6 +1429,9 @@ MobilAP.SessionEvaluationAdminController = Class.create(MobilAP.Controller, {
 	evaluation_summary: {},
     evaluationSummaryLoaded: function() {
     },
+    clearEvaluations: function() {
+    	this.sessionController.clearEvaluations();
+    },
     _evaluationSummaryLoaded: function(json) {
         if (!this.isError(json)) {
     		this.evaluation_summary = json;

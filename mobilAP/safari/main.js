@@ -501,6 +501,11 @@ MobilAP.DesktopSessionEvaluationAdminController = Class.create(MobilAP.SessionEv
         var questions = dashcode.getDataSource('evaluation').content();
         return questions ? questions : [];
     },
+    clearEvaluations: function() {
+    	this.base();
+        this.evaluationQuestionsList.clearSelection();
+        this.setEvaluationQuestion(false);
+    },
     numberOfRows: function() {
         return this.evaluationQuestions().length;
     },
@@ -537,6 +542,7 @@ MobilAP.DesktopSessionEvaluationAdminController = Class.create(MobilAP.SessionEv
 	},
     viewDidLoad: function() {
         this.evaluationQuestionsList.clearSelection();
+        this.setEvaluationQuestion(false);
     },
     evaluationResults: {
         numberOfRows: function() {
@@ -974,9 +980,6 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
 				}
 			}
 		}
-    },
-    evaluationSummaryLoaded: function() {
-    	
     },
     loadView: function(view) {
         var toView = 'session_' + view;
@@ -2241,7 +2244,7 @@ function sessionClearDiscussion(event)
 function sessionClearEvaluations(event)
 {
     if (confirm('Are you sure you wish to clear the evaluations for this session?')) {
-        mobilAP.sessionController.clearEvaluations();
+        mobilAP.sessionEvaluationAdminController.clearEvaluations();
     }
 }
 
