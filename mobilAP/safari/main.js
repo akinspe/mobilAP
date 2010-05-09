@@ -16,6 +16,8 @@ function load()
         detailStack: document.getElementById('detailStack').object
     });
 
+    mobilAP.textField = 'innerText' in document.getElementsByTagName('div')[0] ? 'innerText' : 'textContent';
+
     mobilAP.loginController = new MobilAP.DesktopLoginController({
         userID_field: document.getElementById('login_userID'),
         password_field: document.getElementById('login_pword'),
@@ -156,6 +158,13 @@ function load()
         directoryImportNote: document.getElementById('directoryImportNote')
     });
     mobilAP.addViewController('directoryImport', mobilAP.directoryImportController);
+
+    mobilAP.sessionEvaluationAdminController = new MobilAP.DesktopSessionEvaluationAdminController({
+        evaluationQuestionsList: document.getElementById('sessionEvaluationsQuestionsList').object,
+        evaluationResultsList: document.getElementById('sessionEvaluationsResultsList').object,
+        sessionController: mobilAP.sessionController
+    });
+    mobilAP.sessionController.addViewController('evaluations', mobilAP.sessionEvaluationAdminController);
     
     mobilAP.sessionEvaluationController = new MobilAP.DesktopSessionEvaluationController({
         sessionController: mobilAP.sessionController,
@@ -484,6 +493,92 @@ MobilAP.DesktopSessionPresentersAdminController = Class.create(MobilAP.SessionPr
         this.base(params);
         this.presentersAdd.onkeyup = this.addFieldUpdated.bind(this);
         this.presentersAddList.setDataSource(this);
+    }
+});
+
+MobilAP.DesktopSessionEvaluationAdminController = Class.create(MobilAP.SessionEvaluationAdminController, {
+    evaluationQuestions: function() {
+        var questions = dashcode.getDataSource('evaluation').content();
+        return questions ? questions : [];
+    },
+    numberOfRows: function() {
+        return this.evaluationQuestions().length;
+    },
+    objectForRow: function(rowIndex) {
+    },
+    representationForRow: function(rowIndex) {
+        return this.evaluationQuestions()[rowIndex];
+    },
+    setEvaluationQuestion: function(question) {
+        this.question = question;
+        if (this.evaluation_summary) {
+        	this.question.evaluation_summary = this.evaluation_summary[question.question_index];
+        }
+
+        this.evaluationResults.question = question;
+        this.evaluationResultsList.reloadData();
+    },
+	prepareRow: function(rowElement, rowIndex, templateElements) {
+        var self = this;
+        var question = this.evaluationQuestions()[rowIndex];
+        templateElements.sessionEvaluationsQuestionsTitle.innerHTML = question.question_text;
+        rowElement.onclick = function() {
+            self.setEvaluationQuestion(self.representationForRow(rowIndex));
+        }
+        
+	},
+    questionsUpdated: function() {
+    	this.base();
+        this.evaluationQuestionsList.reloadData();
+    },
+    sessionUpdated: function() {
+    	this.base();
+		this.evaluationResultsList.reloadData();
+	},
+    viewDidLoad: function() {
+        this.evaluationQuestionsList.clearSelection();
+    },
+    evaluationResults: {
+        numberOfRows: function() {
+        	if (!this.question) {
+        		return 0;
+        	}
+            switch (this.question.question_response_type)
+            {
+                case 'M':
+                    return this.question.responses.length;
+                case 'T':
+                	if (this.question.evaluation_summary) {
+                		return this.question.evaluation_summary.length;
+                	}
+                    break;
+            }
+            return 0;
+        },
+        prepareRow: function(rowElement, rowIndex, templateElements) {
+            switch (this.question.question_response_type)
+            {
+                case 'M':
+                    var response = this.question.responses[rowIndex];
+                    templateElements.sessionEvaluationsResultsTitle.innerHTML = response.response_text;
+                    if (this.question.evaluation_summary) {
+                    	var index = rowIndex+1;
+	                    templateElements.sessionEvaluationsResultsCount.innerHTML = this.question.evaluation_summary[index];
+                    } else {
+	                    templateElements.sessionEvaluationsResultsCount.innerHTML = '';
+                    }
+                    break;
+                case 'T':
+                    templateElements.sessionEvaluationsResultsTitle[mobilAP.textField] = this.question.evaluation_summary[rowIndex];
+                    templateElements.sessionEvaluationsResultsCount.innerHTML = '';
+                    break;
+            }
+        }
+    },
+    constructor: function(params) {
+        this.base(params);
+        this.evaluationQuestionsList.setDataSource(this);
+        this.evaluationResultsList.setDataSource(this.evaluationResults);
     }
 });
 
@@ -879,6 +974,9 @@ MobilAP.DesktopSessionController = Class.create(MobilAP.SessionController, {
 				}
 			}
 		}
+    },
+    evaluationSummaryLoaded: function() {
+    	
     },
     loadView: function(view) {
         var toView = 'session_' + view;
@@ -2140,6 +2238,13 @@ function sessionClearDiscussion(event)
     }
 }
 
+function sessionClearEvaluations(event)
+{
+    if (confirm('Are you sure you wish to clear the evaluations for this session?')) {
+        mobilAP.sessionController.clearEvaluations();
+    }
+}
+
 
 function sessionEvaluationFinish(event)
 {
@@ -2437,5 +2542,14 @@ function directoryImportAddAll(event)
         if (confirm('This will add ' + num + ' user' + (num==1 ? '' : 's') + '. Are you sure?')) {
             mobilAP.directoryImportController.addAll();
         }
+    }
+}
+
+
+function sessionAdminViewEvaluations(event)
+{
+    if (mobilAP.sessionController.isAdmin()) {
+        mobilAP.sessionEvaluationAdminController.loadEvaluationSummary();
+        mobilAP.sessionController.loadView('evaluations');
     }
 }

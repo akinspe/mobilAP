@@ -1237,6 +1237,14 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
       
         this.post(base_url + 'session.php', params,callback);
     },
+    clearEvaluations: function(callback) {
+        var params = {
+            session_id: this.session_id,
+            post: 'clearEvaluations'
+        }
+      
+        this.post(base_url + 'session.php', params,callback);
+    },
     addPresenter: function(userID,callback) {
         var params = {
             session_id: this.session_id,
@@ -1417,6 +1425,34 @@ MobilAP.SessionController = Class.create(MobilAP.Controller, {
     }
 });
 
+MobilAP.SessionEvaluationAdminController = Class.create(MobilAP.Controller, {
+	evaluation_summary: {},
+    evaluationSummaryLoaded: function() {
+    },
+    _evaluationSummaryLoaded: function(json) {
+        if (!this.isError(json)) {
+    		this.evaluation_summary = json;
+    		this.evaluationSummaryLoaded();
+    	}
+    },
+    loadEvaluationSummary: function() {
+    	params = {
+    		session_id: this.session.session_id,
+    		evaluation_summary: true
+    	}
+        this.get(base_url + 'session.php',params,this._evaluationSummaryLoaded.bind(this));
+    },
+    sessionUpdated: function(json) {
+    	this.session = this.sessionController.session;
+    },
+    questionsUpdated: function() {
+    },
+    constructor: function(params) {
+        this.base(params);
+        dashcode.getDataSource('session').addObserverForKeyPath(this, this.sessionUpdated, "content");
+        dashcode.getDataSource('evaluation').addObserverForKeyPath(this, this.questionsUpdated, "content");
+    }
+});
 MobilAP.SessionEvaluationController = Class.create(MobilAP.DataSourceController, {
     setResponse: function(index, response) {
         this.responses[index] = response;

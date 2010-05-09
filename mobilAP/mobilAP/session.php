@@ -25,6 +25,9 @@ if ($session = mobilAP::getSessionByID($session_id)) {
 				$data = $session->addLink($link_url, $link_title, $user->getUserID());
                 break;        
 
+            case 'clearEvaluations':
+				$data = $session->clearEvaluations($user->getUserID());
+                break;        
             case 'clearDiscussion':
 				$data = $session->clearDiscussion($user->getUserID());
                 break;        
@@ -144,6 +147,10 @@ if ($session = mobilAP::getSessionByID($session_id)) {
                 break;
         }
         
+	} elseif (isset($_GET['evaluations'])) {
+		$data = $session->isAdmin($user->getUserID()) ? $session->getEvaluations() : array();
+	} elseif (isset($_GET['evaluation_summary'])) {
+		$data = $session->isAdmin($user->getUserID()) ? $session->getEvaluationSummary() : array();
     } else {
 
 		$session->serial = mobilAP::getSerialValue('session_' . $session->session_id);

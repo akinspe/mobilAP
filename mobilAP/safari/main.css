@@ -3121,6 +3121,151 @@ body.DC_windowInactive .sessionLinksListRow_template.selected {
     color: white;
 }
 
+#session_evaluations {
+    width: 100%;
+    min-height: 180px;
+    display: none;
+    position: relative;
+}
+
+#sessionEvaluationsQuestionsList {
+    overflow: hidden;
+    display: none;
+    padding: 0px;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: relative;
+    width: auto;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    margin-left: 0px;
+}
+
+.sessionEvaluationsQuestionsRow_template {
+    position: relative;
+    list-style-type: none;
+    height: 19px;
+    overflow: hidden;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(224, 224, 224);
+}
+
+.sessionEvaluationsQuestionsTitle_template {
+    position: absolute;
+    top: 3px;
+    left: 10px;
+    right: 10px;
+    height: 17px;
+    width: auto;
+    font-size: 13px;
+    font-family: Helvetica, Arial, sans-serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.sessionEvaluationsQuestionsRow_template.selected {
+    background-color: rgb(56, 121, 217);
+}
+
+body:not(.DC_windowInactive) .sessionEvaluationsQuestionsRow_template.selected .sessionEvaluationsQuestionsTitle_template {
+    color: white;
+}
+
+body.DC_windowInactive .sessionEvaluationsQuestionsRow_template.selected {
+    background-color: rgb(212, 212, 212);
+}
+
+#sessionEvaluationsResultsList {
+    overflow: hidden;
+    display: none;
+    padding: 0px;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: relative;
+    width: auto;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    margin-left: 0px;
+}
+
+.sessionEvaluationsResultsRow_template {
+    position: relative;
+    list-style-type: none;
+    height: 19px;
+    overflow: hidden;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(224, 224, 224);
+}
+
+.sessionEvaluationsResultsTitle_template {
+    position: absolute;
+    top: 3px;
+    left: 10px;
+    right: 10px;
+    height: 17px;
+    width: auto;
+    font-size: 13px;
+    font-family: Helvetica, Arial, sans-serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.sessionEvaluationsResultsRow_template.selected {
+    background-color: rgb(56, 121, 217);
+}
+
+body:not(.DC_windowInactive) .sessionEvaluationsResultsRow_template.selected .sessionEvaluationsResultsTitle_template {
+    color: white;
+}
+
+body.DC_windowInactive .sessionEvaluationsResultsRow_template.selected {
+    background-color: rgb(212, 212, 212);
+}
+
+.sessionEvaluationsResultsCount_template {
+    font-size: 13px;
+    font-family: 'Lucida Grande', Arial, sans-serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: absolute;
+    margin-top: 0px;
+    left: 259px;
+    top: 2px;
+    width: auto;
+    height: auto;
+}
+
+.selected .sessionEvaluationsResultsCount_template {
+    color: white;
+}
+
+#sessionEvaluationsClearEvaluationsButton {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.585938) 0px -1px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 30px;
+    -webkit-dashboard-region: dashboard-region(control rectangle);
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    position: relative;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    margin-left: 6px;
+    width: 143px;
+}
+
 #session_links_add {
     width: 100%;
     display: none;
@@ -3815,6 +3960,29 @@ body.DC_windowInactive .sessionDiscussionListRow_template.selected {
     -webkit-margin-top-collapse: separate;
     -webkit-margin-bottom-collapse: separate;
     margin-top: -78px;
+}
+
+#sessionAdminViewEvaluationsButton {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.53125) 0px -1px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-dashboard-region: dashboard-region(control rectangle);
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-margin-top-collapse: separate;
+    -webkit-margin-bottom-collapse: separate;
+    position: absolute;
+    right: auto;
+    height: 25px;
+    width: 130px;
+    top: 0px;
+    left: 150px;
 }
 
 .selected #sessionAdminPresentersLabel {

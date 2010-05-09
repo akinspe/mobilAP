@@ -163,6 +163,7 @@ var dashcodePartSpecs = {
     "sessionAdminPresentersRemoveButton": { "initialHeight": 25, "initialWidth": 90, "leftImageWidth": 5, "onclick": "removeSessionPresenter", "rightImageWidth": 5, "text": "Remove", "view": "DC.PushButton" },
     "sessionAdminSaveButton": { "initialHeight": 30, "initialWidth": 300, "leftImageWidth": 5, "onclick": "sessionSave", "rightImageWidth": 5, "text": "Save", "view": "DC.PushButton" },
     "sessionAdminTitle": { "propertyValues": { "valueBinding": { "keypath": "session.content.session_title" } }, "view": "DC.TextField" },
+    "sessionAdminViewEvaluationsButton": { "initialHeight": 25, "initialWidth": 130, "leftImageWidth": 5, "onclick": "sessionAdminViewEvaluations", "rightImageWidth": 5, "text": "View Evaluations", "view": "DC.PushButton" },
     "sessionDiscussionClearButton": { "initialHeight": 30, "initialWidth": 140, "leftImageWidth": 5, "onclick": "sessionClearDiscussion", "rightImageWidth": 5, "text": "Clear Discussion", "view": "DC.PushButton" },
     "sessionDiscussionList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "sessionDiscussionListText", "listStyle": "List.DESKTOP_LIST", "propertyValues": { "dataArrayBinding": { "keypath": "session.content.session_discussion" } }, "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "sessionDiscussionListText": { "propertyValues": { "textBinding": { "keypath": "*.post_text" } }, "text": "Text", "view": "DC.Text" },
@@ -174,6 +175,13 @@ var dashcodePartSpecs = {
     "sessionEvaluationQuestionPreviousButton": { "initialHeight": 30, "initialWidth": 93, "leftImageWidth": 15, "onclick": "sessionEvaluationPrevious", "rightImageWidth": 1, "text": "Previous", "view": "DC.PushButton" },
     "sessionEvaluationQuestionResponses": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "evaluationQuestionResponsesText", "listStyle": "List.DESKTOP_LIST", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "sessionEvaluationQuestionText": { "text": "Evaluation", "view": "DC.Text" },
+    "sessionEvaluationsClearEvaluationsButton": { "initialHeight": 30, "initialWidth": 143, "leftImageWidth": 5, "onclick": "sessionClearEvaluations", "rightImageWidth": 5, "text": "Clear Evaluations", "view": "DC.PushButton" },
+    "sessionEvaluationsHeader": { "text": "Evaluations", "view": "DC.Text" },
+    "sessionEvaluationsQuestionsList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "MobilAP.DataSourceStub", "labelElementId": "sessionEvaluationsQuestionsTitle", "listStyle": "List.DESKTOP_LIST", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
+    "sessionEvaluationsQuestionsTitle": { "text": "Item", "view": "DC.Text" },
+    "sessionEvaluationsResultsCount": { "text": "Text", "view": "DC.Text" },
+    "sessionEvaluationsResultsList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "MobilAP.DataSourceStub", "labelElementId": "sessionEvaluationsResultsTitle", "listStyle": "List.DESKTOP_LIST", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
+    "sessionEvaluationsResultsTitle": { "text": "Item", "view": "DC.Text" },
     "sessionEvaluationThanksText": { "text": "Thanks for your evaluation", "view": "DC.Text" },
     "sessionHeader": { "propertyValues": { "textBinding": { "keypath": "session.content.session_title" } }, "text": "Session Title", "view": "DC.Text" },
     "sessionInfoDate": { "text": "Date", "view": "DC.Text" },
@@ -225,7 +233,7 @@ var dashcodePartSpecs = {
     "sessionQuestionsNotice": { "text": "No questions have been posted", "view": "DC.Text" },
     "sessionQuestionStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "dissolve" }], "view": "DC.StackLayout" },
     "sessionsAdminSessionsLabel": { "text": "Session:", "view": "DC.Text" },
-    "sessionStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }], "view": "DC.StackLayout" },
+    "sessionStack": { "subviewsTransitions": [{ "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }, { "direction": "right-left", "duration": "0.1", "timing": "ease-in-out", "type": "none" }], "view": "DC.StackLayout" },
     "sessionTabbar": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "session_tabs", "labelElementId": "sessionTabbarTitle", "listStyle": "List.DESKTOP_LIST", "sampleRows": 5, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
     "sessionTabbarTitle": { "text": "Item", "view": "DC.Text" },
     "setupHeader": { "text": "mobilAP Setup", "view": "DC.Text" },
@@ -233,59 +241,6 @@ var dashcodePartSpecs = {
     "splitLayout": { "flexibleViewIndex": 1, "initialSize": 728, "initialSplitterSize": 1, "isVertical": true, "splitterPosition": 171, "view": "DC.SplitLayout" },
     "welcomeText": { "text": "Welcome", "view": "DC.Text" }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 
  This file was generated by Dashcode and is covered by the 

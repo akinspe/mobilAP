@@ -254,75 +254,28 @@ class mobilAP_session
 		$data = array();
 		foreach ($evaluation_questions as $question) {
 			if ($question->question_response_type == mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES) {
-				$data['q' . $question->question_index] = array('avg'=>0, 'count'=>array());
+				$data[$question->question_index] = array();
 				foreach ($question->responses as $response) {
-					$data['q' . $question->question_index]['count'][$response['response_value']] = 0;
+					$data[$question->question_index][$response['response_value']] = 0;
 				}
 				
-				$avg_fields[] = sprintf("avg(q%d) q%d", $question->question_index, $question->question_index);
-				$count_fields[] = sprintf("q%d", $question->question_index);
 			} else {
-				$data['q' . $question->question_index] = array();
-				$text_fields[] = sprintf("q%d", $question->question_index);
+				$data[$question->question_index] = array();
 			}
 		}
 		
-		if (count($avg_fields)) {
-	
-			$sql = sprintf("SELECT %s FROM %s
-					WHERE session_id=?",
-					implode(',', $avg_fields), mobilAP_session::SESSION_EVALUATION_TABLE);
-			$params = array($this->session_id);
-			$result = mobilAP::query($sql,$params);
-			if (mobilAP_Error::isError($result)) {
-				return $data;
-			}
-			if ($row = $result->fetchRow()) {
-				foreach ($row as $idx=>$avg) {
-					if ($avg) {
-						$data[$idx]['avg'] = $avg;
-					}
+		$evaluations = $this->getEvaluations();
+		foreach ($evaluations as $evaluation) {
+			foreach ($evaluation['answers'] as $question_index=>$answer) {
+				$question = $evaluation_questions[$question_index];
+				if ($question->question_response_type == mobilAP_evaluation_question::RESPONSE_TYPE_CHOICES) {
+					$data[$question->question_index][$answer]++;
+				} else {
+					$data[$question->question_index][] = $answer;
 				}
 			}
 		}
 		
-		if (count($count_fields)) {
-
-			$sql = sprintf("SELECT %s FROM %s
-					WHERE session_id=?",
-					implode(',', $count_fields), mobilAP_session::SESSION_EVALUATION_TABLE);
-	
-			$params = array($this->session_id);
-			$result = mobilAP::query($sql,$params);
-			if (mobilAP_Error::isError($result)) {
-				return $data;
-			}
-			while ($row = $result->fetchRow()) {
-				foreach ($row as $idx=>$value) {
-					$data[$idx]['count'][$value]++;
-				}
-			}
-		}
-		
-		if (count($text_fields)) {
-
-			$sql = sprintf("SELECT %s FROM %s WHERE session_id=?",
-				implode(',', $text_fields),mobilAP_session::SESSION_EVALUATION_TABLE);
-	
-			$params = array($this->session_id);
-			$result = mobilAP::query($sql,$params);
-			if (mobilAP_Error::isError($result)) {
-				return $data;
-			}
-			while ($row = $result->fetchRow()) {
-				foreach ($row as $idx=>$text) {
-					if ($text) {
-						$data[$idx][] = $text;
-					}
-				}
-			}
-		}
-
 		return $data;		
 	}
 	
@@ -332,7 +285,8 @@ class mobilAP_session
      */
 	public function getEvaluations()
 	{
-		$sql = sprintf("SELECT * FROM %s WHERE session_id=?", 
+		$sql = sprintf("SELECT * FROM %s a LEFT JOIN %s e USING (evaluation_id) WHERE session_id=? ORDER BY evaluation_id,question_index", 
+				mobilAP_session::SESSION_EVALUATION_ANSWERS_TABLE,
 				mobilAP_session::SESSION_EVALUATION_TABLE);
 			$params = array($this->session_id);
 		$result = mobilAP::query($sql,$params);
@@ -340,8 +294,19 @@ class mobilAP_session
 		if (mobilAP_Error::isError($result)) {
 			return $evaluations;
 		}
+		$evaluation_id = 0;
+		$idx = -1;
 		while ($row = $result->fetchRow()) {
-			$evaluations[] = $row;
+			if ($row['evaluation_id'] != $evaluation_id) {
+				$idx++;
+				$evaluations[$idx] = array(
+					'evaluation_id'=>$row['evaluation_id'],
+					'post_user'=>$row['post_user'],
+					'post_timestamp'=>$row['post_timestamp'],
+					'answers'=>array()
+				);
+			}
+			$evaluations[$idx]['answers'][$row['question_index']] = $row['question_answer'];
 		}
 		
 		return $evaluations;
@@ -805,11 +770,13 @@ class mobilAP_session
         }
         
         //get users who have answered the evaluation so we can update their serials
-        $sql = sprintf("SELECT post_user FROM %s WHERE session_id=?", mobilAP_session::SESSION_EVALUATION_TABLE);
+        $sql = sprintf("SELECT evaluation_id, post_user FROM %s WHERE session_id=?", mobilAP_session::SESSION_EVALUATION_TABLE);
         $params = array($this->session_id);
 		$result = mobilAP::query($sql, $params);
 		$users = array();
 		while ($row = $result->fetchRow()) {
+			$sql = sprintf("DELETE FROM %s WHERE evaluation_id=?", mobilAP_session::SESSION_EVALUATION_ANSWERS_TABLE);
+			mobilAP::query($sql, array($row['evaluation_id']));
 			$users[] = $row['post_user'];
 		}
         

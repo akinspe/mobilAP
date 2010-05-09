@@ -17,6 +17,8 @@ function load()
         homeList: document.getElementById('homeList').object
     });
 
+    mobilAP.textField = 'innerText' in document.getElementsByTagName('div')[0] ? 'innerText' : 'textContent';
+
     mobilAP.loginController = new MobilAP.MobileLoginController({
         userID_field: document.getElementById('loginUserID'),
         password_field: document.getElementById('loginPassword'),
