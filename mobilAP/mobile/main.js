@@ -95,7 +95,7 @@ function load()
     });
     mobilAP.addViewController('directory', mobilAP.directoryController);
 
-    mobilAP.presenterController = new MobilAP.MobileDirectoryController('sessionInfoPresentersList', {
+    mobilAP.presenterController = new MobilAP.MobilePresentersController('sessionInfoPresentersList', {
         sessionController: mobilAP.sessionController,
         profileController: mobilAP.profileController,
     	firstNameElement:'sessionInfoPresentersFirstName',
@@ -524,27 +524,37 @@ MobilAP.MobileDiscussionController = Class.create(MobilAP.DiscussionController, 
 
 
 MobilAP.MobileSessionInfoController = Class.create(MobilAP.SessionInfoController, {
+		sessionUpdated: function() {
+			this.viewDidLoad();
+		},
         viewDidLoad: function() {
             if (this.getConfig('SINGLE_SESSION_MODE')) {
                 this.session_schedule_box.style.display='none';
             } else {
                 this.session_schedule_box.style.display='block';
-                var _timeTransformer = new timeTransformer();
-                var _dateTransformer = new shortDateTransformer();
-                this.session_date.innerHTML = _dateTransformer.transformedValue(this.sessionController.scheduleData.start_time);
-                this.session_start.innerHTML = _timeTransformer.transformedValue(this.sessionController.scheduleData.start_time);
-                this.session_end.innerHTML = _timeTransformer.transformedValue(this.sessionController.scheduleData.end_time);
-                this.session_room.innerHTML = this.sessionController.scheduleData.room;
+                if (this.sessionController.scheduleData) {
+					var _timeTransformer = new timeTransformer();
+					var _dateTransformer = new shortDateTransformer();
+					this.session_date.innerHTML = _dateTransformer.transformedValue(this.sessionController.scheduleData.start_time);
+					this.session_start.innerHTML = _timeTransformer.transformedValue(this.sessionController.scheduleData.start_time);
+					this.session_end.innerHTML = _timeTransformer.transformedValue(this.sessionController.scheduleData.end_time);
+					this.session_room.innerHTML = this.sessionController.scheduleData.room;
+                }
             }
             this.session_description.style.display = this.sessionController.session.session_description ? 'block' : 'none';
-        }
+        },
+        constructor: function(params) {
+        	this.base(params);
+			this.sessionController.addObserverForKeyPath(this, this.sessionUpdated, "session");
+		}
+        
 });
 
 MobilAP.MobileDirectoryAdminController = Class.create(MobilAP.DirectoryAdminController, {
 
 });
 
-MobilAP.MobileDirectoryController = Class.create(MobilAP.DirectoryController, {
+MobilAP.MobilePeopleController = Class.create(MobilAP.DirectoryController, {
     viewDidLoad: function() {
         this.clearSelection();
     },
@@ -587,14 +597,34 @@ MobilAP.MobileDirectoryController = Class.create(MobilAP.DirectoryController, {
 		}
 	},
     numberOfRows: function() {
-		return this.content().length
+		return this.content().length;
     },
+    constructor: function(part_id,params) {
+    	this.base(part_id,params);
+    }
+});
+
+MobilAP.MobileDirectoryController = Class.create(MobilAP.MobilePeopleController, {
     constructor: function(part_id,params) {
     	this.base(part_id,params);
 		this._dataSource = dashcode.getDataSource('users');
 		this._content = this._dataSource.content() || [];
 		this._dataSource.addObserverForKeyPath(this, this.reloadData, "content");
         this.object.setDataSource(this);
+    }
+});
+
+MobilAP.MobilePresentersController = Class.create(MobilAP.MobilePeopleController, {
+	sessionUpdated: function() {
+    	this.object.reloadData();
+	},
+    content: function() {
+    	return this.sessionController.session.session_presenters;
+    },
+    constructor: function(part_id,params) {
+    	this.base(part_id,params);
+        this.object.setDataSource(this);
+		this.sessionController.addObserverForKeyPath(this, this.sessionUpdated, "session");
     }
 });
 

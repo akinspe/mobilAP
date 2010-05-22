@@ -87,10 +87,10 @@ var dashcodePartSpecs = {
     "sessionInfoDate": { "text": "Date", "view": "DC.Text" },
     "sessionInfoDescription": { "propertyValues": { "textBinding": { "keypath": "session.content.session_description" } }, "text": "Description", "view": "DC.Text" },
     "sessionInfoEnd": { "text": "12:00p", "view": "DC.Text" },
-    "sessionInfoPresentersFirstName": { "propertyValues": { "textBinding": { "keypath": "*.FirstName" } }, "text": "First", "view": "DC.Text" },
-    "sessionInfoPresentersLastName": { "propertyValues": { "textBinding": { "keypath": "*.LastName" } }, "text": "Last", "view": "DC.Text" },
-    "sessionInfoPresentersList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "labelElementId": "sessionInfoPresentersLastName", "listStyle": "List.ROUNDED_RECTANGLE", "propertyValues": { "dataArrayBinding": { "keypath": "session.content.session_presenters" } }, "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
-    "sessionInfoPresentersOrganization": { "propertyValues": { "textBinding": { "keypath": "*.organization" } }, "text": "Organization", "view": "DC.Text" },
+    "sessionInfoPresentersFirstName": { "text": "First", "view": "DC.Text" },
+    "sessionInfoPresentersLastName": { "text": "Last", "view": "DC.Text" },
+    "sessionInfoPresentersList": { "allowsEmptySelection": true, "dataArray": ["Item 1", "Item 2", "Item 3"], "dataSourceName": "MobilAP.DataSourceStub", "labelElementId": "sessionInfoPresentersLastName", "listStyle": "List.ROUNDED_RECTANGLE", "sampleRows": 3, "selectionEnabled": true, "useDataSource": true, "view": "DC.List" },
+    "sessionInfoPresentersOrganization": { "text": "Organization", "view": "DC.Text" },
     "sessionInfoRoom": { "text": "Room", "view": "DC.Text" },
     "sessionInfoStart": { "text": "12:00a", "view": "DC.Text" },
     "sessionLinksAddButton": { "initialHeight": 30, "initialWidth": 302, "leftImageWidth": 15, "onclick": "sessionLinkButton", "rightImageWidth": 15, "text": "Add Link", "view": "DC.PushButton" },
@@ -123,48 +123,3 @@ var dashcodePartSpecs = {
     "setupLoading": { "text": "Please run mobilAP Setup from a desktop browser.", "view": "DC.Text" },
     "stackLayout": { "subviewsTransitions": [{ "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }, { "direction": "right-left", "duration": "", "timing": "ease-in-out", "type": "push" }], "view": "DC.StackLayout" }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
