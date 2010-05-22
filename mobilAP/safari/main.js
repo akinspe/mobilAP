@@ -647,7 +647,10 @@ MobilAP.DesktopSessionQuestionAdminController = Class.create(MobilAP.SessionQues
 });
 
 MobilAP.DesktopSessionInfoController = Class.create(MobilAP.SessionInfoController, {
-        viewDidLoad: function() {
+		sessionUpdated: function() {
+            this.session_presenters.style.display = this.sessionController.session.session_presenters.length>0 ? 'block' : 'none';
+		},
+		viewDidLoad: function() {
             this.session_presenters.style.display = this.sessionController.session.session_presenters.length>0 ? 'block' : 'none';
             
             if (this.getConfig('SINGLE_SESSION_MODE')) {
@@ -661,7 +664,12 @@ MobilAP.DesktopSessionInfoController = Class.create(MobilAP.SessionInfoControlle
                 this.session_end.innerHTML = _timeTransformer.transformedValue(this.sessionController.scheduleData.end_time);
                 this.session_room.innerHTML = this.sessionController.scheduleData.room;
             }
-        }
+        },
+        constructor: function(params) {
+        	this.base(params);
+			this.sessionController.addObserverForKeyPath(this, this.sessionUpdated, "session");
+		}
+
 });
 
 
