@@ -1,3 +1,6 @@
+2.0b14 (May 23, 2010)
+- Fixed an issue where the wrong session presenters would show up on the mobile site
+
 2.0b13 (May 13, 2010)
 - Added the ability to view session evaluation results
 - Added the ability to clear evaluations for a given session
