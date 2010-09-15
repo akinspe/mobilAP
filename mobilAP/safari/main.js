@@ -1139,8 +1139,6 @@ MobilAP.DesktopQuestionsController = Class.create(MobilAP.ListController, {
     viewDidLoad: function() {
         this.setEditMode(false);
         this.reloadData();
-        this.sessionQuestionsNotice.style.display = this.content().length == 0 ? '' : 'none';
-        this.editButton.viewElement().style.display = this.content().length == 0 ? 'none' : '';
     },
     rowSelected: function(change, keyPath) {
         this.base(change, keyPath);
@@ -1152,6 +1150,11 @@ MobilAP.DesktopQuestionsController = Class.create(MobilAP.ListController, {
         }    
     },
     objectForRow: function() {
+    },
+    reloadData: function() {
+    	this.base();
+        this.sessionQuestionsNotice.style.display = this.content().length == 0 ? '' : 'none';
+        this.editButton.viewElement().style.display = this.content().length == 0 ? 'none' : '';
     },
     representationForRow: function(rowIndex) {
         var question = new MobilAP.SessionQuestion(this.sessionController.session.session_questions[rowIndex]);
