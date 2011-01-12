@@ -7,6 +7,7 @@ $data = array();
 
 $continent = isset($_GET['continent']) ? $_GET['continent'] : '';
 $area = isset($_GET['area']) ? $_GET['area'] : '';
+$encode = true;
 
 try {
 	$conn = new PDO('sqlite:' . $timezone_file);
@@ -34,11 +35,29 @@ try {
 	}
 	
 } catch (Exception $error) {
-	$data = new MobilAP_Error($error->getMessage(), $error->getCode(), $error);
+	if ($continent) {
+		if ($area) {
+            $file = sprintf("./timezones/%s-%s.json", $continent, $area);
+            if (!file_exists($file)) {
+                $file = './timezones/empty.json';
+            }
+		} else{
+	        $file = sprintf("./timezones/%s.json", $continent);
+	    }
+	} else {
+	    $file = './timezones/continents.json';
+	}
+
+    if (file_exists($file)) {
+        $data = file_get_contents($file);
+        $encode = false;        
+    } else {
+        $data = new MobilAP_Error("Unable to locate timezone file $file");
+    }
 }
 
 
 header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
-echo json_encode($data);
+echo $encode ? json_encode($data) : $data;
 
 ?>
