@@ -259,6 +259,10 @@ MobilAP.SetupController = Class.create(MobilAP.Controller, {
         this.updateTimeZone();
 	},
 	_processTimeZoneData: function(select,json) {
+        if (this.isError(json)) {
+            alert("Error processing time zone data: " + json.error_message);
+            return;
+        }
 		this.resetSelect(select);
 		for (i=0; i<json.length;i++) {
 			select.options[i+1] = new Option(json[i],json[i]);

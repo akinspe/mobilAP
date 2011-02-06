@@ -1,0 +1,1 @@
+["Azores","Bermuda","Canary","Cape_Verde","Faeroe","Faroe","Jan_Mayen","Madeira","Reykjavik","South_Georgia","St_Helena","Stanley"]
