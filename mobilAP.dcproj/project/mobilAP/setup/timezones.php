@@ -58,6 +58,6 @@ try {
 
 
 header("Content-type: application/json; charset=" . MOBILAP_CHARSET);
-echo json_encode($data);
+echo $encode ? json_encode($data) : $data;
 
 ?>
